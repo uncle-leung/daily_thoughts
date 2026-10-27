@@ -24,7 +24,7 @@ Actions 的计划任务可能晚几分钟。只有默认分支 `main` 上的 wor
    - `QQ_SMTP_AUTH_CODE`：授权码
    - `QQ_SMTP_USER`：可选，默认用收件地址 `fisherleung27@qq.com`
 
-授权码还没配时，workflow 会把纯文本榜单交给 [FormSubmit](https://formsubmit.co) 转发。第一封通常是确认链接，点一次之后后续提交才会进收件箱。配好 `QQ_SMTP_AUTH_CODE` 后就不再走 FormSubmit。
+授权码还没配时，workflow 会把纯文本榜单交给 [FormSubmit](https://formsubmit.co) 转发。第一次会先往邮箱发一封 **Activate Form** 激活信，点开链接之后，下一次任务才会把榜单正文送进来。激活信可能在垃圾箱。配好 `QQ_SMTP_AUTH_CODE` 后就不再走 FormSubmit，邮件会是完整的 HTML 表格。
 
 本地试跑：
 

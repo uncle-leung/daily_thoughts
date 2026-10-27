@@ -347,6 +347,11 @@ def send_qq_smtp(
         smtp.send_message(message)
 
 
+def formsubmit_needs_activation(payload: dict[str, object]) -> bool:
+    message = str(payload.get("message", ""))
+    return str(payload.get("success", "")).lower() == "false" and "activat" in message.lower()
+
+
 def send_formsubmit(*, recipient: str, subject: str, text: str) -> dict[str, object]:
     payload = {
         "name": "GitHub Trending Digest",
@@ -362,6 +367,7 @@ def send_formsubmit(*, recipient: str, subject: str, text: str) -> dict[str, obj
             "Content-Type": "application/json",
             "Accept": "application/json",
             "User-Agent": USER_AGENT,
+            "Referer": "https://github.com/uncle-leung/daily_thoughts",
         },
         method="POST",
     )
@@ -371,9 +377,11 @@ def send_formsubmit(*, recipient: str, subject: str, text: str) -> dict[str, obj
         parsed = json.loads(raw)
     except json.JSONDecodeError:
         parsed = {"raw": raw[:500]}
-    if isinstance(parsed, dict) and str(parsed.get("success", "")).lower() == "false":
+    if not isinstance(parsed, dict):
+        return {"raw": raw[:500]}
+    if str(parsed.get("success", "")).lower() == "false" and not formsubmit_needs_activation(parsed):
         raise RuntimeError(f"FormSubmit rejected the digest: {parsed}")
-    return parsed if isinstance(parsed, dict) else {"raw": raw[:500]}
+    return parsed
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -458,10 +466,16 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"FormSubmit send failed: {exc}", file=sys.stderr)
             return 3
+        if formsubmit_needs_activation(result):
+            print(
+                f"FormSubmit sent an activation email to {recipient}. "
+                "Open it and click Activate Form. The ranking digest is delivered on the next run."
+            )
+            return 0
         print(f"sent via FormSubmit to {recipient}: {result}")
         print(
             "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "
-            "for the HTML digest. FormSubmit's first message may be a confirmation link."
+            "for the HTML digest."
         )
         return 0
 

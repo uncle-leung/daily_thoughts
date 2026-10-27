@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
 from github_trending_digest import (  # noqa: E402
+    formsubmit_needs_activation,
     parse_trending_html,
     render_text,
     subject_for,
@@ -87,6 +88,21 @@ class ParseTrendingTest(unittest.TestCase):
         self.assertIn("本周热门", text)
         self.assertIn("Nutlope/hallmark", text)
         self.assertIn("这一榜暂时没有取到数据", text)
+
+    def test_formsubmit_activation_is_not_a_hard_failure(self) -> None:
+        self.assertTrue(
+            formsubmit_needs_activation(
+                {
+                    "success": "false",
+                    "message": "This form needs Activation. We've sent you an email.",
+                }
+            )
+        )
+        self.assertFalse(
+            formsubmit_needs_activation(
+                {"success": "false", "message": "Make sure you open this page through a web server."}
+            )
+        )
 
 
 if __name__ == "__main__":
