@@ -25,6 +25,16 @@ Actions 的计划任务可能晚几分钟。只有默认分支 `main` 上的 wor
 python3 scripts/daily_ideas.py --text-out digests/ideas.txt
 ```
 
+## 国内外大事
+
+`.github/workflows/major-events.yml` 在每天 **09:15** 和 **18:15**（上海时间）再发一封邮件，同样到 `fisherleung27@qq.com`。
+
+每封有国内大事 10 条、国外大事 10 条。每条摘自中国新闻网报道开头的三四句话。上午和晚上不是同一组。对应 UTC cron 是 `15 1 * * *` 和 `15 10 * * *`。
+
+```bash
+python3 scripts/major_events.py --text-out digests/events.txt
+```
+
 ## 发信
 
 优先走 QQ 邮箱 SMTP（`smtp.qq.com:465`），邮件是 HTML 表格加纯文本。

@@ -1,0 +1,35 @@
+name: Major events
+
+on:
+  schedule:
+    # 09:15 and 18:15 Asia/Shanghai (UTC+8, no daylight saving).
+    - cron: "15 1 * * *"
+    - cron: "15 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Send major events
+        env:
+          DIGEST_TO: fisherleung27@qq.com
+          QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
+          QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
+          DIGEST_FALLBACK: formsubmit
+        run: python3 scripts/major_events.py --send --html-out digests/events.html --text-out digests/events.txt
+
+      - name: Keep the letter
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: major-events
+          path: digests/
+          if-no-files-found: ignore
