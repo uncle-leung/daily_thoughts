@@ -784,7 +784,7 @@ def send_formsubmit(*, recipient: str, subject: str, text: str, sender_name: str
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=40) as response:
+    with urllib.request.urlopen(request, timeout=90) as response:
         raw = response.read().decode("utf-8", errors="replace")
     try:
         parsed = json.loads(raw)
