@@ -19,7 +19,9 @@ import ssl
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from email.message import EmailMessage
 from zoneinfo import ZoneInfo
@@ -61,6 +63,19 @@ GAINED_RE = re.compile(
     re.I,
 )
 TAG_RE = re.compile(r"<[^>]+>")
+FENCE_RE = re.compile(r"```.*?```", re.S)
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+BADGE_RE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+MD_LINK_RE = re.compile(r"\[([^\]]+)\]\([^)]*\)")
+URL_RE = re.compile(r"https?://\S+")
+EMOJI_RE = re.compile(r"[\U0001F300-\U0001FAFF\u2600-\u27BF]")
+SKIP_SENTENCE_RE = re.compile(
+    r"\b(table of contents|license|changelog|contributing|installation|installing|"
+    r"getting started|prerequisite|build status|npm install|pip install|docker pull|"
+    r"yarn add|pnpm add|cargo install|go install)\b",
+    re.I,
+)
+README_FILES = ("README.md", "readme.md", "README.rst", "README.txt", "README")
 
 
 def fetch_html(url: str, timeout: int = 30) -> str:
@@ -126,6 +141,401 @@ def parse_trending_html(page: str, limit: int = 15) -> list[dict[str, str]]:
     return repos
 
 
+def cjk_ratio(text: str) -> float:
+    letters = [char for char in text if char.isalpha() or "\u4e00" <= char <= "\u9fff"]
+    if not letters:
+        return 0.0
+    cjk = sum(1 for char in letters if "\u4e00" <= char <= "\u9fff")
+    return cjk / len(letters)
+
+
+def readme_plaintext(markdown: str) -> str:
+    text = FENCE_RE.sub(" ", markdown)
+    text = HTML_COMMENT_RE.sub(" ", text)
+    text = BADGE_RE.sub(" ", text)
+    text = MD_LINK_RE.sub(r"\1", text)
+    text = URL_RE.sub(" ", text)
+    text = TAG_RE.sub(" ", text)
+    text = text.replace("**", " ").replace("__", " ").replace("`", " ")
+    text = re.sub(r"^#{1,6}\s*", "", text, flags=re.M)
+    text = EMOJI_RE.sub(" ", text)
+    text = html.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def split_sentences(text: str) -> list[str]:
+    parts = re.split(r"(?<=[。！？])|(?<=[.!?])\s+", text)
+    return [part.strip(" -–—|") for part in parts if part.strip(" -–—|")]
+
+
+def _usable_sentence(sentence: str, minimum: int) -> bool:
+    sentence = sentence.strip()
+    if len(sentence) < minimum or len(sentence) > 320:
+        return False
+    if SKIP_SENTENCE_RE.search(sentence):
+        return False
+    letters = sum(1 for char in sentence if char.isalpha() or "\u4e00" <= char <= "\u9fff")
+    return letters >= 8 and letters / len(sentence) > 0.4
+
+
+def _overlaps(left: str, right: str) -> bool:
+    a = re.sub(r"\W+", "", left).lower()
+    b = re.sub(r"\W+", "", right).lower()
+    if not a or not b:
+        return False
+    return a in b or b in a
+
+
+NAV_LINE_RE = re.compile(
+    r"(简体中文|繁体中文|日本語|한국어|table of contents|changelog|installation|license|目录|安装|许可证)",
+    re.I,
+)
+DATE_LINE_RE = re.compile(r"\[20\d{2}|^20\d{2}[-/.]")
+GLOSSARY = (
+    (re.compile(r"\bmulti-?agents?\b", re.I), "多智能体"),
+    (re.compile(r"\bcoding agents?\b", re.I), "编程智能体"),
+    (re.compile(r"\bagentic\b", re.I), "智能体"),
+    (re.compile(r"\bagents?\b", re.I), "智能体"),
+    (re.compile(r"\bLLMs?\b", re.I), "大语言模型"),
+    (re.compile(r"\blarge language models?\b", re.I), "大语言模型"),
+    (re.compile(r"\bharness(?:es)?\b", re.I), "智能体运行框架"),
+    (re.compile(r"\bopen[- ]source\b", re.I), "开源"),
+    (re.compile(r"\bframeworks?\b", re.I), "框架"),
+    (re.compile(r"\bworkflows?\b", re.I), "工作流"),
+    (re.compile(r"\bplugins?\b", re.I), "插件"),
+    (re.compile(r"\bskills?\b", re.I), "技能"),
+    (re.compile(r"\blocal-first\b", re.I), "本地优先"),
+    (re.compile(r"\bvoice cloning\b", re.I), "声音克隆"),
+)
+TERM_FIXES = (
+    ("智能体马具", "智能体框架"),
+    ("代理框架", "智能体框架"),
+    ("人工智能代理", "智能体"),
+    ("现实世界贸易公司", "真实交易公司"),
+    ("法学硕士", "大语言模型"),
+    ("特工安全带", "智能体运行框架"),
+    ("编码代理", "编程智能体"),
+    ("代理商", "智能体"),
+    ("代理人", "智能体"),
+    ("多代理", "多智能体"),
+    ("代理 IDE", "智能体 IDE"),
+    ("代理聊天", "智能体聊天"),
+    ("您的代理", "你的智能体"),
+    ("你的代理", "你的智能体"),
+    ("代理变成", "智能体变成"),
+    ("特工", "智能体"),
+    ("安全带", "工具"),
+)
+
+
+def readme_lines(markdown: str) -> list[str]:
+    text = FENCE_RE.sub("\n", markdown)
+    text = HTML_COMMENT_RE.sub("\n", text)
+    text = BADGE_RE.sub(" ", text)
+    text = MD_LINK_RE.sub(r"\1", text)
+    lines: list[str] = []
+    for raw in text.splitlines():
+        line = re.sub(r"^#{1,6}\s*", "", raw.strip())
+        line = line.replace("**", "").replace("__", "").replace("`", "")
+        line = EMOJI_RE.sub(" ", line)
+        line = TAG_RE.sub(" ", line)
+        line = URL_RE.sub(" ", line)
+        line = html.unescape(line)
+        line = re.sub(r"\s+", " ", line).strip(" |-–—")
+        if line:
+            lines.append(line)
+    return lines
+
+
+def _prose_line(line: str) -> bool:
+    if len(line) < 24:
+        return False
+    if line.count("|") >= 2 or line.count("·") >= 2 or line.count("•") >= 2:
+        return False
+    if DATE_LINE_RE.search(line) or SKIP_SENTENCE_RE.search(line):
+        return False
+    if NAV_LINE_RE.search(line) and len(line) < 90:
+        return False
+    letters = sum(1 for char in line if char.isalpha() or "\u4e00" <= char <= "\u9fff")
+    return letters >= 12 and letters / len(line) > 0.55
+
+
+def _clip_sentence(sentence: str, limit: int = 180) -> str:
+    sentence = sentence.strip()
+    if len(sentence) <= limit:
+        return sentence
+    cut = max(sentence.rfind(" ", 40, limit), sentence.rfind("，", 20, limit))
+    if cut < 20:
+        cut = limit
+    return sentence[:cut].rstrip(" ,;:，；、")
+
+
+def _apply_glossary(text: str) -> str:
+    if cjk_ratio(text) >= 0.35:
+        return text
+    for pattern, replacement in GLOSSARY:
+        text = pattern.sub(replacement, text)
+    return text
+
+
+def _fix_terms(text: str) -> str:
+    for source, target in TERM_FIXES:
+        text = text.replace(source, target)
+    return text
+
+
+def _sentence_score(sentence: str) -> int:
+    lowered = sentence.lower()
+    if sentence.endswith("?") or sentence.endswith("？"):
+        return -5
+    if any(word in lowered for word in ("thank", "released", "looking forward", "star history", "install the")):
+        return -4
+    score = 0
+    if re.search(r"\b(is|are)\b|是一|用于|提供", sentence):
+        score += 5
+    if re.search(r"\b(that|which|lets|helps|turns|mirrors)\b|可以|适合|用来", sentence):
+        score += 2
+    if 50 <= len(sentence) <= 220:
+        score += 1
+    return score
+
+
+def _candidate_sentences(description: str, readme: str) -> list[str]:
+    paragraphs: list[str] = []
+    current: list[str] = []
+
+    def flush() -> None:
+        if current:
+            paragraphs.append(" ".join(current))
+            current.clear()
+
+    for raw in readme.splitlines():
+        if not raw.strip():
+            flush()
+            continue
+        if raw.lstrip().startswith(">"):
+            flush()
+            continue
+        line = readme_lines(raw + "\n")
+        if not line or not _prose_line(line[0]):
+            flush()
+            continue
+        current.append(line[0])
+    flush()
+    sentences: list[str] = []
+    for paragraph in paragraphs:
+        for sentence in split_sentences(paragraph) or [paragraph]:
+            sentence = _clip_sentence(sentence, 220).strip().rstrip(".")
+            if _usable_sentence(sentence, 24):
+                sentences.append(sentence)
+    return sentences
+
+
+DEFINITION_RE = re.compile(
+    r"\bis (an?|the)\b|是一|旨在|用于|helps you|lets you|turns your",
+    re.I,
+)
+
+
+def summary_sentences(description: str, readme: str) -> list[str]:
+    """Lead with the GitHub tagline, then one definition sentence from the README."""
+    description = EMOJI_RE.sub(" ", description)
+    description = re.sub(r"\s+", " ", description).strip()
+    picked: list[str] = []
+    description_sentences = [
+        sentence.strip().rstrip(".")
+        for sentence in split_sentences(description)
+        if sentence.strip()
+    ]
+    chinese_sentences = [sentence for sentence in description_sentences if cjk_ratio(sentence) >= 0.35]
+    if chinese_sentences:
+        picked.extend(chinese_sentences[:2])
+    elif _usable_sentence(description, 12):
+        picked.append(description.rstrip("."))
+    intro = "\n".join(line for line in readme.splitlines()[:180] if "<img" not in line.lower() and "<a " not in line.lower())
+    for sentence in _candidate_sentences("", intro):
+        if re.search(r"\b(npx|npm|pip3?|docker|cargo|yarn|pnpm|license|licensed)\b", sentence, re.I):
+            continue
+        if sentence.lower().startswith("each "):
+            continue
+        if cjk_ratio(description) >= 0.35 and cjk_ratio(sentence) < 0.2:
+            continue
+        if not DEFINITION_RE.search(sentence):
+            continue
+        if any(_overlaps(sentence, existing) for existing in picked):
+            continue
+        picked.append(sentence.rstrip("."))
+        if len(picked) == 3:
+            break
+        break
+    cleaned: list[str] = []
+    for sentence in picked[:3]:
+        sentence = sentence.strip()
+        if sentence and sentence[-1] not in "。！？.!?":
+            sentence += "."
+        cleaned.append(sentence)
+    return cleaned
+
+
+def draft_summary(description: str, readme: str) -> str:
+    return " ".join(summary_sentences(description, readme))
+
+
+def shape_summary(text: str) -> str:
+    text = _fix_terms(re.sub(r"\s+", " ", text).strip())
+    if not text:
+        return ""
+    parts = [part.strip() for part in re.split(r"(?<=[。！？])", text) if part.strip()]
+    if len(parts) == 1 and text.count("，") >= 4:
+        parts = [clause.strip(" ，,;；") for clause in re.split(r"[，,]", text) if len(clause.strip()) >= 4][:3]
+    shaped: list[str] = []
+    for part in parts[:3]:
+        part = part.strip().rstrip("。！？.!?，,")
+        if part:
+            shaped.append(part + "。")
+    return "".join(shaped)
+
+
+def parse_gtx_payload(payload: object) -> str:
+    if not isinstance(payload, list) or not payload or not isinstance(payload[0], list):
+        return ""
+    parts: list[str] = []
+    for item in payload[0]:
+        if isinstance(item, list) and item and isinstance(item[0], str):
+            parts.append(item[0])
+    return "".join(parts)
+
+
+def _translate_chunk(chunk: str) -> str:
+    url = (
+        "https://translate.googleapis.com/translate_a/single?client=gtx"
+        "&sl=auto&tl=zh-CN&dt=t&q=" + urllib.parse.quote(chunk)
+    )
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=20) as response:
+        payload = json.loads(response.read().decode("utf-8", errors="replace"))
+    translated = parse_gtx_payload(payload).strip()
+    if not translated:
+        raise RuntimeError("empty translation")
+    return translated
+
+
+def translate_to_zh(text: str) -> str:
+    text = text.strip()
+    if not text or cjk_ratio(text) >= 0.35:
+        return text
+    text = re.sub(r"\bharness(?:es)?\b", "framework", text, flags=re.I)
+    text = re.sub(r"\bLLMs?\b", "large language models", text)
+    pieces: list[str] = []
+    rest = text
+    while rest:
+        chunk = rest[:700]
+        if len(rest) > 700:
+            cut = max(chunk.rfind("。"), chunk.rfind(". "), chunk.rfind("，"))
+            if cut > 180:
+                chunk = rest[: cut + 1]
+        rest = rest[len(chunk) :].strip()
+        pieces.append(_translate_chunk(chunk))
+    return "".join(pieces).strip()
+
+
+def limit_to_three(text: str) -> str:
+    parts = split_sentences(text)
+    if len(parts) <= 3:
+        return text.strip()
+    joiner = "" if cjk_ratio(text) >= 0.35 else " "
+    return joiner.join(parts[:3]).strip()
+
+
+def _fetch_bytes(url: str, headers: dict[str, str] | None = None) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
+    with urllib.request.urlopen(request, timeout=20) as response:
+        return response.read(30000).decode("utf-8", errors="replace")
+
+
+def fetch_readme(owner: str, name: str) -> str:
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if token:
+        try:
+            body = _fetch_bytes(
+                f"https://api.github.com/repos/{owner}/{name}/readme",
+                headers={
+                    "Accept": "application/vnd.github.raw",
+                    "Authorization": f"Bearer {token}",
+                    "X-GitHub-Api-Version": "2022-11-28",
+                },
+            )
+            if not body.lstrip().startswith("{"):
+                return body
+        except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError):
+            pass
+    for filename in README_FILES:
+        url = f"https://raw.githubusercontent.com/{owner}/{name}/HEAD/{urllib.parse.quote(filename)}"
+        try:
+            return _fetch_bytes(url)
+        except (urllib.error.URLError, TimeoutError, ConnectionError):
+            continue
+    return ""
+
+
+def _collapse_short_bits(bits: list[str]) -> str:
+    bodies = [bit.strip().rstrip("。！？.!?") for bit in bits if bit.strip()]
+    if len(bodies) >= 2 and max(len(body) for body in bodies) <= 24:
+        return "，".join(bodies) + "。"
+    return "".join(body + "。" for body in bodies)
+
+
+def summarize_repo(repo: dict[str, str]) -> str:
+    readme = ""
+    try:
+        readme = fetch_readme(repo["owner"], repo["name"])
+    except (urllib.error.URLError, TimeoutError, ConnectionError):
+        readme = ""
+    sentences = summary_sentences(repo.get("description", ""), readme)
+    if not sentences:
+        sentences = [repo.get("description") or f"{repo['owner']}/{repo['name']}。"]
+    rendered: list[str] = []
+    for index, sentence in enumerate(sentences):
+        try:
+            chinese = translate_to_zh(sentence)
+        except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError, RuntimeError):
+            chinese = sentence
+        bits = [bit for bit in split_sentences(shape_summary(chinese)) if bit.strip()]
+        if index == 0 and len(sentences) > 1 and len(bits) > 1 and max(len(bit) for bit in bits) <= 24:
+            rendered.append(_collapse_short_bits(bits))
+        else:
+            rendered.extend(bits[: 3 - len(rendered)])
+        if len(rendered) >= 3:
+            break
+    return "".join(rendered[:3])
+
+
+def attach_summaries(sections: dict[str, list[dict[str, str]]]) -> None:
+    unique: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for key in ("daily", "weekly", "monthly", "daily_zh"):
+        for repo in sections.get(key) or []:
+            ident = (repo["owner"], repo["name"])
+            if ident in seen:
+                continue
+            seen.add(ident)
+            unique.append(repo)
+    summaries: dict[tuple[str, str], str] = {}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = {pool.submit(summarize_repo, repo): repo for repo in unique}
+        for future in as_completed(futures):
+            repo = futures[future]
+            ident = (repo["owner"], repo["name"])
+            try:
+                summaries[ident] = future.result()
+            except Exception as exc:  # noqa: BLE001
+                print(f"summary failed for {ident[0]}/{ident[1]}: {exc}", file=sys.stderr)
+                summaries[ident] = repo.get("description") or "暂无足够资料概括这个仓库。"
+    for key in ("daily", "weekly", "monthly", "daily_zh"):
+        for repo in sections.get(key) or []:
+            repo["summary"] = summaries.get((repo["owner"], repo["name"]), repo.get("description", ""))
+
+
 def collect(limit: int, include_chinese_daily: bool) -> dict[str, list[dict[str, str]]]:
     sections: dict[str, list[dict[str, str]]] = {}
     errors: list[str] = []
@@ -166,9 +576,12 @@ def subject_for(now: datetime | None = None) -> str:
     return f"GitHub 热门项目 · {current.strftime('%Y-%m-%d')} {slot}（上海）"
 
 
+def _blurb(repo: dict[str, str]) -> str:
+    return repo.get("summary") or repo.get("description") or "（暂无简介）"
+
+
 def _repo_line(repo: dict[str, str]) -> str:
     language = repo["language"] or "未标注语言"
-    description = repo["description"] or "（暂无简介）"
     gained = (
         f"{repo['gained_period'] or '本时段'} +{repo['gained']} Star"
         if repo["gained"]
@@ -178,7 +591,7 @@ def _repo_line(repo: dict[str, str]) -> str:
     forks = f"{repo['forks']} Fork" if repo["forks"] else "Fork 未知"
     return (
         f"{repo['rank']}. {repo['owner']}/{repo['name']}\n"
-        f"   {description}\n"
+        f"   {_blurb(repo)}\n"
         f"   {language} · {stars} · {forks} · {gained}\n"
         f"   {repo['url']}"
     )
@@ -189,7 +602,7 @@ def render_text(sections: dict[str, list[dict[str, str]]], now: datetime | None 
     lines = [
         subject_for(current),
         "",
-        "排名来自 GitHub Trending 官方榜，按该时段新增 Star 排序。",
+        "排名来自 GitHub Trending 官方榜，按该时段新增 Star 排序。每条用两三句话说明这个项目是做什么的。",
         f"整理时间：{current.strftime('%Y-%m-%d %H:%M')} 上海时间",
         "",
     ]
@@ -237,15 +650,15 @@ def _repo_rows(repos: list[dict[str, str]]) -> str:
             f'style="color:#0969da;text-decoration:none;font-weight:600;">'
             f'{html.escape(repo["owner"])}/{html.escape(repo["name"])}</a>'
         )
-        description = html.escape(repo["description"] or "（暂无简介）")
+        blurb = html.escape(_blurb(repo))
         gained = f"+{repo['gained']}" if repo["gained"] else "—"
         rows.append(
             "<tr>"
             f'<td style="padding:8px 10px;border-bottom:1px solid #e6e8eb;'
             f'font-size:14px;color:#57606a;vertical-align:top;">{html.escape(repo["rank"])}</td>'
             f'<td style="padding:8px 10px;border-bottom:1px solid #e6e8eb;'
-            f'font-size:14px;line-height:1.45;color:#1f2328;vertical-align:top;">'
-            f"{project}<div style=\"margin-top:4px;color:#57606a;\">{description}</div></td>"
+            f'font-size:14px;line-height:1.6;color:#1f2328;vertical-align:top;">'
+            f"{project}<div style=\"margin-top:6px;color:#24292f;\">{blurb}</div></td>"
             + _cell(repo["language"] or "—")
             + _cell(repo["stars"] or "—", "text-align:right;white-space:nowrap;")
             + _cell(repo["forks"] or "—", "text-align:right;white-space:nowrap;")
@@ -309,7 +722,7 @@ def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None 
         </td></tr>
         <tr><td style="background:#ffffff;padding:22px 24px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
           <p style="margin:0 0 22px;color:#57606a;font-size:14px;line-height:1.6;">
-            排名来自 GitHub Trending 官方榜，按对应时段内新增 Star 排序。点项目名可打开仓库。
+            排名来自 GitHub Trending 官方榜，按对应时段内新增 Star 排序。每条下面用两三句话说明这个项目是做什么的。
           </p>
           {''.join(blocks)}
           <p style="margin:8px 0 0;color:#8b949e;font-size:12px;line-height:1.5;">
@@ -394,6 +807,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Omit the Chinese-language daily board.",
     )
     parser.add_argument(
+        "--skip-summaries",
+        action="store_true",
+        help="Keep the one-line GitHub tagline instead of a short summary.",
+    )
+    parser.add_argument(
         "--html-out",
         default="",
         help="Write the HTML digest to this path.",
@@ -416,6 +834,9 @@ def main(argv: list[str] | None = None) -> int:
     except RuntimeError as exc:
         print(f"fetch failed: {exc}", file=sys.stderr)
         return 2
+
+    if not args.skip_summaries:
+        attach_summaries(sections)
 
     now = _stamp()
     subject = subject_for(now)

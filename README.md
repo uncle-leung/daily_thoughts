@@ -2,7 +2,7 @@
 
 每天 **09:00** 和 **18:00**（上海时间）抓取 GitHub Trending 官方榜的今日、本周、本月排名，整理成邮件发到 `fisherleung27@qq.com`。
 
-数据来自 [github.com/trending](https://github.com/trending)。邮件里还有一份中文社区今日榜（`spoken_language_code=zh`）。
+数据来自 [github.com/trending](https://github.com/trending)。每条排名用仓库简介和 README 整理成两三句中文说明。邮件里还有一份中文社区今日榜（`spoken_language_code=zh`）。
 
 ## 定时任务
 
