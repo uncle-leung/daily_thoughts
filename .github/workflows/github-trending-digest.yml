@@ -1,0 +1,35 @@
+name: GitHub trending digest
+
+on:
+  schedule:
+    # 09:00 and 18:00 Asia/Shanghai (UTC+8, no daylight saving).
+    - cron: "0 1 * * *"
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Send digest
+        env:
+          DIGEST_TO: 
+          QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
+          QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
+          DIGEST_FALLBACK: formsubmit
+        run: python3 scripts/github_trending_digest.py --send --html-out digests/latest.html --text-out digests/latest.txt
+
+      - name: Keep the digest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-trending-digest
+          path: digests/
+          if-no-files-found: ignore
