@@ -15,6 +15,16 @@
 
 Actions 的计划任务可能晚几分钟。只有默认分支 `main` 上的 workflow 会按点运行。Actions 页面也可以手动运行 **GitHub trending digest**。
 
+## 每日想法
+
+`.github/workflows/daily-ideas.yml` 在每天 **09:30** 和 **18:30**（上海时间）另发一封邮件，同样到 `fisherleung27@qq.com`。
+
+每封 10 条，主题涵盖世事、人生、工作、健康、财富和知识。每条三四句话。上午和晚上不是同一组。对应 UTC cron 是 `30 1 * * *` 和 `30 10 * * *`。
+
+```bash
+python3 scripts/daily_ideas.py --text-out digests/ideas.txt
+```
+
 ## 发信
 
 优先走 QQ 邮箱 SMTP（`smtp.qq.com:465`），邮件是 HTML 表格加纯文本。
