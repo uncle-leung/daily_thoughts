@@ -765,9 +765,9 @@ def formsubmit_needs_activation(payload: dict[str, object]) -> bool:
     return str(payload.get("success", "")).lower() == "false" and "activat" in message.lower()
 
 
-def send_formsubmit(*, recipient: str, subject: str, text: str) -> dict[str, object]:
+def send_formsubmit(*, recipient: str, subject: str, text: str, sender_name: str = "GitHub Trending Digest") -> dict[str, object]:
     payload = {
-        "name": "GitHub Trending Digest",
+        "name": sender_name,
         "_subject": subject,
         "_template": "box",
         "_captcha": "false",
