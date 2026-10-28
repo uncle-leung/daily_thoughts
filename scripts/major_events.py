@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from cursor_news import load_cursor_events  # noqa: E402
 from mail_schedule import begin_send, mark_sent  # noqa: E402
 from github_trending_digest import (  # noqa: E402
     USER_AGENT,
@@ -305,6 +306,12 @@ def load_events(now: datetime) -> tuple[list[dict[str, str]], list[dict[str, str
     return domestic_ready, world_ready
 
 
+def material_note(items: list[dict[str, str]]) -> str:
+    if any(item.get("via") == "cursor" for item in items):
+        return "每条事实来自 Cursor 云端代理当场的联网搜索，并打开了原文。不使用模型记忆。默认模型是 Grok 4.7。"
+    return "材料来自中国新闻网公开报道，只摘开头几句，不是评论。"
+
+
 def render_text(
     domestic: list[dict[str, str]],
     world: list[dict[str, str]],
@@ -330,7 +337,7 @@ def render_text(
         lines.append(f"{index}. {item['title']}")
         lines.append(item["body"])
         lines.append("")
-    lines.append("材料来自中国新闻网公开报道，只摘开头几句，不是评论。")
+    lines.append(material_note(list(domestic) + list(world)))
     lines.append("每天 09:15 和 18:15（上海时间）自动发送，上下午不是同一组。")
     return "\n".join(lines).strip() + "\n"
 
@@ -341,9 +348,11 @@ def _blocks(items: list[dict[str, str]]) -> str:
         link = item.get("link") or ""
         source = ""
         if link.startswith("https://"):
+            label = item.get("source") or "原文"
             source = (
                 "<div style=\"margin-top:6px;font-size:12px;\">"
-                f"<a href=\"{html.escape(link, quote=True)}\" style=\"color:#0969da;text-decoration:none;\">中国新闻网</a></div>"
+                f"<a href=\"{html.escape(link, quote=True)}\" style=\"color:#0969da;text-decoration:none;\">"
+                f"{html.escape(label)}</a></div>"
             )
         blocks.append(
             "<div style=\"padding:16px 0;border-bottom:1px solid #e6e8eb;\">"
@@ -402,12 +411,16 @@ def main(argv: list[str] | None = None) -> int:
         slot = begin_send("events", now)
         if slot is None:
             return 0
-    try:
-        domestic_ready, world_ready = load_events(now)
-    except Exception as exc:  # noqa: BLE001
-        print(f"event load failed: {exc}", file=sys.stderr)
-        return 3
-    domestic, world = select_events(now, domestic_ready, world_ready)
+    cursor_pair = load_cursor_events(now)
+    if cursor_pair is not None:
+        domestic, world = cursor_pair
+    else:
+        try:
+            domestic_ready, world_ready = load_events(now)
+        except Exception as exc:  # noqa: BLE001
+            print(f"event load failed: {exc}", file=sys.stderr)
+            return 3
+        domestic, world = select_events(now, domestic_ready, world_ready)
     if len(domestic) < 10 or len(world) < 10:
         print(
             f"only found domestic {len(domestic)} and world {len(world)}; still sending what is ready",

@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from current_signals import load_signals, simplify_signal
+from cursor_news import load_cursor_ideas
 from mail_schedule import begin_send, mark_sent
 from github_trending_digest import (
     digest_recipient,
@@ -326,7 +327,10 @@ def render_text(ideas: list[dict[str, str]], now: datetime | None = None) -> str
         lines.append(f"{index}. [{idea['category']}] {idea['title']}")
         lines.append(idea["body"])
         lines.append("")
-    if any(idea.get("grounded") == "no" for idea in ideas):
+    if any(idea.get("via") == "cursor" for idea in ideas):
+        lines.append("每条都对照 Cursor 云端代理当场搜到并打开的公开报道，不使用模型记忆。默认模型是 Grok 4.7。")
+        lines.append("")
+    elif any(idea.get("grounded") == "no" for idea in ideas):
         lines.append("其中没有对上当天报道的条目，用的是这个时代里仍然成立的判断。")
         lines.append("")
     lines.append("材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。")
@@ -402,12 +406,14 @@ def main(argv: list[str] | None = None) -> int:
         slot = begin_send("ideas", now)
         if slot is None:
             return 0
-    try:
-        signals = load_signals(now)
-    except Exception as exc:  # noqa: BLE001
-        print(f"signal load failed: {exc}", file=sys.stderr)
-        signals = []
-    ideas = select_ideas(now, signals, simplify=True)
+    ideas = load_cursor_ideas(now)
+    if ideas is None:
+        try:
+            signals = load_signals(now)
+        except Exception as exc:  # noqa: BLE001
+            print(f"signal load failed: {exc}", file=sys.stderr)
+            signals = []
+        ideas = select_ideas(now, signals, simplify=True)
     subject = subject_for(now)
     text = render_text(ideas, now)
     html_body = render_html(ideas, now)

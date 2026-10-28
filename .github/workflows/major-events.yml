@@ -9,7 +9,7 @@ permissions:
 jobs:
   send:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,6 +21,8 @@ jobs:
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           DIGEST_FALLBACK: formsubmit
           MAIL_FORCE: "1"
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          CURSOR_MODEL: grok-4.7
         run: python3 scripts/major_events.py --send --html-out digests/events.html --text-out digests/events.txt
 
       - name: Keep the letter
