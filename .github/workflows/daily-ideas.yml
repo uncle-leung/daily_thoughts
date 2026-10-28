@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  actions: write
+  contents: write
 
 jobs:
   send:
@@ -32,3 +33,25 @@ jobs:
           name: daily-ideas
           path: digests/
           if-no-files-found: ignore
+
+      - name: Publish the page
+        id: save
+        if: success()
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add mail-state archive docs
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Publish today's letters"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ask Pages to deploy
+        if: steps.save.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish-page.yml --ref "${GITHUB_REF_NAME}"

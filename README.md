@@ -57,6 +57,16 @@ python3 scripts/github_trending_digest.py --html-out digests/latest.html --text-
 QQ_SMTP_AUTH_CODE=你的授权码 python3 scripts/github_trending_digest.py --send
 ```
 
+## 公开页面
+
+发出去的信会留在仓库的 `docs/` 里，并由定时任务发布到 GitHub Pages：
+
+https://uncle-leung.github.io/daily_thoughts/
+
+页面只放已经发出的正文。上午 10:17 那三封是这个页做好之前发的，所以只有发送记录，没有正文。之后每一封都会整封留在页面上。
+
+这个仓库目前是私有的。GitHub Free 只能给公开仓库开 Pages。第一次打开发送任务里的 Pages 部署时，如果仓库设置还没选 **Settings → Pages → GitHub Actions**，部署那一步会失败，信仍然会发出。
+
 ## 和 Cursor 的关系
 
 国内外大事和每日想法在发信前，交给一个没有代码仓库的 Cursor 云端代理。代理必须先 `web_search`，再 `web_fetch` 打开原文，不能靠模型记忆写时事。默认模型是 Grok 4.7（`reasoning_effort=high`，`fast=true`）。

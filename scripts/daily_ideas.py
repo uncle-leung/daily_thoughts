@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from current_signals import load_signals, simplify_signal
 from cursor_news import load_cursor_ideas
 from mail_schedule import begin_send, mark_sent
+from site_page import publish_sent_letter
 from github_trending_digest import (
     digest_recipient,
     formsubmit_needs_activation,
@@ -453,6 +454,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
         mark_sent("ideas", now, slot or "08:30")
+        publish_sent_letter("ideas", now, slot or "08:30", subject, html_body, text)
         print("sent via QQ SMTP")
         return 0
 
@@ -471,6 +473,7 @@ def main(argv: list[str] | None = None) -> int:
             print("FormSubmit sent an activation email.")
             return 0
         mark_sent("ideas", now, slot or "08:30")
+        publish_sent_letter("ideas", now, slot or "08:30", subject, html_body, text)
         print("sent via FormSubmit")
         return 0
 

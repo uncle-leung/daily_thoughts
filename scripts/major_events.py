@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from cursor_news import load_cursor_events  # noqa: E402
 from mail_schedule import begin_send, mark_sent  # noqa: E402
+from site_page import publish_sent_letter  # noqa: E402
 from github_trending_digest import (  # noqa: E402
     USER_AGENT,
     digest_recipient,
@@ -466,6 +467,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
         mark_sent("events", now, slot or "08:15")
+        publish_sent_letter("events", now, slot or "08:15", subject, html_body, text)
         print("sent via QQ SMTP")
         return 0
     if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
@@ -483,6 +485,7 @@ def main(argv: list[str] | None = None) -> int:
             print("FormSubmit sent an activation email.")
             return 0
         mark_sent("events", now, slot or "08:15")
+        publish_sent_letter("events", now, slot or "08:15", subject, html_body, text)
         print("sent via FormSubmit")
         return 0
     print(

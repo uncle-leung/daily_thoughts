@@ -30,6 +30,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from mail_schedule import begin_send, mark_sent  # noqa: E402
+from site_page import publish_sent_letter  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 TRENDING_URL = "https://github.com/trending?since={period}&spoken_language_code={lang}"
@@ -900,6 +901,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
         mark_sent("trending", now, slot or "08:00")
+        publish_sent_letter("trending", now, slot or "08:00", subject, html_body, text)
         print("sent via QQ SMTP")
         return 0
 
@@ -916,6 +918,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         mark_sent("trending", now, slot or "08:00")
+        publish_sent_letter("trending", now, slot or "08:00", subject, html_body, text)
         print("sent via FormSubmit")
         print(
             "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "
