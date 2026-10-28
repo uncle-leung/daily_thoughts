@@ -20,9 +20,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from mail_schedule import begin_send, mark_sent  # noqa: E402
 from github_trending_digest import (  # noqa: E402
-    DEFAULT_TO,
     USER_AGENT,
+    digest_recipient,
     formsubmit_needs_activation,
+    redact,
     send_formsubmit,
     send_qq_smtp,
 )
@@ -432,7 +433,10 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    recipient = os.environ.get("DIGEST_TO", DEFAULT_TO).strip() or DEFAULT_TO
+    recipient = digest_recipient()
+    if not recipient:
+        print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
+        return 3
     auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
     smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
     if auth_code:
@@ -446,10 +450,10 @@ def main(argv: list[str] | None = None) -> int:
                 html_body=html_body,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"QQ SMTP send failed: {exc}", file=sys.stderr)
+            print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
         mark_sent("events", now, slot or "09:15")
-        print(f"sent via QQ SMTP to {recipient}")
+        print("sent via QQ SMTP")
         return 0
     if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
         try:
@@ -460,13 +464,13 @@ def main(argv: list[str] | None = None) -> int:
                 sender_name="国内外大事",
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"FormSubmit send failed: {exc}", file=sys.stderr)
+            print(f"FormSubmit send failed: {redact(str(exc), recipient)}", file=sys.stderr)
             return 3
         if formsubmit_needs_activation(result):
-            print(f"FormSubmit sent an activation email to {recipient}.")
+            print("FormSubmit sent an activation email.")
             return 0
         mark_sent("events", now, slot or "09:15")
-        print(f"sent via FormSubmit to {recipient}: {result}")
+        print("sent via FormSubmit")
         return 0
     print(
         "QQ_SMTP_AUTH_CODE is not set. Refusing to send. "

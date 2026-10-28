@@ -37,7 +37,6 @@ USER_AGENT = (
     "Mozilla/5.0 (compatible; daily-thoughts-trending-digest/1.0; "
     "+https://github.com/uncle-leung/daily_thoughts)"
 )
-DEFAULT_TO = ""
 PERIODS = (
     ("daily", "今日", "今天新增 Star"),
     ("weekly", "本周", "本周新增 Star"),
@@ -739,6 +738,18 @@ def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None 
 """
 
 
+def digest_recipient() -> str:
+    """Mailbox that receives the letters. Set DIGEST_TO; do not store it in the repo."""
+    return os.environ.get("DIGEST_TO", "").strip()
+
+
+def redact(text: str, *secrets: str) -> str:
+    for secret in secrets:
+        if secret:
+            text = text.replace(secret, "[redacted]")
+    return text
+
+
 def send_qq_smtp(
     *,
     user: str,
@@ -869,7 +880,10 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    recipient = os.environ.get("DIGEST_TO", DEFAULT_TO).strip() or DEFAULT_TO
+    recipient = digest_recipient()
+    if not recipient:
+        print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
+        return 3
     auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
     smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
     if auth_code:
@@ -883,26 +897,26 @@ def main(argv: list[str] | None = None) -> int:
                 html_body=html_body,
             )
         except Exception as exc:  # noqa: BLE001 - report SMTP failure without a traceback dump
-            print(f"QQ SMTP send failed: {exc}", file=sys.stderr)
+            print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
         mark_sent("trending", now, slot or "09:00")
-        print(f"sent via QQ SMTP to {recipient}")
+        print("sent via QQ SMTP")
         return 0
 
     if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
         try:
             result = send_formsubmit(recipient=recipient, subject=subject, text=text)
         except Exception as exc:  # noqa: BLE001
-            print(f"FormSubmit send failed: {exc}", file=sys.stderr)
+            print(f"FormSubmit send failed: {redact(str(exc), recipient)}", file=sys.stderr)
             return 3
         if formsubmit_needs_activation(result):
             print(
-                f"FormSubmit sent an activation email to {recipient}. "
+                "FormSubmit sent an activation email. "
                 "Open it and click Activate Form. The ranking digest is delivered on the next run."
             )
             return 0
         mark_sent("trending", now, slot or "09:00")
-        print(f"sent via FormSubmit to {recipient}: {result}")
+        print("sent via FormSubmit")
         print(
             "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "
             "for the HTML digest."

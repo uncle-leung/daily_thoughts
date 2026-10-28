@@ -24,7 +24,7 @@ jobs:
 
       - name: Send due letters
         env:
-          DIGEST_TO: 
+          DIGEST_TO: ${{ secrets.DIGEST_TO }}
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           DIGEST_FALLBACK: formsubmit

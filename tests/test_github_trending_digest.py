@@ -1,3 +1,4 @@
+import os
 import pathlib
 import re
 import sys
@@ -8,8 +9,10 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
 from github_trending_digest import (  # noqa: E402
+    digest_recipient,
     draft_summary,
     formsubmit_needs_activation,
+    redact,
     limit_to_three,
     parse_gtx_payload,
     parse_trending_html,
@@ -161,6 +164,24 @@ class ParseTrendingTest(unittest.TestCase):
             formsubmit_needs_activation(
                 {"success": "false", "message": "Make sure you open this page through a web server."}
             )
+        )
+
+    def test_recipient_comes_only_from_the_environment(self) -> None:
+        previous = os.environ.pop("DIGEST_TO", None)
+        try:
+            self.assertEqual(digest_recipient(), "")
+            os.environ["DIGEST_TO"] = "  reader@example.com  "
+            self.assertEqual(digest_recipient(), "reader@example.com")
+        finally:
+            if previous is None:
+                os.environ.pop("DIGEST_TO", None)
+            else:
+                os.environ["DIGEST_TO"] = previous
+
+    def test_logs_do_not_keep_the_mailbox(self) -> None:
+        self.assertEqual(
+            redact("sent to reader@example.com via https://formsubmit.co/ajax/reader@example.com", "reader@example.com"),
+            "sent to [redacted] via https://formsubmit.co/ajax/[redacted]",
         )
 
 

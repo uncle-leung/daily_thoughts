@@ -1,6 +1,6 @@
 # GitHub 热门项目日报
 
-每天 **09:00** 和 **18:00**（上海时间）抓取 GitHub Trending 官方榜的今日、本周、本月排名，整理成邮件发到 ``。
+每天 **09:00** 和 **18:00**（上海时间）抓取 GitHub Trending 官方榜的今日、本周、本月排名，整理成邮件发到 Secret `DIGEST_TO` 里的邮箱。邮箱不写进仓库。
 
 数据来自 [github.com/trending](https://github.com/trending)。每条排名用仓库简介和 README 整理成两三句中文说明。邮件里还有一份中文社区今日榜（`spoken_language_code=zh`）。
 
@@ -20,7 +20,7 @@ GitHub 在私有仓库上仍可能把计划任务推迟一两个小时。推迟�
 
 ## 每日想法
 
-每天 **09:30** 和 **18:30**（上海时间）另发一封邮件，同样到 ``。
+每天 **09:30** 和 **18:30**（上海时间）另发一封邮件，收件人同样是 `DIGEST_TO`。
 
 每封 10 条，每条三四句话。内容对照当天的公开报道，覆盖人工智能、社会变化、工作、健康、财富和时事，不是一套固定的人生清单。上午和晚上用不同的报道。报道暂时取不到时，用若干条和这个时代有关的判断补足。
 
@@ -30,7 +30,7 @@ python3 scripts/daily_ideas.py --text-out digests/ideas.txt
 
 ## 国内外大事
 
-每天 **09:15** 和 **18:15**（上海时间）再发一封邮件，同样到 ``。
+每天 **09:15** 和 **18:15**（上海时间）再发一封邮件，收件人同样是 `DIGEST_TO`。
 
 每封有国内大事 10 条、国外大事 10 条。每条摘自中国新闻网报道开头的三四句话。上午和晚上不是同一组。
 
@@ -44,8 +44,9 @@ python3 scripts/major_events.py --text-out digests/events.txt
 
 1. 打开 QQ 邮箱 → 设置 → 账号 → 开启 POP3/IMAP/SMTP，生成授权码。授权码不是 QQ 登录密码。
 2. 在本仓库 **Settings → Secrets and variables → Actions** 添加：
+   - `DIGEST_TO`：收件邮箱
    - `QQ_SMTP_AUTH_CODE`：授权码
-   - `QQ_SMTP_USER`：可选，默认用收件地址 ``
+   - `QQ_SMTP_USER`：可选，不填就用 `DIGEST_TO`
 
 授权码还没配时，workflow 会把纯文本榜单交给 [FormSubmit](https://formsubmit.co) 转发。第一次会先往邮箱发一封 **Activate Form** 激活信，点开链接之后，下一次任务才会把榜单正文送进来。激活信可能在垃圾箱。配好 `QQ_SMTP_AUTH_CODE` 后就不再走 FormSubmit，邮件会是完整的 HTML 表格。
 
