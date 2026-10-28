@@ -13,9 +13,9 @@ from zoneinfo import ZoneInfo
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 GRACE = timedelta(minutes=100)
 SLOTS = {
-    "trending": ("09:00", "18:00"),
-    "events": ("09:15", "18:15"),
-    "ideas": ("09:30", "18:30"),
+    "trending": ("08:00", "18:00"),
+    "events": ("08:15", "18:15"),
+    "ideas": ("08:30", "18:30"),
 }
 
 

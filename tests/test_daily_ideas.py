@@ -119,7 +119,7 @@ class DailyIdeasTest(unittest.TestCase):
             self.assertLessEqual(sentence_count(idea["body"]), 4)
 
     def test_slot_labels(self) -> None:
-        self.assertEqual(slot_for(datetime(2026, 10, 28, 9, 30, tzinfo=SHANGHAI)), "09:30")
+        self.assertEqual(slot_for(datetime(2026, 10, 28, 8, 30, tzinfo=SHANGHAI)), "08:30")
         self.assertEqual(slot_for(datetime(2026, 10, 28, 18, 30, tzinfo=SHANGHAI)), "18:30")
 
     def test_old_headlines_are_left_out(self) -> None:

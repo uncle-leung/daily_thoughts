@@ -60,8 +60,8 @@ def _stamp(now: datetime | None = None) -> datetime:
 
 def slot_for(now: datetime | None = None) -> str:
     current = _stamp(now)
-    # 09:15 Shanghai is 01:15 UTC; 18:15 Shanghai is 10:15 UTC.
-    return "09:15" if current.astimezone(ZoneInfo("UTC")).hour < 6 else "18:15"
+    # 08:15 Shanghai is 00:15 UTC; 18:15 Shanghai is 10:15 UTC.
+    return "08:15" if current.astimezone(ZoneInfo("UTC")).hour < 6 else "18:15"
 
 
 def subject_for(now: datetime | None = None) -> str:
@@ -259,7 +259,7 @@ def materialize(items: list[dict[str, str]], limit: int = 20) -> list[dict[str, 
 
 
 def choose_slot(items: list[dict[str, str]], slot: str, count: int = 10) -> list[dict[str, str]]:
-    offset = 0 if slot == "09:15" else 1
+    offset = 0 if slot == "08:15" else 1
     chosen = [item for index, item in enumerate(items) if index % 2 == offset]
     if len(chosen) < count:
         used = {item["title"] for item in chosen}
@@ -338,7 +338,7 @@ def render_text(
         lines.append(item["body"])
         lines.append("")
     lines.append(material_note(list(domestic) + list(world)))
-    lines.append("每天 09:15 和 18:15（上海时间）自动发送，上下午不是同一组。")
+    lines.append("每天 08:15 和 18:15（上海时间）自动发送，上下午不是同一组。")
     return "\n".join(lines).strip() + "\n"
 
 
@@ -379,7 +379,7 @@ def render_html(
         <tr><td style="background:#1f2328;color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;">
           <div style="font-size:13px;letter-spacing:0.04em;color:#c9d1d9;">MAJOR EVENTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">国内 10 条 · 国外 10 条</div>
-          <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">{html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 09:15 与 18:15</div>
+          <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">{html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:15 与 18:15</div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:8px 24px 22px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
           <h2 style="margin:18px 0 0;font-size:16px;">国内大事</h2>
@@ -465,7 +465,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
-        mark_sent("events", now, slot or "09:15")
+        mark_sent("events", now, slot or "08:15")
         print("sent via QQ SMTP")
         return 0
     if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
@@ -482,7 +482,7 @@ def main(argv: list[str] | None = None) -> int:
         if formsubmit_needs_activation(result):
             print("FormSubmit sent an activation email.")
             return 0
-        mark_sent("events", now, slot or "09:15")
+        mark_sent("events", now, slot or "08:15")
         print("sent via FormSubmit")
         return 0
     print(

@@ -80,9 +80,9 @@ class MajorEventsTest(unittest.TestCase):
     def test_morning_and_evening_split_the_same_pool(self) -> None:
         domestic = [ready("国内", number) for number in range(1, 21)]
         world = [ready("国外", number) for number in range(1, 21)]
-        morning_d = choose_slot(domestic, "09:15")
+        morning_d = choose_slot(domestic, "08:15")
         evening_d = choose_slot(domestic, "18:15")
-        morning_w = choose_slot(world, "09:15")
+        morning_w = choose_slot(world, "08:15")
         evening_w = choose_slot(world, "18:15")
         self.assertEqual(len(morning_d), 10)
         self.assertEqual(len(evening_w), 10)
@@ -93,7 +93,7 @@ class MajorEventsTest(unittest.TestCase):
             self.assertLessEqual(sentence_count(item["body"]), 4)
 
     def test_slot_labels(self) -> None:
-        self.assertEqual(slot_for(datetime(2026, 10, 28, 9, 15, tzinfo=SHANGHAI)), "09:15")
+        self.assertEqual(slot_for(datetime(2026, 10, 28, 8, 15, tzinfo=SHANGHAI)), "08:15")
         self.assertEqual(slot_for(datetime(2026, 10, 28, 18, 15, tzinfo=SHANGHAI)), "18:15")
 
 

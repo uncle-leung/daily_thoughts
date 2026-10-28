@@ -630,7 +630,7 @@ def render_text(sections: dict[str, list[dict[str, str]]], now: datetime | None 
     if errors:
         lines.append("抓取时有部分页面失败，上面只包含成功的榜单。")
         lines.append("")
-    lines.append("每天 09:00 和 18:00（上海时间）自动发送。")
+    lines.append("每天 08:00 和 18:00（上海时间）自动发送。")
     lines.append("来源：https://github.com/trending")
     return "\n".join(lines).strip() + "\n"
 
@@ -718,7 +718,7 @@ def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None 
           <div style="font-size:13px;letter-spacing:0.04em;color:#c9d1d9;">GITHUB TRENDING</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">热门项目 · 日 / 周 / 月</div>
           <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">
-            {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 09:00 与 18:00
+            {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:00 与 18:00
           </div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:22px 24px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
@@ -899,7 +899,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001 - report SMTP failure without a traceback dump
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
-        mark_sent("trending", now, slot or "09:00")
+        mark_sent("trending", now, slot or "08:00")
         print("sent via QQ SMTP")
         return 0
 
@@ -915,7 +915,7 @@ def main(argv: list[str] | None = None) -> int:
                 "Open it and click Activate Form. The ranking digest is delivered on the next run."
             )
             return 0
-        mark_sent("trending", now, slot or "09:00")
+        mark_sent("trending", now, slot or "08:00")
         print("sent via FormSubmit")
         print(
             "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "

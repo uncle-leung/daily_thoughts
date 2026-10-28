@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Email ten short reflections at 09:30 and 18:30 Asia/Shanghai."""
+"""Email ten short reflections at 08:30 and 18:30 Asia/Shanghai."""
 
 from __future__ import annotations
 
@@ -152,8 +152,8 @@ def _stamp(now: datetime | None = None) -> datetime:
 
 def slot_for(now: datetime | None = None) -> str:
     current = _stamp(now)
-    # 09:30 Shanghai is 01:30 UTC; 18:30 Shanghai is 10:30 UTC.
-    return "09:30" if current.astimezone(ZoneInfo("UTC")).hour < 6 else "18:30"
+    # 08:30 Shanghai is 00:30 UTC; 18:30 Shanghai is 10:30 UTC.
+    return "08:30" if current.astimezone(ZoneInfo("UTC")).hour < 6 else "18:30"
 
 
 def subject_for(now: datetime | None = None) -> str:
@@ -265,7 +265,7 @@ def allocate(signals: list[dict[str, str]], excluded: set[str], count: int) -> l
 
 def _fallback(now: datetime, excluded: set[str], count: int) -> list[dict[str, str]]:
     current = _stamp(now)
-    slot = 0 if slot_for(current) == "09:30" else 1
+    slot = 0 if slot_for(current) == "08:30" else 1
     rng = random.Random(current.date().toordinal() * 10 + slot)
     pool = [dict(item, source="", link="", grounded="no") for item in ERA_FALLBACK if item["title"] not in excluded]
     rng.shuffle(pool)
@@ -298,7 +298,7 @@ def select_ideas(
     current = _stamp(now)
     available = list(signals or [])
     morning = allocate(available, set(), count)
-    excluded = {item["title"] for item in morning} if slot_for(current) != "09:30" else set()
+    excluded = {item["title"] for item in morning} if slot_for(current) != "08:30" else set()
     chosen = morning if not excluded else allocate(available, excluded, count)
     ideas: list[dict[str, str]] = []
     variants: dict[str, int] = {}
@@ -334,7 +334,7 @@ def render_text(ideas: list[dict[str, str]], now: datetime | None = None) -> str
         lines.append("其中没有对上当天报道的条目，用的是这个时代里仍然成立的判断。")
         lines.append("")
     lines.append("材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。")
-    lines.append("每天 09:30 和 18:30（上海时间）自动发送。")
+    lines.append("每天 08:30 和 18:30（上海时间）自动发送。")
     return "\n".join(lines).strip() + "\n"
 
 
@@ -373,7 +373,7 @@ def render_html(ideas: list[dict[str, str]], now: datetime | None = None) -> str
           <div style="font-size:13px;letter-spacing:0.04em;color:#c9d1d9;">DAILY THOUGHTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">十条想法</div>
           <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">
-            {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 09:30 与 18:30
+            {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:30 与 18:30
           </div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:8px 24px 22px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
@@ -452,7 +452,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
             return 3
-        mark_sent("ideas", now, slot or "09:30")
+        mark_sent("ideas", now, slot or "08:30")
         print("sent via QQ SMTP")
         return 0
 
@@ -470,7 +470,7 @@ def main(argv: list[str] | None = None) -> int:
         if formsubmit_needs_activation(result):
             print("FormSubmit sent an activation email.")
             return 0
-        mark_sent("ideas", now, slot or "09:30")
+        mark_sent("ideas", now, slot or "08:30")
         print("sent via FormSubmit")
         return 0
 

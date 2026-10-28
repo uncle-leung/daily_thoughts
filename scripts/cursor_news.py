@@ -140,10 +140,10 @@ def parse_ideas(text: str) -> list[dict[str, str]]:
 
 def events_prompt(now: datetime) -> str:
     current = now.astimezone(SHANGHAI)
-    slot = "09:15" if current.hour < 12 else "18:15"
+    slot = "08:15" if current.hour < 12 else "18:15"
     focus = (
         "优先午夜到今早的报道。"
-        if slot == "09:15"
+        if slot == "08:15"
         else "优先今天中午以后仍在发展的报道，避开只是复述今早已经讲过的通稿。"
     )
     return f"""你在查今天的时事。现在是 {current.strftime("%Y-%m-%d %H:%M")}（上海），这一档是 {slot}。
@@ -162,8 +162,8 @@ body 从该网页摘 3 到 4 句中文，保留事实，不要评论，不要写
 
 def ideas_prompt(now: datetime) -> str:
     current = now.astimezone(SHANGHAI)
-    slot = "09:30" if current.hour < 12 else "18:30"
-    focus = "偏已经发生的政策、科技和公共安排。" if slot == "09:30" else "偏仍在变化的国际、社会和产业消息。"
+    slot = "08:30" if current.hour < 12 else "18:30"
+    focus = "偏已经发生的政策、科技和公共安排。" if slot == "08:30" else "偏仍在变化的国际、社会和产业消息。"
     return f"""你在整理「每日想法」。现在是 {current.strftime("%Y-%m-%d %H:%M")}（上海），这一档是 {slot}。{focus}
 禁止凭模型记忆写时事。每条都要先 web_search，再 web_fetch 打开一篇近三天的公开报道。
 不要改文件。不要输出记忆里的旧闻。
