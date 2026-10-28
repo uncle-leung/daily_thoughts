@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今日邮件</title>
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; background: #f6f8fa; color: #1f2328;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 28px 16px 64px; }
+    header.top { background: #1f2328; color: #fff; border-radius: 16px; padding: 22px 24px; }
+    header.top p { margin: 8px 0 0; color: #c9d1d9; font-size: 14px; line-height: 1.6; }
+    h1 { margin: 0; font-size: 28px; }
+    #lead { margin-top: 8px; font-size: 15px; color: #c9d1d9; }
+    article.letter { margin-top: 22px; }
+    article.letter h2 { margin: 0; font-size: 18px; }
+    .meta { margin: 6px 0 10px; color: #57606a; font-size: 13px; }
+    article.missing { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px 18px; }
+    article.missing p:last-child { margin: 0; color: #57606a; line-height: 1.6; }
+    iframe { width: 100%; min-height: 320px; border: 0; border-radius: 12px; background: #fff; }
+    .open { margin: 8px 0 0; font-size: 13px; }
+    .open a, a { color: #0969da; }
+    pre { white-space: pre-wrap; background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; }
+    .empty { background: #fff; border: 1px dashed #d0d7de; border-radius: 12px; padding: 18px; color: #57606a; }
+    details.earlier { margin-top: 36px; }
+    details.earlier summary { cursor: pointer; color: #57606a; }
+    .day-label { margin-top: 22px; font-size: 16px; color: #57606a; }
+    #stale { display: none; margin-top: 14px; color: #57606a; }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="top">
+      <h1>今日邮件</h1>
+      <p id="lead" data-date="2026-10-28">今天 · 2026-10-28</p>
+      <p>这里是已经发出的信。定时任务发完一封，就会把正文留在这个页面上。</p>
+      <p id="stale">今天的信还没发。下面是最近留下的内容。</p>
+    </header>
+    <article class="letter missing"><h2 id="letter-trending-0900">GitHub 热门项目</h2><p class="meta">10:17 发出</p><p>这封已经发出。当时没有把正文留在页面上，之后发出的信会完整显示在这里。</p></article><article class="letter missing"><h2 id="letter-events-0915">国内外大事</h2><p class="meta">10:17 发出</p><p>这封已经发出。当时没有把正文留在页面上，之后发出的信会完整显示在这里。</p></article><article class="letter missing"><h2 id="letter-ideas-0930">每日想法</h2><p class="meta">10:17 发出</p><p>这封已经发出。当时没有把正文留在页面上，之后发出的信会完整显示在这里。</p></article><article class="letter"><h2 id="letter-events-1201">国内外大事</h2><p class="meta">12:01 发出 · 国内外大事 · 2026-10-28 12:01（上海）</p><iframe title="国内外大事" src="letters/2026-10-28/events-1201.html" onload="fitLetter(this)"></iframe><p class="open"><a href="letters/2026-10-28/events-1201.html">单独打开这封</a></p></article><article class="letter"><h2 id="letter-ideas-1201">每日想法</h2><p class="meta">12:01 发出 · 每日想法 · 2026-10-28 12:01（上海）</p><iframe title="每日想法" src="letters/2026-10-28/ideas-1201.html" onload="fitLetter(this)"></iframe><p class="open"><a href="letters/2026-10-28/ideas-1201.html">单独打开这封</a></p></article>
+    
+    
+  </main>
+  <script>
+    function fitLetter(frame) {
+      try {
+        frame.style.height = (frame.contentDocument.documentElement.scrollHeight + 12) + "px";
+      } catch (err) {}
+    }
+    (function () {
+      var lead = document.getElementById("lead");
+      var today = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit"
+      }).format(new Date());
+      if (lead.dataset.date !== today) {
+        lead.textContent = lead.dataset.date + " · 上海";
+        var stale = document.getElementById("stale");
+        if (stale) stale.style.display = "block";
+      }
+    })();
+  </script>
+</body>
+</html>

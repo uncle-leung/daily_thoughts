@@ -29,20 +29,20 @@ class MailScheduleTest(unittest.TestCase):
         self._tmp.cleanup()
 
     def test_each_morning_slot_opens_on_time_and_stays_open_for_one_catch_up(self) -> None:
-        early = datetime(2026, 10, 28, 9, 2, tzinfo=SHANGHAI)
-        self.assertEqual(begin_send("trending", early), "09:00")
+        early = datetime(2026, 10, 28, 8, 2, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", early), "08:00")
         self.assertIsNone(begin_send("events", early))
         self.assertIsNone(begin_send("ideas", early))
-        late_morning = datetime(2026, 10, 28, 10, 9, tzinfo=SHANGHAI)
-        self.assertEqual(begin_send("trending", late_morning), "09:00")
-        self.assertEqual(begin_send("events", late_morning), "09:15")
-        self.assertEqual(begin_send("ideas", late_morning), "09:30")
+        late_morning = datetime(2026, 10, 28, 9, 9, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", late_morning), "08:00")
+        self.assertEqual(begin_send("events", late_morning), "08:15")
+        self.assertEqual(begin_send("ideas", late_morning), "08:30")
 
     def test_a_sent_slot_is_not_repeated(self) -> None:
-        now = datetime(2026, 10, 28, 9, 20, tzinfo=SHANGHAI)
-        mark_sent("trending", now, "09:00")
+        now = datetime(2026, 10, 28, 8, 20, tzinfo=SHANGHAI)
+        mark_sent("trending", now, "08:00")
         self.assertIsNone(begin_send("trending", now))
-        self.assertEqual(begin_send("events", now), "09:15")
+        self.assertEqual(begin_send("events", now), "08:15")
 
     def test_a_late_night_runner_does_not_send_the_evening_letter(self) -> None:
         late = datetime(2026, 10, 27, 23, 45, tzinfo=SHANGHAI)
@@ -51,7 +51,7 @@ class MailScheduleTest(unittest.TestCase):
         self.assertIsNone(begin_send("ideas", late))
 
     def test_before_the_slot_nothing_is_due(self) -> None:
-        now = datetime(2026, 10, 28, 8, 50, tzinfo=SHANGHAI)
+        now = datetime(2026, 10, 28, 7, 50, tzinfo=SHANGHAI)
         self.assertIsNone(begin_send("trending", now))
         self.assertIsNone(begin_send("ideas", now))
 
