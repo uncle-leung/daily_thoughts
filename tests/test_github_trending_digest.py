@@ -16,6 +16,7 @@ from github_trending_digest import (  # noqa: E402
     limit_to_three,
     parse_gtx_payload,
     parse_trending_html,
+    redact,
     render_text,
     shape_summary,
     subject_for,
