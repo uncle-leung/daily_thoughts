@@ -73,11 +73,12 @@ class ParseTrendingTest(unittest.TestCase):
     def test_limit(self) -> None:
         self.assertEqual(len(parse_trending_html(SAMPLE, limit=1)), 1)
 
-    def test_subject_uses_shanghai_slot(self) -> None:
+    def test_subject_uses_the_actual_shanghai_clock(self) -> None:
         morning = datetime(2026, 10, 27, 9, 5, tzinfo=ZoneInfo("Asia/Shanghai"))
         evening = datetime(2026, 10, 27, 18, 5, tzinfo=ZoneInfo("Asia/Shanghai"))
-        self.assertIn("09:00", subject_for(morning))
-        self.assertIn("18:00", subject_for(evening))
+        self.assertIn("09:05", subject_for(morning))
+        self.assertIn("18:05", subject_for(evening))
+        self.assertNotIn("09:00", subject_for(morning))
         self.assertIn("2026-10-27", subject_for(evening))
 
     def test_text_contains_each_board(self) -> None:

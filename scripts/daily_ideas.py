@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from current_signals import load_signals, simplify_signal
+from mail_schedule import begin_send, mark_sent
 from github_trending_digest import (
     DEFAULT_TO,
     formsubmit_needs_activation,
@@ -155,7 +156,7 @@ def slot_for(now: datetime | None = None) -> str:
 
 def subject_for(now: datetime | None = None) -> str:
     current = _stamp(now)
-    return f"每日想法 · {current.strftime('%Y-%m-%d')} {slot_for(current)}（上海）"
+    return f"每日想法 · {current.strftime('%Y-%m-%d %H:%M')}（上海）"
 
 
 def _clip(text: str, limit: int) -> str:
@@ -395,6 +396,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     now = _stamp()
+    slot = None
+    if args.send:
+        slot = begin_send("ideas", now)
+        if slot is None:
+            return 0
     try:
         signals = load_signals(now)
     except Exception as exc:  # noqa: BLE001
@@ -436,6 +442,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"QQ SMTP send failed: {exc}", file=sys.stderr)
             return 3
+        mark_sent("ideas", now, slot or "09:30")
         print(f"sent via QQ SMTP to {recipient}")
         return 0
 
@@ -453,6 +460,7 @@ def main(argv: list[str] | None = None) -> int:
         if formsubmit_needs_activation(result):
             print(f"FormSubmit sent an activation email to {recipient}.")
             return 0
+        mark_sent("ideas", now, slot or "09:30")
         print(f"sent via FormSubmit to {recipient}: {result}")
         return 0
 

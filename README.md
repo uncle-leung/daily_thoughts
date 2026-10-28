@@ -6,20 +6,23 @@
 
 ## 定时任务
 
-`.github/workflows/github-trending-digest.yml` 在 GitHub Actions 上运行。Cron 使用 UTC：
+`.github/workflows/mail-schedule.yml` 每小时检查四次（UTC 的第 2、17、32、47 分钟）。每封信只在对应上海时间过后的 100 分钟内发送一次，同一天同一档不会重发：
 
-| 上海时间 | UTC cron |
+| 邮件 | 上海时间 |
 | --- | --- |
-| 09:00 | `0 1 * * *` |
-| 18:00 | `0 10 * * *` |
+| GitHub 热门项目 | 09:00、18:00 |
+| 国内外大事 | 09:15、18:15 |
+| 每日想法 | 09:30、18:30 |
 
-Actions 的计划任务可能晚几分钟。只有默认分支 `main` 上的 workflow 会按点运行。Actions 页面也可以手动运行 **GitHub trending digest**。
+主题上的时间是实际发出时的上海时间。超过 100 分钟才跑起来的任务直接跳过，不会把深夜补跑标成 18:00。已发送的档期记在 `mail-state/`。只有默认分支 `main` 上的 workflow 会按计划运行。Actions 里手动运行某一封时会强制再发一次。
+
+GitHub 在私有仓库上仍可能把计划任务推迟一两个小时。推迟超过 100 分钟的那一班当天就不会再发。
 
 ## 每日想法
 
-`.github/workflows/daily-ideas.yml` 在每天 **09:30** 和 **18:30**（上海时间）另发一封邮件，同样到 `fisherleung27@qq.com`。
+每天 **09:30** 和 **18:30**（上海时间）另发一封邮件，同样到 `fisherleung27@qq.com`。
 
-每封 10 条，每条三四句话。内容对照当天的公开报道，覆盖人工智能、社会变化、工作、健康、财富和时事，不是一套固定的人生清单。上午和晚上用不同的报道。对应 UTC cron 是 `30 1 * * *` 和 `30 10 * * *`。报道暂时取不到时，用若干条和这个时代有关的判断补足。
+每封 10 条，每条三四句话。内容对照当天的公开报道，覆盖人工智能、社会变化、工作、健康、财富和时事，不是一套固定的人生清单。上午和晚上用不同的报道。报道暂时取不到时，用若干条和这个时代有关的判断补足。
 
 ```bash
 python3 scripts/daily_ideas.py --text-out digests/ideas.txt
@@ -27,9 +30,9 @@ python3 scripts/daily_ideas.py --text-out digests/ideas.txt
 
 ## 国内外大事
 
-`.github/workflows/major-events.yml` 在每天 **09:15** 和 **18:15**（上海时间）再发一封邮件，同样到 `fisherleung27@qq.com`。
+每天 **09:15** 和 **18:15**（上海时间）再发一封邮件，同样到 `fisherleung27@qq.com`。
 
-每封有国内大事 10 条、国外大事 10 条。每条摘自中国新闻网报道开头的三四句话。上午和晚上不是同一组。对应 UTC cron 是 `15 1 * * *` 和 `15 10 * * *`。
+每封有国内大事 10 条、国外大事 10 条。每条摘自中国新闻网报道开头的三四句话。上午和晚上不是同一组。
 
 ```bash
 python3 scripts/major_events.py --text-out digests/events.txt
@@ -55,12 +58,6 @@ QQ_SMTP_AUTH_CODE=你的授权码 python3 scripts/github_trending_digest.py --se
 
 ## 和 Cursor 的关系
 
-抓取和发信是固定流程，放在 GitHub Actions 里每天跑两次，不消耗 Cursor 模型额度。
+抓取和发信是固定流程，放在 GitHub Actions 里按上面的档期跑，不消耗 Cursor 模型额度。
 
-如果希望改由 Cursor Automation 触发，在 [cursor.com/automations](https://cursor.com/automations) 新建定时任务，Cron 填：
-
-```text
-CRON_TZ=Asia/Shanghai 0 9,18 * * *
-```
-
-提示词可以写成：在 `uncle-leung/daily_thoughts` 里执行 `python3 scripts/github_trending_digest.py --send`。云端环境需要有 `QQ_SMTP_AUTH_CODE`。不要和上面的 GitHub Actions 同时开，否则每天会收到两封。
+不要再并行开一套 Cursor Automation，否则同一档会收到两封。
