@@ -24,7 +24,12 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from email.message import EmailMessage
+from pathlib import Path
 from zoneinfo import ZoneInfo
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from mail_schedule import begin_send, mark_sent  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 TRENDING_URL = "https://github.com/trending?since={period}&spoken_language_code={lang}"
@@ -570,10 +575,7 @@ def _stamp(now: datetime | None = None) -> datetime:
 
 def subject_for(now: datetime | None = None) -> str:
     current = _stamp(now)
-    # 09:00 Shanghai is 01:00 UTC; 18:00 Shanghai is 10:00 UTC.
-    # Use UTC so a delayed runner still labels the slot that fired.
-    slot = "09:00" if current.astimezone(ZoneInfo("UTC")).hour < 6 else "18:00"
-    return f"GitHub 热门项目 · {current.strftime('%Y-%m-%d')} {slot}（上海）"
+    return f"GitHub 热门项目 · {current.strftime('%Y-%m-%d %H:%M')}（上海）"
 
 
 def _blurb(repo: dict[str, str]) -> str:
@@ -829,6 +831,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit < 1 or args.limit > 25:
         print("limit must be between 1 and 25", file=sys.stderr)
         return 2
+    now = _stamp()
+    slot = None
+    if args.send:
+        slot = begin_send("trending", now)
+        if slot is None:
+            return 0
     try:
         sections = collect(limit=args.limit, include_chinese_daily=not args.skip_chinese)
     except RuntimeError as exc:
@@ -838,7 +846,6 @@ def main(argv: list[str] | None = None) -> int:
     if not args.skip_summaries:
         attach_summaries(sections)
 
-    now = _stamp()
     subject = subject_for(now)
     text = render_text(sections, now)
     html_body = render_html(sections, now)
@@ -878,6 +885,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001 - report SMTP failure without a traceback dump
             print(f"QQ SMTP send failed: {exc}", file=sys.stderr)
             return 3
+        mark_sent("trending", now, slot or "09:00")
         print(f"sent via QQ SMTP to {recipient}")
         return 0
 
@@ -893,6 +901,7 @@ def main(argv: list[str] | None = None) -> int:
                 "Open it and click Activate Form. The ranking digest is delivered on the next run."
             )
             return 0
+        mark_sent("trending", now, slot or "09:00")
         print(f"sent via FormSubmit to {recipient}: {result}")
         print(
             "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "

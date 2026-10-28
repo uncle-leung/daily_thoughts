@@ -1,10 +1,6 @@
 name: Major events
 
 on:
-  schedule:
-    # 09:15 and 18:15 Asia/Shanghai (UTC+8, no daylight saving).
-    - cron: "15 1 * * *"
-    - cron: "15 10 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +20,7 @@ jobs:
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           DIGEST_FALLBACK: formsubmit
+          MAIL_FORCE: "1"
         run: python3 scripts/major_events.py --send --html-out digests/events.html --text-out digests/events.txt
 
       - name: Keep the letter

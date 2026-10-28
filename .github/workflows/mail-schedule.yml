@@ -1,0 +1,44 @@
+name: Mail schedule
+
+on:
+  schedule:
+    # Check four times an hour, off the crowded :00 minute.
+    # Each letter is sent once, within 100 minutes after its Shanghai slot.
+    - cron: "2,17,32,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shanghai-mail
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Send due letters
+        env:
+          DIGEST_TO: 
+          QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
+          QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
+          DIGEST_FALLBACK: formsubmit
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/mail_schedule.py
+
+      - name: Remember what was sent
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add mail-state
+          if git diff --cached --quiet; then
+            echo "no new markers"
+          else
+            git commit -m "Record mail slots that were sent"
+            git push
+          fi

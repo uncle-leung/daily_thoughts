@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from mail_schedule import begin_send, mark_sent  # noqa: E402
 from github_trending_digest import (  # noqa: E402
     DEFAULT_TO,
     USER_AGENT,
@@ -63,7 +64,7 @@ def slot_for(now: datetime | None = None) -> str:
 
 def subject_for(now: datetime | None = None) -> str:
     current = _stamp(now)
-    return f"国内外大事 · {current.strftime('%Y-%m-%d')} {slot_for(current)}（上海）"
+    return f"国内外大事 · {current.strftime('%Y-%m-%d %H:%M')}（上海）"
 
 
 def clean_fragment(value: str) -> str:
@@ -395,6 +396,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     now = _stamp()
+    slot = None
+    if args.send:
+        slot = begin_send("events", now)
+        if slot is None:
+            return 0
     try:
         domestic_ready, world_ready = load_events(now)
     except Exception as exc:  # noqa: BLE001
@@ -442,6 +448,7 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"QQ SMTP send failed: {exc}", file=sys.stderr)
             return 3
+        mark_sent("events", now, slot or "09:15")
         print(f"sent via QQ SMTP to {recipient}")
         return 0
     if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
@@ -458,6 +465,7 @@ def main(argv: list[str] | None = None) -> int:
         if formsubmit_needs_activation(result):
             print(f"FormSubmit sent an activation email to {recipient}.")
             return 0
+        mark_sent("events", now, slot or "09:15")
         print(f"sent via FormSubmit to {recipient}: {result}")
         return 0
     print(
