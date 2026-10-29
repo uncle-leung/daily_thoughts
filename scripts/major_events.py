@@ -19,11 +19,10 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from cursor_news import load_cursor_events  # noqa: E402
-from mail_schedule import begin_send, mark_sent  # noqa: E402
+from mail_schedule import begin_send, mark_sent, require_recipient  # noqa: E402
 from site_page import publish_sent_letter  # noqa: E402
 from github_trending_digest import (  # noqa: E402
     USER_AGENT,
-    digest_recipient,
     formsubmit_needs_activation,
     redact,
     send_formsubmit,
@@ -408,10 +407,14 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     now = _stamp()
     slot = None
+    recipient = ""
     if args.send:
         slot = begin_send("events", now)
         if slot is None:
             return 0
+        recipient = require_recipient() or ""
+        if not recipient:
+            return 3
     cursor_pair = load_cursor_events(now)
     if cursor_pair is not None:
         domestic, world = cursor_pair
@@ -447,10 +450,6 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    recipient = digest_recipient()
-    if not recipient:
-        print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
-        return 3
     auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
     smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
     if auth_code:

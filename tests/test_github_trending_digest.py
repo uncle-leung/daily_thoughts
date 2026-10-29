@@ -17,6 +17,7 @@ from github_trending_digest import (  # noqa: E402
     parse_gtx_payload,
     parse_trending_html,
     redact,
+    render_html,
     render_text,
     shape_summary,
     subject_for,
@@ -84,6 +85,28 @@ class ParseTrendingTest(unittest.TestCase):
         self.assertIn("18:05", subject_for(evening))
         self.assertNotIn("09:00", subject_for(morning))
         self.assertIn("2026-10-27", subject_for(evening))
+
+    def test_html_puts_each_board_behind_a_tab(self) -> None:
+        sections = {
+            "daily": parse_trending_html(SAMPLE, limit=1),
+            "weekly": [],
+            "monthly": [],
+            "daily_zh": parse_trending_html(SAMPLE, limit=1),
+            "_errors": [],
+        }
+        when = datetime(2026, 10, 27, 18, 0, tzinfo=ZoneInfo("Asia/Shanghai"))
+        page = render_html(sections, when)
+        self.assertEqual(page.count("data-ranks>"), 1)
+        self.assertIn('aria-controls="rank-daily"', page)
+        self.assertIn('aria-controls="rank-weekly"', page)
+        self.assertIn('aria-controls="rank-monthly"', page)
+        self.assertIn('aria-controls="rank-daily_zh"', page)
+        self.assertIn(">中文社区</button>", page)
+        self.assertIn("这一榜暂时没有取到数据", page)
+        self.assertNotIn("hidden", page.split("<script>")[0])
+        sections["daily_zh"] = []
+        without_chinese = render_html(sections, when)
+        self.assertNotIn("rank-daily_zh", without_chinese)
 
     def test_text_contains_each_board(self) -> None:
         sections = {

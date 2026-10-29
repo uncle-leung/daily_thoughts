@@ -3,13 +3,17 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from mail_schedule import begin_send, mark_sent  # noqa: E402
+import daily_ideas  # noqa: E402
+import github_trending_digest  # noqa: E402
+import major_events  # noqa: E402
+from mail_schedule import begin_send, letters_due, main, mark_sent  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 
@@ -26,6 +30,7 @@ class MailScheduleTest(unittest.TestCase):
             os.environ.pop("MAIL_STATE_DIR", None)
         else:
             os.environ["MAIL_STATE_DIR"] = self._old
+        os.environ.pop("DIGEST_TO", None)
         self._tmp.cleanup()
 
     def test_each_morning_slot_opens_on_time_and_stays_open_for_one_catch_up(self) -> None:
@@ -54,6 +59,66 @@ class MailScheduleTest(unittest.TestCase):
         now = datetime(2026, 10, 28, 7, 50, tzinfo=SHANGHAI)
         self.assertIsNone(begin_send("trending", now))
         self.assertIsNone(begin_send("ideas", now))
+
+    def test_a_delayed_morning_runner_still_sends_until_noon(self) -> None:
+        late = datetime(2026, 10, 29, 10, 40, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(late), ["trending", "events", "ideas"])
+        almost_noon = datetime(2026, 10, 29, 11, 59, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", almost_noon), "08:00")
+        afternoon = datetime(2026, 10, 29, 13, 0, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(afternoon), [])
+
+    def test_a_delayed_evening_runner_still_sends_until_23(self) -> None:
+        delayed = datetime(2026, 10, 28, 20, 30, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(delayed), ["trending", "events", "ideas"])
+        closed = datetime(2026, 10, 28, 23, 0, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(closed), [])
+
+    def test_missing_recipient_does_not_start_the_letters(self) -> None:
+        os.environ.pop("DIGEST_TO", None)
+        now = datetime(2026, 10, 29, 10, 40, tzinfo=SHANGHAI)
+        with patch("mail_schedule._stamp", return_value=now):
+            with patch("mail_schedule.subprocess.run") as run:
+                code = main()
+        self.assertEqual(code, 1)
+        run.assert_not_called()
+
+    def test_only_the_open_letter_is_started(self) -> None:
+        os.environ["DIGEST_TO"] = "reader@example.com"
+        now = datetime(2026, 10, 29, 8, 2, tzinfo=SHANGHAI)
+        with patch("mail_schedule._stamp", return_value=now):
+            with patch("mail_schedule.subprocess.run", return_value=type("Proc", (), {"returncode": 0})()) as run:
+                code = main()
+        self.assertEqual(code, 0)
+        self.assertEqual(run.call_count, 1)
+        command = run.call_args.args[0]
+        self.assertIn("github_trending_digest.py", command[1])
+
+    def test_a_letter_refuses_before_fetching_when_the_mailbox_is_missing(self) -> None:
+        os.environ.pop("DIGEST_TO", None)
+        os.environ.pop("MAIL_FORCE", None)
+        now = datetime(2026, 10, 29, 10, 40, tzinfo=SHANGHAI)
+        with patch.object(github_trending_digest, "_stamp", return_value=now):
+            with patch.object(github_trending_digest, "collect") as collect:
+                self.assertEqual(github_trending_digest.main(["--send"]), 3)
+                collect.assert_not_called()
+        with patch.object(major_events, "_stamp", return_value=now):
+            with patch.object(major_events, "load_cursor_events") as load_events:
+                self.assertEqual(major_events.main(["--send"]), 3)
+                load_events.assert_not_called()
+        with patch.object(daily_ideas, "_stamp", return_value=now):
+            with patch.object(daily_ideas, "load_cursor_ideas") as load_ideas:
+                self.assertEqual(daily_ideas.main(["--send"]), 3)
+                load_ideas.assert_not_called()
+
+    def test_idle_hour_does_not_start_letters(self) -> None:
+        os.environ["DIGEST_TO"] = "reader@example.com"
+        now = datetime(2026, 10, 29, 7, 50, tzinfo=SHANGHAI)
+        with patch("mail_schedule._stamp", return_value=now):
+            with patch("mail_schedule.subprocess.run") as run:
+                code = main()
+        self.assertEqual(code, 0)
+        run.assert_not_called()
 
 
 if __name__ == "__main__":
