@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from site_page import collect_day, remember_letter, rebuild_site  # noqa: E402
+from site_page import collect_day, remember_letter, rebuild_site, with_rank_tabs  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 NOW = datetime(2026, 10, 28, 15, 0, tzinfo=SHANGHAI)
@@ -51,6 +51,34 @@ class SitePageTest(unittest.TestCase):
     def test_a_day_with_no_mail_says_so(self) -> None:
         page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")
         self.assertIn("今天还没有发出的邮件。", page)
+
+    def test_trending_boards_become_tabs_on_the_page_only(self) -> None:
+        letter = """<!DOCTYPE html><html><body>
+        <h2>今日热门</h2><table><tr><td>1</td></tr></table>
+        <h2>本周热门</h2><table><tr><td>2</td></tr></table>
+        <h2>本月热门</h2><p>这一榜暂时没有取到数据。</p>
+        <h2>中文社区今日热门</h2><table><tr><td>4</td></tr></table>
+        </body></html>"""
+        remember_letter(
+            self.root,
+            "trending",
+            "18:00",
+            datetime(2026, 10, 28, 18, 56, tzinfo=SHANGHAI),
+            "GitHub 热门项目",
+            letter,
+            "今日热门\n",
+        )
+        rebuild_site(self.root, NOW)
+        archived = (self.root / "archive" / "2026-10-28" / "trending-1800.html").read_text(encoding="utf-8")
+        published = (self.root / "docs" / "letters" / "2026-10-28" / "trending-1800.html").read_text(encoding="utf-8")
+        self.assertNotIn("data-ranks", archived)
+        self.assertEqual(published.count("data-ranks>"), 1)
+        self.assertIn(">今日</button>", published)
+        self.assertIn(">本周</button>", published)
+        self.assertIn(">本月</button>", published)
+        self.assertIn(">中文社区</button>", published)
+        self.assertIn('style="display:none"', published)
+        self.assertNotIn('hidden', with_rank_tabs(letter).split("<script>")[0])
 
 
 if __name__ == "__main__":

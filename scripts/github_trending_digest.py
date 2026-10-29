@@ -30,7 +30,7 @@ from zoneinfo import ZoneInfo
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from mail_schedule import begin_send, mark_sent, require_recipient  # noqa: E402
-from site_page import publish_sent_letter  # noqa: E402
+from site_page import publish_sent_letter, rank_tabs_markup  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 TRENDING_URL = "https://github.com/trending?since={period}&spoken_language_code={lang}"
@@ -677,6 +677,7 @@ def _section_table(title: str, gain_label: str, repos: list[dict[str, str]]) -> 
         )
     else:
         body = f"""
+        <div class="rank-scroll" style="overflow-x:auto;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
                style="border-collapse:collapse;margin:0 0 28px;background:#ffffff;">
           <thead>
@@ -691,6 +692,7 @@ def _section_table(title: str, gain_label: str, repos: list[dict[str, str]]) -> 
           </thead>
           <tbody>{_repo_rows(repos)}</tbody>
         </table>
+        </div>
         """
     return (
         f'<h2 style="margin:0 0 12px;font-size:18px;color:#1f2328;">{html.escape(title)}</h2>'
@@ -700,14 +702,18 @@ def _section_table(title: str, gain_label: str, repos: list[dict[str, str]]) -> 
 
 def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None = None) -> str:
     current = _stamp(now)
-    blocks = [
-        _section_table("今日热门", "今天新增", sections.get("daily") or []),
-        _section_table("本周热门", "本周新增", sections.get("weekly") or []),
-        _section_table("本月热门", "本月新增", sections.get("monthly") or []),
-    ]
-    chinese = sections.get("daily_zh") or []
-    if chinese:
-        blocks.append(_section_table("中文社区今日热门", "今天新增", chinese))
+    catalog = (
+        ("daily", "今日", "今日热门", "今天新增"),
+        ("weekly", "本周", "本周热门", "本周新增"),
+        ("monthly", "本月", "本月热门", "本月新增"),
+        ("daily_zh", "中文社区", "中文社区今日热门", "今天新增"),
+    )
+    boards = []
+    for key, label, title, gain in catalog:
+        repos = sections.get(key) or []
+        if key == "daily_zh" and not repos:
+            continue
+        boards.append((key, label, _section_table(title, gain, repos)))
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head><meta charset="utf-8"><title>{html.escape(subject_for(current))}</title></head>
@@ -726,7 +732,7 @@ def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None 
           <p style="margin:0 0 22px;color:#57606a;font-size:14px;line-height:1.6;">
             排名来自 GitHub Trending 官方榜，按对应时段内新增 Star 排序。每条下面用两三句话说明这个项目是做什么的。
           </p>
-          {''.join(blocks)}
+          {rank_tabs_markup(boards)}
           <p style="margin:8px 0 0;color:#8b949e;font-size:12px;line-height:1.5;">
             来源 <a href="https://github.com/trending" style="color:#0969da;">github.com/trending</a>
           </p>
