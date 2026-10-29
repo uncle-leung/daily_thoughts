@@ -29,7 +29,7 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mail_schedule import begin_send, mark_sent  # noqa: E402
+from mail_schedule import begin_send, mark_sent, require_recipient  # noqa: E402
 from site_page import publish_sent_letter  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
@@ -845,10 +845,14 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     now = _stamp()
     slot = None
+    recipient = ""
     if args.send:
         slot = begin_send("trending", now)
         if slot is None:
             return 0
+        recipient = require_recipient() or ""
+        if not recipient:
+            return 3
     try:
         sections = collect(limit=args.limit, include_chinese_daily=not args.skip_chinese)
     except RuntimeError as exc:
@@ -881,10 +885,6 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    recipient = digest_recipient()
-    if not recipient:
-        print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
-        return 3
     auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
     smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
     if auth_code:

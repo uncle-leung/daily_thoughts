@@ -3,7 +3,7 @@ name: Mail schedule
 on:
   schedule:
     # Check four times an hour, off the crowded :00 minute.
-    # Each letter is sent once, within 100 minutes after its Shanghai slot.
+    # Morning letters stay open until 12:00 Shanghai, evening letters until 23:00.
     - cron: "2,17,32,47 * * * *"
   workflow_dispatch:
 
