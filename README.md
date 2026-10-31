@@ -27,7 +27,7 @@
 在 **Settings → Secrets and variables → Actions** 添加：
 
 - `DIGEST_TO`：发信邮箱。不填则拒绝发信。没填 `QQ_SMTP_USER` 时，用它登录 SMTP。可以写多个，用逗号或空格分开，第一个必须是授权码对应的那个邮箱。
-- `DIGEST_ALSO`：可选。额外收件人，只收信，不拿来登录。再加一个邮箱时放这里，就不用改发信账号。
+- `DIGEST_ALSO`：可选。额外收件人，只收信，不拿来登录。多个邮箱用逗号或空格分开，中文逗号也可以，例如 `a@qq.com, b@qq.com`。
 - `QQ_SMTP_AUTH_CODE`：QQ 邮箱授权码，不是登录密码。在 QQ 邮箱 → 设置 → 账号 → POP3/IMAP/SMTP 里生成。
 - `QQ_SMTP_USER`：可选。不填就用 `DIGEST_TO` 里的第一个邮箱。
 - `CURSOR_API_KEY`：可选。见下面「时事从哪里来」。

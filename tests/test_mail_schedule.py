@@ -124,8 +124,11 @@ class MailScheduleTest(unittest.TestCase):
 
     def test_extra_mailbox_is_appended_and_duplicates_are_dropped(self) -> None:
         os.environ["DIGEST_TO"] = " owner@example.com, not-an-email "
-        os.environ["DIGEST_ALSO"] = "extra@example.com\nowner@example.com"
-        self.assertEqual(recipient_list(), ["owner@example.com", "extra@example.com"])
+        os.environ["DIGEST_ALSO"] = "one@example.com, two@example.com，three@example.com owner@example.com"
+        self.assertEqual(
+            recipient_list(),
+            ["owner@example.com", "one@example.com", "two@example.com", "three@example.com"],
+        )
 
     def test_a_new_mailbox_stays_due_until_that_copy_is_delivered(self) -> None:
         now = datetime(2026, 10, 28, 8, 20, tzinfo=SHANGHAI)

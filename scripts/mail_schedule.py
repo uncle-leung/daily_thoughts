@@ -87,7 +87,7 @@ def parse_addresses(*chunks: str) -> list[str]:
     found: list[str] = []
     seen: set[str] = set()
     for chunk in chunks:
-        for part in re.split(r"[,;\s]+", chunk or ""):
+        for part in re.split(r"[,，、;；\s]+", chunk or ""):
             address = part.strip().strip("<>")
             if not _ADDRESS_RE.fullmatch(address):
                 continue
