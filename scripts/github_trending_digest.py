@@ -29,7 +29,13 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mail_schedule import begin_send, mark_sent, require_recipient  # noqa: E402
+from mail_schedule import (  # noqa: E402
+    begin_send,
+    mark_sent,
+    pending_recipients,
+    recipient_list,
+    require_recipient,
+)
 from site_page import publish_sent_letter, rank_tabs_markup  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
@@ -746,8 +752,16 @@ def render_html(sections: dict[str, list[dict[str, str]]], now: datetime | None 
 
 
 def digest_recipient() -> str:
-    """Mailbox that receives the letters. Set DIGEST_TO; do not store it in the repo."""
-    return os.environ.get("DIGEST_TO", "").strip()
+    """Mailboxes for this run, sending account first. Set DIGEST_TO; do not store them in the repo."""
+    return ", ".join(recipient_list())
+
+
+def _login_user(configured: list[str]) -> str:
+    """SMTP login stays the sending mailbox. An extra recipient must not take its place."""
+    explicit = os.environ.get("QQ_SMTP_USER", "").strip()
+    if explicit:
+        return explicit
+    return configured[0] if configured else ""
 
 
 def redact(text: str, *secrets: str) -> str:
@@ -757,27 +771,198 @@ def redact(text: str, *secrets: str) -> str:
     return text
 
 
-def send_qq_smtp(
-    *,
-    user: str,
-    auth_code: str,
-    recipient: str,
-    subject: str,
-    text: str,
-    html_body: str,
-    host: str = "smtp.qq.com",
-    port: int = 465,
-) -> None:
+def _letter_message(*, user: str, recipient: str, subject: str, text: str, html_body: str) -> EmailMessage:
     message = EmailMessage()
     message["Subject"] = subject
     message["From"] = user
     message["To"] = recipient
     message.set_content(text)
     message.add_alternative(html_body, subtype="html")
+    return message
+
+
+def send_qq_smtp(
+    *,
+    user: str,
+    auth_code: str,
+    recipient: str = "",
+    recipients: list[str] | None = None,
+    subject: str,
+    text: str,
+    html_body: str,
+    host: str = "smtp.qq.com",
+    port: int = 465,
+) -> tuple[list[str], list[str]]:
+    """Send one copy per mailbox on one login. Return (delivered, failed).
+
+    A later mailbox that rejects the letter does not undo the copies already accepted.
+    Login failure raises, because nobody has the letter yet.
+    """
+    targets = [item for item in (recipients or []) if item]
+    if recipient and recipient not in targets:
+        targets.insert(0, recipient)
+    delivered: list[str] = []
+    failed: list[str] = []
+    if not targets:
+        return delivered, failed
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(host, port, timeout=40, context=context) as smtp:
-        smtp.login(user, auth_code)
-        smtp.send_message(message)
+    hidden = (user, auth_code, *targets)
+
+    def connect() -> smtplib.SMTP_SSL:
+        client = smtplib.SMTP_SSL(host, port, timeout=40, context=context)
+        try:
+            client.login(user, auth_code)
+        except Exception:
+            try:
+                client.quit()
+            except Exception:
+                pass
+            raise
+        return client
+
+    smtp = connect()
+    try:
+        for index, address in enumerate(targets):
+            message = _letter_message(
+                user=user,
+                recipient=address,
+                subject=subject,
+                text=text,
+                html_body=html_body,
+            )
+            try:
+                smtp.send_message(message)
+            except Exception as exc:
+                failed.append(address)
+                print(f"QQ SMTP send failed: {redact(str(exc), *hidden)}", file=sys.stderr)
+                if index + 1 == len(targets):
+                    break
+                try:
+                    smtp.close()
+                except Exception:
+                    pass
+                try:
+                    smtp = connect()
+                except Exception as login_exc:
+                    print(f"QQ SMTP send failed: {redact(str(login_exc), *hidden)}", file=sys.stderr)
+                    failed.extend(item for item in targets if item not in delivered and item not in failed)
+                    break
+                continue
+            delivered.append(address)
+    finally:
+        try:
+            smtp.quit()
+        except Exception:
+            pass
+    return delivered, failed
+
+
+def deliver_letter(
+    *,
+    subject: str,
+    text: str,
+    html_body: str,
+    sender_name: str,
+    recipients: list[str],
+) -> tuple[int, list[str]]:
+    """Deliver one letter. Return (exit code, mailboxes that accepted it)."""
+    if not recipients:
+        print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
+        return 3, []
+    configured = recipient_list()
+    auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
+    smtp_user = _login_user(configured) or recipients[0]
+    hidden = (auth_code, smtp_user, *configured, *recipients)
+    if auth_code:
+        try:
+            delivered, failed = send_qq_smtp(
+                user=smtp_user,
+                auth_code=auth_code,
+                recipients=recipients,
+                subject=subject,
+                text=text,
+                html_body=html_body,
+            )
+        except Exception as exc:  # noqa: BLE001 - report SMTP failure without a traceback dump
+            print(f"QQ SMTP send failed: {redact(str(exc), *hidden)}", file=sys.stderr)
+            return 3, []
+        if failed:
+            print(
+                f"QQ SMTP send failed for {len(failed)} of {len(recipients)}",
+                file=sys.stderr,
+            )
+            return 3, delivered
+        print(f"sent via QQ SMTP ({len(delivered)})")
+        return 0, delivered
+
+    if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
+        delivered = []
+        failed = 0
+        activation = 0
+        for address in recipients:
+            try:
+                result = send_formsubmit(
+                    recipient=address,
+                    subject=subject,
+                    text=text,
+                    sender_name=sender_name,
+                )
+            except Exception as exc:  # noqa: BLE001
+                failed += 1
+                print(f"FormSubmit send failed: {redact(str(exc), *hidden)}", file=sys.stderr)
+                continue
+            if formsubmit_needs_activation(result):
+                activation += 1
+                continue
+            delivered.append(address)
+        if activation:
+            print(
+                "FormSubmit sent an activation email. "
+                "Open it and click Activate Form. The letter is delivered on the next run."
+            )
+        if failed:
+            return 3, delivered
+        if delivered:
+            print("sent via FormSubmit")
+            print(
+                "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "
+                "for the HTML digest."
+            )
+        return 0, delivered
+
+    print(
+        "QQ_SMTP_AUTH_CODE is not set. Refusing to send. "
+        "Export the QQ mailbox authorization code, or set DIGEST_FALLBACK=formsubmit.",
+        file=sys.stderr,
+    )
+    return 3, []
+
+
+def finish_delivery(
+    kind: str,
+    now: datetime,
+    slot: str,
+    subject: str,
+    html_body: str,
+    text: str,
+    sender_name: str,
+) -> int:
+    force = os.environ.get("MAIL_FORCE", "").strip() == "1"
+    targets = pending_recipients(kind, now, slot, force=force)
+    if not targets:
+        print(f"already sent {kind} {slot}")
+        return 0
+    code, delivered = deliver_letter(
+        subject=subject,
+        text=text,
+        html_body=html_body,
+        sender_name=sender_name,
+        recipients=targets,
+    )
+    if delivered:
+        mark_sent(kind, now, slot, delivered)
+        publish_sent_letter(kind, now, slot, subject, html_body, text)
+    return code
 
 
 def formsubmit_needs_activation(payload: dict[str, object]) -> bool:
@@ -851,13 +1036,11 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     now = _stamp()
     slot = None
-    recipient = ""
     if args.send:
         slot = begin_send("trending", now)
         if slot is None:
             return 0
-        recipient = require_recipient() or ""
-        if not recipient:
+        if require_recipient() is None:
             return 3
     try:
         sections = collect(limit=args.limit, include_chinese_daily=not args.skip_chinese)
@@ -891,53 +1074,15 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
-    smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
-    if auth_code:
-        try:
-            send_qq_smtp(
-                user=smtp_user,
-                auth_code=auth_code,
-                recipient=recipient,
-                subject=subject,
-                text=text,
-                html_body=html_body,
-            )
-        except Exception as exc:  # noqa: BLE001 - report SMTP failure without a traceback dump
-            print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
-            return 3
-        mark_sent("trending", now, slot or "08:00")
-        publish_sent_letter("trending", now, slot or "08:00", subject, html_body, text)
-        print("sent via QQ SMTP")
-        return 0
-
-    if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
-        try:
-            result = send_formsubmit(recipient=recipient, subject=subject, text=text)
-        except Exception as exc:  # noqa: BLE001
-            print(f"FormSubmit send failed: {redact(str(exc), recipient)}", file=sys.stderr)
-            return 3
-        if formsubmit_needs_activation(result):
-            print(
-                "FormSubmit sent an activation email. "
-                "Open it and click Activate Form. The ranking digest is delivered on the next run."
-            )
-            return 0
-        mark_sent("trending", now, slot or "08:00")
-        publish_sent_letter("trending", now, slot or "08:00", subject, html_body, text)
-        print("sent via FormSubmit")
-        print(
-            "QQ SMTP is not configured. Add repository secret QQ_SMTP_AUTH_CODE "
-            "for the HTML digest."
-        )
-        return 0
-
-    print(
-        "QQ_SMTP_AUTH_CODE is not set. Refusing to send. "
-        "Export the QQ mailbox authorization code, or set DIGEST_FALLBACK=formsubmit.",
-        file=sys.stderr,
+    return finish_delivery(
+        "trending",
+        now,
+        slot or "08:00",
+        subject,
+        html_body,
+        text,
+        "GitHub Trending Digest",
     )
-    return 3
 
 
 if __name__ == "__main__":

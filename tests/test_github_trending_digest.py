@@ -1,18 +1,21 @@
+import io
 import os
 import pathlib
-import re
+import smtplib
 import sys
 import unittest
+from contextlib import redirect_stderr
 from datetime import datetime
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
 from github_trending_digest import (  # noqa: E402
+    deliver_letter,
     digest_recipient,
     draft_summary,
     formsubmit_needs_activation,
-    redact,
     limit_to_three,
     parse_gtx_payload,
     parse_trending_html,
@@ -192,15 +195,106 @@ class ParseTrendingTest(unittest.TestCase):
 
     def test_recipient_comes_only_from_the_environment(self) -> None:
         previous = os.environ.pop("DIGEST_TO", None)
+        also = os.environ.pop("DIGEST_ALSO", None)
         try:
             self.assertEqual(digest_recipient(), "")
             os.environ["DIGEST_TO"] = "  reader@example.com  "
             self.assertEqual(digest_recipient(), "reader@example.com")
+            os.environ["DIGEST_ALSO"] = "second@example.com, reader@example.com"
+            self.assertEqual(digest_recipient(), "reader@example.com, second@example.com")
         finally:
             if previous is None:
                 os.environ.pop("DIGEST_TO", None)
             else:
                 os.environ["DIGEST_TO"] = previous
+            if also is None:
+                os.environ.pop("DIGEST_ALSO", None)
+            else:
+                os.environ["DIGEST_ALSO"] = also
+
+    def test_extra_mailbox_is_copied_without_taking_the_smtp_login(self) -> None:
+        previous = {
+            name: os.environ.get(name)
+            for name in ("DIGEST_TO", "DIGEST_ALSO", "QQ_SMTP_USER", "QQ_SMTP_AUTH_CODE")
+        }
+        os.environ["DIGEST_TO"] = "owner@example.com"
+        os.environ["DIGEST_ALSO"] = "extra@example.com"
+        os.environ.pop("QQ_SMTP_USER", None)
+        os.environ["QQ_SMTP_AUTH_CODE"] = "secret-code"
+
+        class FakeSMTP:
+            created: list["FakeSMTP"] = []
+            reject_extra = False
+
+            def __init__(self, host: str, port: int, timeout: int = 40, context: object = None) -> None:
+                del host, port, timeout, context
+                self.user = ""
+                self.messages: list[str] = []
+                FakeSMTP.created.append(self)
+
+            def login(self, user: str, auth_code: str) -> None:
+                self.user = user
+                self.auth_code = auth_code
+
+            def send_message(self, message: object) -> None:
+                address = str(message["To"])  # type: ignore[index]
+                if FakeSMTP.reject_extra and address == "extra@example.com":
+                    raise smtplib.SMTPRecipientsRefused({address: (550, b"no")})
+                self.messages.append(address)
+
+            def close(self) -> None:
+                return None
+
+            def quit(self) -> None:
+                return None
+
+        try:
+            FakeSMTP.created = []
+            FakeSMTP.reject_extra = False
+            with patch("github_trending_digest.smtplib.SMTP_SSL", FakeSMTP):
+                code, delivered = deliver_letter(
+                    subject="subject",
+                    text="hello",
+                    html_body="<p>hello</p>",
+                    sender_name="digest",
+                    recipients=["extra@example.com", "owner@example.com"],
+                )
+            self.assertEqual(code, 0)
+            self.assertEqual(delivered, ["extra@example.com", "owner@example.com"])
+            self.assertEqual(len(FakeSMTP.created), 1)
+            self.assertEqual(FakeSMTP.created[0].user, "owner@example.com")
+            self.assertEqual(FakeSMTP.created[0].auth_code, "secret-code")
+            self.assertEqual(
+                FakeSMTP.created[0].messages,
+                ["extra@example.com", "owner@example.com"],
+            )
+
+            FakeSMTP.created = []
+            FakeSMTP.reject_extra = True
+            notes = io.StringIO()
+            with patch("github_trending_digest.smtplib.SMTP_SSL", FakeSMTP):
+                with redirect_stderr(notes):
+                    code, delivered = deliver_letter(
+                        subject="subject",
+                        text="hello",
+                        html_body="<p>hello</p>",
+                        sender_name="digest",
+                        recipients=["extra@example.com", "owner@example.com"],
+                    )
+            self.assertEqual(code, 3)
+            self.assertEqual(delivered, ["owner@example.com"])
+            self.assertEqual(len(FakeSMTP.created), 2)
+            log = notes.getvalue()
+            self.assertNotIn("owner@example.com", log)
+            self.assertNotIn("extra@example.com", log)
+            self.assertNotIn("secret-code", log)
+            self.assertIn("[redacted]", log)
+        finally:
+            for name, value in previous.items():
+                if value is None:
+                    os.environ.pop(name, None)
+                else:
+                    os.environ[name] = value
 
     def test_logs_do_not_keep_the_mailbox(self) -> None:
         self.assertEqual(

@@ -17,14 +17,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from current_signals import load_signals, simplify_signal
 from cursor_news import load_cursor_ideas
-from mail_schedule import begin_send, mark_sent, require_recipient
-from site_page import publish_sent_letter
-from github_trending_digest import (
-    formsubmit_needs_activation,
-    redact,
-    send_formsubmit,
-    send_qq_smtp,
-)
+from mail_schedule import begin_send, require_recipient
+from github_trending_digest import finish_delivery
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 CATEGORIES = ("世间", "人生", "工作", "健康", "财富", "知识")
@@ -402,13 +396,11 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     now = _stamp()
     slot = None
-    recipient = ""
     if args.send:
         slot = begin_send("ideas", now)
         if slot is None:
             return 0
-        recipient = require_recipient() or ""
-        if not recipient:
+        if require_recipient() is None:
             return 3
     ideas = load_cursor_ideas(now)
     if ideas is None:
@@ -437,51 +429,15 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(text)
         return 0
 
-    auth_code = os.environ.get("QQ_SMTP_AUTH_CODE", "").strip()
-    smtp_user = os.environ.get("QQ_SMTP_USER", "").strip() or recipient
-    if auth_code:
-        try:
-            send_qq_smtp(
-                user=smtp_user,
-                auth_code=auth_code,
-                recipient=recipient,
-                subject=subject,
-                text=text,
-                html_body=html_body,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"QQ SMTP send failed: {redact(str(exc), recipient, smtp_user, auth_code)}", file=sys.stderr)
-            return 3
-        mark_sent("ideas", now, slot or "08:30")
-        publish_sent_letter("ideas", now, slot or "08:30", subject, html_body, text)
-        print("sent via QQ SMTP")
-        return 0
-
-    if os.environ.get("DIGEST_FALLBACK", "").strip().lower() == "formsubmit":
-        try:
-            result = send_formsubmit(
-                recipient=recipient,
-                subject=subject,
-                text=text,
-                sender_name="每日想法",
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"FormSubmit send failed: {redact(str(exc), recipient)}", file=sys.stderr)
-            return 3
-        if formsubmit_needs_activation(result):
-            print("FormSubmit sent an activation email.")
-            return 0
-        mark_sent("ideas", now, slot or "08:30")
-        publish_sent_letter("ideas", now, slot or "08:30", subject, html_body, text)
-        print("sent via FormSubmit")
-        return 0
-
-    print(
-        "QQ_SMTP_AUTH_CODE is not set. Refusing to send. "
-        "Export the QQ mailbox authorization code, or set DIGEST_FALLBACK=formsubmit.",
-        file=sys.stderr,
+    return finish_delivery(
+        "ideas",
+        now,
+        slot or "08:30",
+        subject,
+        html_body,
+        text,
+        "每日想法",
     )
-    return 3
 
 
 if __name__ == "__main__":
