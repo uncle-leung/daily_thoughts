@@ -18,6 +18,7 @@ jobs:
       - name: Send ideas
         env:
           DIGEST_TO: ${{ secrets.DIGEST_TO }}
+          DIGEST_ALSO: ${{ secrets.DIGEST_ALSO }}
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           DIGEST_FALLBACK: formsubmit

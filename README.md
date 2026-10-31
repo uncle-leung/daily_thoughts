@@ -1,6 +1,6 @@
 # 每日三封信
 
-每天按上海时间发三封信，并把已经发出的正文留在一个公开页面上。收件邮箱只放在 GitHub Actions 的 Secret `DIGEST_TO` 里，不写进仓库，运行日志里也不打印。
+每天按上海时间发三封信，并把已经发出的正文留在一个公开页面上。收件邮箱只放在 GitHub Actions 的 Secret `DIGEST_TO` 和 `DIGEST_ALSO` 里，不写进仓库，运行日志里也不打印。
 
 | 邮件 | 上海时间 | 内容 |
 | --- | --- | --- |
@@ -12,7 +12,7 @@
 
 ## 定时任务
 
-`.github/workflows/mail-schedule.yml` 每小时检查四次（UTC 的第 2、17、32、47 分钟，上海时间同样是这四个分钟）。上午三封从各自的点一直开到 12:00，晚上三封开到 23:00。同一天同一档发出去之后不会重发。已发送的档期记在 `mail-state/`。
+`.github/workflows/mail-schedule.yml` 只在信还送得出去的时候检查：上海时间 08:00–12:00（UTC 0–3 点）和 18:00–23:00（UTC 10–14 点），每个小时的第 2、17、32、47 分钟。上午三封从各自的点一直开到 12:00，晚上三封开到 23:00。同一天同一档，每个收件人都送到之后不再重发。已发送的档期记在 `mail-state/`，里面不写邮箱。
 
 没设收件人 `DIGEST_TO` 时，任务马上失败，不会先去抓榜单和新闻。
 
@@ -26,9 +26,10 @@
 
 在 **Settings → Secrets and variables → Actions** 添加：
 
-- `DIGEST_TO`：收件邮箱。不填则拒绝发信。
+- `DIGEST_TO`：发信邮箱。不填则拒绝发信。没填 `QQ_SMTP_USER` 时，用它登录 SMTP。可以写多个，用逗号或空格分开，第一个必须是授权码对应的那个邮箱。
+- `DIGEST_ALSO`：可选。额外收件人，只收信，不拿来登录。多个邮箱用逗号或空格分开，中文逗号也可以，例如 `a@qq.com, b@qq.com`。
 - `QQ_SMTP_AUTH_CODE`：QQ 邮箱授权码，不是登录密码。在 QQ 邮箱 → 设置 → 账号 → POP3/IMAP/SMTP 里生成。
-- `QQ_SMTP_USER`：可选。不填就用 `DIGEST_TO`。
+- `QQ_SMTP_USER`：可选。不填就用 `DIGEST_TO` 里的第一个邮箱。
 - `CURSOR_API_KEY`：可选。见下面「时事从哪里来」。
 
 这些值只放在 Secrets 里。`.env` 已被忽略，不要把邮箱、授权码或 API Key 提交进仓库。
@@ -44,7 +45,7 @@ python3 scripts/daily_ideas.py --text-out digests/ideas.txt
 本地发信时从环境变量读收件人：
 
 ```bash
-DIGEST_TO=你的邮箱 QQ_SMTP_AUTH_CODE=你的授权码 python3 scripts/github_trending_digest.py --send
+DIGEST_TO=发信邮箱 DIGEST_ALSO=另一个邮箱 QQ_SMTP_AUTH_CODE=你的授权码 python3 scripts/github_trending_digest.py --send
 ```
 
 ## 公开页面

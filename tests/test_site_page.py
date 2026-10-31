@@ -47,6 +47,13 @@ class SitePageTest(unittest.TestCase):
         self.assertIn("三条已经发出的话。", letter)
         rows = collect_day(self.root, "2026-10-28")
         self.assertEqual([row["kind"] for row in rows], ["trending", "ideas"])
+        (state / "events-0815").write_text(
+            "2026-10-28T08:20:00+08:00\nto abcdef\n",
+            encoding="utf-8",
+        )
+        noted = collect_day(self.root, "2026-10-28")
+        events = next(row for row in noted if row["kind"] == "events")
+        self.assertEqual(events["sentAt"], "2026-10-28T08:20:00+08:00")
 
     def test_a_day_with_no_mail_says_so(self) -> None:
         page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")

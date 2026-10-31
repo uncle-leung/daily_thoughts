@@ -83,11 +83,16 @@ def _slot_text(hhmm: str) -> str:
 
 
 def _parse_sent_at(value: str) -> datetime | None:
-    value = value.strip()
-    if not value:
+    line = ""
+    for item in value.splitlines():
+        item = item.strip()
+        if item and not item.startswith("to "):
+            line = item
+            break
+    if not line:
         return None
     try:
-        parsed = datetime.fromisoformat(value)
+        parsed = datetime.fromisoformat(line)
     except ValueError:
         return None
     if parsed.tzinfo is None:

@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -77,13 +79,83 @@ def _window_end(current: datetime, slot: str) -> datetime:
     return current.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
 
 
+_ADDRESS_RE = re.compile(r"^[^@\s,;<>]+@[^@\s,;<>]+\.[^@\s,;<>]+$")
+
+
+def parse_addresses(*chunks: str) -> list[str]:
+    """Split mailbox lists. Order is kept, duplicates and fragments without @ are dropped."""
+    found: list[str] = []
+    seen: set[str] = set()
+    for chunk in chunks:
+        for part in re.split(r"[,，、;；\s]+", chunk or ""):
+            address = part.strip().strip("<>")
+            if not _ADDRESS_RE.fullmatch(address):
+                continue
+            key = address.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            found.append(address)
+    return found
+
+
+def recipient_list() -> list[str]:
+    """Sending mailbox first, then extra recipients. Extras are never the SMTP login."""
+    return parse_addresses(
+        os.environ.get("DIGEST_TO", ""),
+        os.environ.get("DIGEST_ALSO", ""),
+    )
+
+
+def mailbox_key(address: str) -> str:
+    """Stable id for a mailbox. The address itself stays out of the repo and the logs."""
+    return hashlib.sha256(address.strip().casefold().encode("utf-8")).hexdigest()[:16]
+
+
 def require_recipient() -> str | None:
-    """Mailbox for this run. Empty means do not fetch or send."""
-    recipient = os.environ.get("DIGEST_TO", "").strip()
-    if recipient:
-        return recipient
+    """Mailboxes for this run. Empty means do not fetch or send."""
+    found = recipient_list()
+    if found:
+        return ", ".join(found)
     print("DIGEST_TO is not set. Refusing to send.", file=sys.stderr)
     return None
+
+
+def _delivery_keys(path: Path) -> set[str] | None:
+    """Mailboxes already delivered, by key.
+
+    None means an older marker that finished the whole slot for whoever was configured then.
+    """
+    if not path.exists():
+        return set()
+    keys = {
+        line[3:].strip()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.startswith("to ") and line[3:].strip()
+    }
+    if not keys:
+        return None
+    return keys
+
+
+def slot_satisfied(kind: str, now: datetime, slot: str) -> bool:
+    recorded = _delivery_keys(marker_path(kind, now, slot))
+    if recorded is None:
+        return True
+    everyone = recipient_list()
+    if not everyone:
+        return False
+    return all(mailbox_key(item) in recorded for item in everyone)
+
+
+def pending_recipients(kind: str, now: datetime, slot: str, *, force: bool = False) -> list[str]:
+    everyone = recipient_list()
+    if force:
+        return everyone
+    recorded = _delivery_keys(marker_path(kind, now, slot))
+    if recorded is None:
+        return []
+    return [item for item in everyone if mailbox_key(item) not in recorded]
 
 
 def begin_send(kind: str, now: datetime | None = None, force: bool | None = None) -> str | None:
@@ -94,8 +166,7 @@ def begin_send(kind: str, now: datetime | None = None, force: bool | None = None
     slot = slot_name(kind, current)
     hour, minute = int(slot[:2]), int(slot[3:])
     start = current.replace(hour=hour, minute=minute, second=0, microsecond=0)
-    path = marker_path(kind, current, slot)
-    if path.exists() and not force:
+    if not force and slot_satisfied(kind, current, slot):
         print(f"already sent {kind} {slot}")
         return None
     end = _window_end(current, slot)
@@ -110,10 +181,20 @@ def letters_due(now: datetime | None = None) -> list[str]:
     return [kind for kind in SLOTS if begin_send(kind, current)]
 
 
-def mark_sent(kind: str, now: datetime, slot: str) -> None:
+def mark_sent(kind: str, now: datetime, slot: str, recipients: list[str] | None = None) -> None:
     path = marker_path(kind, now, slot)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(_stamp(now).isoformat() + "\n", encoding="utf-8")
+    lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.exists() else []
+    if not lines or lines[0].startswith("to "):
+        lines.insert(0, _stamp(now).isoformat())
+    if recipients:
+        existing = set(lines)
+        for address in recipients:
+            token = "to " + mailbox_key(address)
+            if token not in existing:
+                lines.append(token)
+                existing.add(token)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -127,7 +208,7 @@ def main(argv: list[str] | None = None) -> int:
     failed = 0
     for kind in due:
         command = [sys.executable, *COMMANDS[kind]]
-        print("run " + " ".join(command))
+        print("run " + " ".join(command), flush=True)
         if subprocess.run(command, cwd=root).returncode != 0:
             failed += 1
     return 1 if failed else 0

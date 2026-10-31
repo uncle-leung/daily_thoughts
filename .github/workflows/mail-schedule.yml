@@ -2,9 +2,9 @@ name: Mail schedule
 
 on:
   schedule:
-    # Check four times an hour, off the crowded :00 minute.
-    # Morning letters stay open until 12:00 Shanghai, evening letters until 23:00.
-    - cron: "2,17,32,47 * * * *"
+    # Shanghai 08:00–12:00 is UTC 00:00–04:00, and 18:00–23:00 is UTC 10:00–15:00.
+    # Check four times an hour only while a letter can still go out.
+    - cron: "2,17,32,47 0-3,10-14 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,6 +26,7 @@ jobs:
       - name: Send due letters
         env:
           DIGEST_TO: ${{ secrets.DIGEST_TO }}
+          DIGEST_ALSO: ${{ secrets.DIGEST_ALSO }}
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           DIGEST_FALLBACK: formsubmit
