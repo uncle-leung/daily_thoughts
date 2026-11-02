@@ -2,9 +2,14 @@ name: Mail schedule
 
 on:
   schedule:
-    # Shanghai 08:00–12:00 is UTC 00:00–04:00, and 18:00–23:00 is UTC 10:00–15:00.
-    # Check four times an hour only while a letter can still go out.
-    - cron: "2,17,32,47 0-3,10-14 * * *"
+    # Shanghai is UTC+8. These two lines are the slot times themselves:
+    # 08:00, 08:15, 08:30 and 18:00, 18:15, 18:30.
+    - cron: "0,15,30 0 * * *"
+    - cron: "0,15,30 10 * * *"
+    # GitHub often starts a schedule late or drops a tick. Keep checking while a
+    # letter is still due: 08:00–14:00 Shanghai (UTC 0–5) and 18:00 through 08:00
+    # the next morning (UTC 10–23).
+    - cron: "2,17,32,47 0-5,10-23 * * *"
   workflow_dispatch:
 
 permissions:

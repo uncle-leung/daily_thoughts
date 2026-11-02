@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Send each daily letter once while its Shanghai half of the day is still open."""
+"""Send each daily letter once, starting at its Shanghai time.
+
+GitHub Actions starts scheduled work late and sometimes skips a tick.
+A morning letter stays open from its clock time until 14:00. An evening
+letter stays open until 08:00 the next morning, so a run after midnight
+still sends last night's letters. Each mailbox is sent at most once per slot.
+"""
 
 from __future__ import annotations
 
@@ -8,15 +14,15 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
-# Morning letters stay open until noon, evening letters until 23:00.
-# GitHub often starts a private-repo schedule one or two hours late.
-MORNING_CLOSE = (12, 0)
-EVENING_CLOSE = (23, 0)
+# 14:00 Shanghai is 06:00 UTC, the same cutoff the letter body uses to
+# choose morning versus evening copy. Evening stays open until the next 08:00.
+MORNING_OPEN = (8, 0)
+MORNING_CLOSE = (14, 0)
 SLOTS = {
     "trending": ("08:00", "18:00"),
     "events": ("08:15", "18:15"),
@@ -70,13 +76,38 @@ def slot_name(kind: str, now: datetime | None = None) -> str:
     return morning if current.hour < 12 else evening
 
 
+def _minutes(value: datetime | tuple[int, int] | str) -> int:
+    if isinstance(value, datetime):
+        return value.hour * 60 + value.minute
+    if isinstance(value, str):
+        return int(value[:2]) * 60 + int(value[3:])
+    return value[0] * 60 + value[1]
+
+
+def slot_day(now: datetime, slot: str) -> date:
+    """Calendar day the slot belongs to. After midnight, evening is still yesterday."""
+    current = _stamp(now)
+    if _minutes(slot) >= _minutes("12:00") and _minutes(current) < _minutes(MORNING_OPEN):
+        return current.date() - timedelta(days=1)
+    return current.date()
+
+
+def due_delivery(kind: str, now: datetime | None = None) -> tuple[date, str] | None:
+    """Return the unsent slot that is open now, with the day it belongs to."""
+    current = _stamp(now)
+    morning, evening = SLOTS[kind]
+    mins = _minutes(current)
+    if mins >= _minutes(evening):
+        return current.date(), evening
+    if _minutes(morning) <= mins < _minutes(MORNING_CLOSE):
+        return current.date(), morning
+    if mins < _minutes(MORNING_OPEN):
+        return current.date() - timedelta(days=1), evening
+    return None
+
+
 def marker_path(kind: str, now: datetime, slot: str) -> Path:
-    return state_root() / now.date().isoformat() / f"{kind}-{slot.replace(':', '')}"
-
-
-def _window_end(current: datetime, slot: str) -> datetime:
-    close_hour, close_minute = MORNING_CLOSE if int(slot[:2]) < 12 else EVENING_CLOSE
-    return current.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
+    return state_root() / slot_day(now, slot).isoformat() / f"{kind}-{slot.replace(':', '')}"
 
 
 _ADDRESS_RE = re.compile(r"^[^@\s,;<>]+@[^@\s,;<>]+\.[^@\s,;<>]+$")
@@ -163,15 +194,17 @@ def begin_send(kind: str, now: datetime | None = None, force: bool | None = None
     current = _stamp(now)
     if force is None:
         force = os.environ.get("MAIL_FORCE", "").strip() == "1"
-    slot = slot_name(kind, current)
-    hour, minute = int(slot[:2]), int(slot[3:])
-    start = current.replace(hour=hour, minute=minute, second=0, microsecond=0)
-    if not force and slot_satisfied(kind, current, slot):
+    if force:
+        slot = slot_name(kind, current)
+    else:
+        found = due_delivery(kind, current)
+        if found is None:
+            morning, evening = SLOTS[kind]
+            print(f"skip {kind}: waiting for {morning} or {evening}")
+            return None
+        slot = found[1]
+    if slot_satisfied(kind, current, slot):
         print(f"already sent {kind} {slot}")
-        return None
-    end = _window_end(current, slot)
-    if not force and not (start <= current < end):
-        print(f"skip {kind} {slot}: outside {start.strftime('%H:%M')}–{end.strftime('%H:%M')}")
         return None
     return slot
 

@@ -60,30 +60,44 @@ class MailScheduleTest(unittest.TestCase):
         self.assertIsNone(begin_send("trending", now))
         self.assertEqual(begin_send("events", now), "08:15")
 
-    def test_a_late_night_runner_does_not_send_the_evening_letter(self) -> None:
+    def test_evening_letter_stays_open_until_the_next_morning(self) -> None:
         late = datetime(2026, 10, 27, 23, 45, tzinfo=SHANGHAI)
-        self.assertIsNone(begin_send("trending", late))
-        self.assertIsNone(begin_send("events", late))
-        self.assertIsNone(begin_send("ideas", late))
+        self.assertEqual(begin_send("trending", late), "18:00")
+        self.assertEqual(begin_send("events", late), "18:15")
+        self.assertEqual(begin_send("ideas", late), "18:30")
 
-    def test_before_the_slot_nothing_is_due(self) -> None:
+    def test_before_the_slot_nothing_is_due_once_last_night_went_out(self) -> None:
         now = datetime(2026, 10, 28, 7, 50, tzinfo=SHANGHAI)
+        for kind, slot in (("trending", "18:00"), ("events", "18:15"), ("ideas", "18:30")):
+            mark_sent(kind, now, slot)
         self.assertIsNone(begin_send("trending", now))
         self.assertIsNone(begin_send("ideas", now))
 
-    def test_a_delayed_morning_runner_still_sends_until_noon(self) -> None:
+    def test_a_run_after_midnight_sends_yesterdays_evening_letter(self) -> None:
+        late = datetime(2026, 11, 2, 0, 42, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", late), "18:00")
+        mark_sent("trending", late, "18:00")
+        marker = Path(os.environ["MAIL_STATE_DIR"]) / "2026-11-01" / "trending-1800"
+        self.assertTrue(marker.is_file())
+        self.assertFalse((Path(os.environ["MAIL_STATE_DIR"]) / "2026-11-02" / "trending-1800").exists())
+        self.assertIsNone(begin_send("trending", late))
+        morning = datetime(2026, 11, 2, 8, 0, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", morning), "08:00")
+
+    def test_a_delayed_morning_runner_still_sends_until_14(self) -> None:
         late = datetime(2026, 10, 29, 10, 40, tzinfo=SHANGHAI)
         self.assertEqual(letters_due(late), ["trending", "events", "ideas"])
-        almost_noon = datetime(2026, 10, 29, 11, 59, tzinfo=SHANGHAI)
-        self.assertEqual(begin_send("trending", almost_noon), "08:00")
-        afternoon = datetime(2026, 10, 29, 13, 0, tzinfo=SHANGHAI)
-        self.assertEqual(letters_due(afternoon), [])
+        still_open = datetime(2026, 10, 29, 13, 39, tzinfo=SHANGHAI)
+        self.assertEqual(begin_send("trending", still_open), "08:00")
+        self.assertEqual(letters_due(still_open), ["trending", "events", "ideas"])
+        closed = datetime(2026, 10, 29, 14, 0, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(closed), [])
 
-    def test_a_delayed_evening_runner_still_sends_until_23(self) -> None:
+    def test_a_delayed_evening_runner_still_sends_after_23(self) -> None:
         delayed = datetime(2026, 10, 28, 20, 30, tzinfo=SHANGHAI)
         self.assertEqual(letters_due(delayed), ["trending", "events", "ideas"])
-        closed = datetime(2026, 10, 28, 23, 0, tzinfo=SHANGHAI)
-        self.assertEqual(letters_due(closed), [])
+        at_close_used_to_be = datetime(2026, 10, 28, 23, 0, tzinfo=SHANGHAI)
+        self.assertEqual(letters_due(at_close_used_to_be), ["trending", "events", "ideas"])
 
     def test_missing_recipient_does_not_start_the_letters(self) -> None:
         os.environ.pop("DIGEST_TO", None)
@@ -181,7 +195,7 @@ class MailScheduleTest(unittest.TestCase):
 
     def test_idle_hour_does_not_start_letters(self) -> None:
         os.environ["DIGEST_TO"] = "reader@example.com"
-        now = datetime(2026, 10, 29, 7, 50, tzinfo=SHANGHAI)
+        now = datetime(2026, 10, 29, 15, 0, tzinfo=SHANGHAI)
         with patch("mail_schedule._stamp", return_value=now):
             with patch("mail_schedule.subprocess.run") as run:
                 code = main()

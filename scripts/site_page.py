@@ -119,7 +119,9 @@ def remember_letter(
     """Store one sent letter. The page is rebuilt from this folder and mail-state."""
     if kind not in KIND_TITLE or not re.fullmatch(r"\d{2}:\d{2}", slot):
         raise ValueError(f"unknown letter slot {kind} {slot}")
-    day = _day_key(sent_at)
+    from mail_schedule import slot_day
+
+    day = slot_day(sent_at, slot).isoformat()
     folder = root / "archive" / day
     folder.mkdir(parents=True, exist_ok=True)
     stem = f"{kind}-{slot.replace(':', '')}"
