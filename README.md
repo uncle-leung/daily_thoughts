@@ -7,12 +7,13 @@
 | GitHub 热门项目 | 08:00、18:00 | [github.com/trending](https://github.com/trending) 的今日、本周、本月榜，另加一份中文社区今日榜 |
 | 国内外大事 | 08:15、18:15 | 国内 10 条、国外 10 条，每条是打开的报道里的三四句话 |
 | 每日想法 | 08:30、18:30 | 10 条，每条三四句话，对照当天的公开报道 |
+| NBA直播 | 08:45、18:45 | 今天与明天的开球时间（上海），全国转播对照 [iptv-org sports.m3u](https://iptv-org.github.io/iptv/categories/sports.m3u) 里的 NBA TV / ESPN / TNT / ABC / Sportsnet |
 
-主题上的时间是实际发出时的上海时间。上午和晚上不是同一组内容。
+主题上的时间是实际发出时的上海时间。上午和晚上不是同一组内容。NBA 那一封按开球日的上海日历切分今天/明天。
 
 ## 定时任务
 
-`.github/workflows/mail-schedule.yml` 在上海时间 08:00、08:15、08:30 和 18:00、18:15、18:30 各启动一次。GitHub 经常晚启动或漏掉某一拍，所以在信还该发的时候另外每 15 分钟再检查一次：上午从各自的点开到 14:00，晚上开到第二天 08:00。过了午夜仍没发出的晚上那三封，会记在前一天。同一天同一档，每个收件人都送到之后不再重发。已发送的档期记在 `mail-state/`，里面不写邮箱。
+`.github/workflows/mail-schedule.yml` 在上海时间 08:00、08:15、08:30、08:45 和 18:00、18:15、18:30、18:45 各启动一次。GitHub 经常晚启动或漏掉某一拍，所以在信还该发的时候另外每 15 分钟再检查一次：上午从各自的点开到 14:00，晚上开到第二天 08:00。过了午夜仍没发出的晚上那几封，会记在前一天。同一天同一档，每个收件人都送到之后不再重发。已发送的档期记在 `mail-state/`，里面不写邮箱。
 
 没设收件人 `DIGEST_TO` 时，任务马上失败，不会先去抓榜单和新闻。
 
@@ -40,6 +41,7 @@ GitHub 仍可能把计划任务推迟。上午拖过 14:00、晚上拖过第二�
 python3 scripts/github_trending_digest.py --html-out digests/latest.html --text-out digests/latest.txt
 python3 scripts/major_events.py --text-out digests/events.txt
 python3 scripts/daily_ideas.py --text-out digests/ideas.txt
+python3 scripts/nba_digest.py --text-out digests/nba.txt
 ```
 
 本地发信时从环境变量读收件人：

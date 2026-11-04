@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import daily_ideas  # noqa: E402
 import github_trending_digest  # noqa: E402
 import major_events  # noqa: E402
+import nba_digest  # noqa: E402
 from mail_schedule import (  # noqa: E402
     begin_send,
     letters_due,
@@ -49,10 +50,12 @@ class MailScheduleTest(unittest.TestCase):
         self.assertEqual(begin_send("trending", early), "08:00")
         self.assertIsNone(begin_send("events", early))
         self.assertIsNone(begin_send("ideas", early))
+        self.assertIsNone(begin_send("nba", early))
         late_morning = datetime(2026, 10, 28, 9, 9, tzinfo=SHANGHAI)
         self.assertEqual(begin_send("trending", late_morning), "08:00")
         self.assertEqual(begin_send("events", late_morning), "08:15")
         self.assertEqual(begin_send("ideas", late_morning), "08:30")
+        self.assertEqual(begin_send("nba", late_morning), "08:45")
 
     def test_a_sent_slot_is_not_repeated(self) -> None:
         now = datetime(2026, 10, 28, 8, 20, tzinfo=SHANGHAI)
@@ -65,13 +68,20 @@ class MailScheduleTest(unittest.TestCase):
         self.assertEqual(begin_send("trending", late), "18:00")
         self.assertEqual(begin_send("events", late), "18:15")
         self.assertEqual(begin_send("ideas", late), "18:30")
+        self.assertEqual(begin_send("nba", late), "18:45")
 
     def test_before_the_slot_nothing_is_due_once_last_night_went_out(self) -> None:
         now = datetime(2026, 10, 28, 7, 50, tzinfo=SHANGHAI)
-        for kind, slot in (("trending", "18:00"), ("events", "18:15"), ("ideas", "18:30")):
+        for kind, slot in (
+            ("trending", "18:00"),
+            ("events", "18:15"),
+            ("ideas", "18:30"),
+            ("nba", "18:45"),
+        ):
             mark_sent(kind, now, slot)
         self.assertIsNone(begin_send("trending", now))
         self.assertIsNone(begin_send("ideas", now))
+        self.assertIsNone(begin_send("nba", now))
 
     def test_a_run_after_midnight_sends_yesterdays_evening_letter(self) -> None:
         late = datetime(2026, 11, 2, 0, 42, tzinfo=SHANGHAI)
@@ -86,18 +96,18 @@ class MailScheduleTest(unittest.TestCase):
 
     def test_a_delayed_morning_runner_still_sends_until_14(self) -> None:
         late = datetime(2026, 10, 29, 10, 40, tzinfo=SHANGHAI)
-        self.assertEqual(letters_due(late), ["trending", "events", "ideas"])
+        self.assertEqual(letters_due(late), ["trending", "events", "ideas", "nba"])
         still_open = datetime(2026, 10, 29, 13, 39, tzinfo=SHANGHAI)
         self.assertEqual(begin_send("trending", still_open), "08:00")
-        self.assertEqual(letters_due(still_open), ["trending", "events", "ideas"])
+        self.assertEqual(letters_due(still_open), ["trending", "events", "ideas", "nba"])
         closed = datetime(2026, 10, 29, 14, 0, tzinfo=SHANGHAI)
         self.assertEqual(letters_due(closed), [])
 
     def test_a_delayed_evening_runner_still_sends_after_23(self) -> None:
         delayed = datetime(2026, 10, 28, 20, 30, tzinfo=SHANGHAI)
-        self.assertEqual(letters_due(delayed), ["trending", "events", "ideas"])
+        self.assertEqual(letters_due(delayed), ["trending", "events", "ideas", "nba"])
         at_close_used_to_be = datetime(2026, 10, 28, 23, 0, tzinfo=SHANGHAI)
-        self.assertEqual(letters_due(at_close_used_to_be), ["trending", "events", "ideas"])
+        self.assertEqual(letters_due(at_close_used_to_be), ["trending", "events", "ideas", "nba"])
 
     def test_missing_recipient_does_not_start_the_letters(self) -> None:
         os.environ.pop("DIGEST_TO", None)
@@ -135,6 +145,10 @@ class MailScheduleTest(unittest.TestCase):
             with patch.object(daily_ideas, "load_cursor_ideas") as load_ideas:
                 self.assertEqual(daily_ideas.main(["--send"]), 3)
                 load_ideas.assert_not_called()
+        with patch.object(nba_digest, "_stamp", return_value=now):
+            with patch.object(nba_digest, "load_iptv_catalog") as load_catalog:
+                self.assertEqual(nba_digest.main(["--send"]), 3)
+                load_catalog.assert_not_called()
 
     def test_extra_mailbox_is_appended_and_duplicates_are_dropped(self) -> None:
         os.environ["DIGEST_TO"] = " owner@example.com, not-an-email "

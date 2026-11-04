@@ -27,6 +27,7 @@ SLOTS = {
     "trending": ("08:00", "18:00"),
     "events": ("08:15", "18:15"),
     "ideas": ("08:30", "18:30"),
+    "nba": ("08:45", "18:45"),
 }
 COMMANDS = {
     "trending": [
@@ -52,6 +53,14 @@ COMMANDS = {
         "digests/ideas.html",
         "--text-out",
         "digests/ideas.txt",
+    ],
+    "nba": [
+        "scripts/nba_digest.py",
+        "--send",
+        "--html-out",
+        "digests/nba.html",
+        "--text-out",
+        "digests/nba.txt",
     ],
 }
 

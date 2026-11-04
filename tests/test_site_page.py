@@ -7,7 +7,13 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from site_page import collect_day, remember_letter, rebuild_site, with_rank_tabs  # noqa: E402
+from site_page import (  # noqa: E402
+    collect_day,
+    open_links_in_new_tab,
+    remember_letter,
+    rebuild_site,
+    with_rank_tabs,
+)
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 NOW = datetime(2026, 10, 28, 15, 0, tzinfo=SHANGHAI)
@@ -39,10 +45,13 @@ class SitePageTest(unittest.TestCase):
         page = index.read_text(encoding="utf-8")
         self.assertIn("今日邮件", page)
         self.assertIn("今天 · 2026-10-28", page)
-        self.assertIn("GitHub 热门项目", page)
+        self.assertIn("data-letters", page)
+        self.assertIn(">GITHUB TRENDING</button>", page)
+        self.assertIn(">DAILY THOUGHTS</button>", page)
         self.assertIn("没有把正文留在页面上", page)
         self.assertIn("每日想法 · &lt;测试&gt;", page)
         self.assertNotIn("<测试>", page)
+        self.assertIn('target="_blank"', page)
         letter = (self.root / "docs" / "letters" / "2026-10-28" / "ideas-1201.html").read_text(encoding="utf-8")
         self.assertIn("三条已经发出的话。", letter)
         rows = collect_day(self.root, "2026-10-28")
@@ -58,6 +67,38 @@ class SitePageTest(unittest.TestCase):
     def test_a_day_with_no_mail_says_so(self) -> None:
         page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")
         self.assertIn("今天还没有发出的邮件。", page)
+
+    def test_letter_links_open_in_a_new_tab(self) -> None:
+        source = '<p><a href="https://github.com/example/repo">示例</a></p>'
+        rewritten = open_links_in_new_tab(source)
+        self.assertIn('target="_blank"', rewritten)
+        self.assertIn('rel="noopener noreferrer"', rewritten)
+        remember_letter(
+            self.root,
+            "trending",
+            "08:00",
+            datetime(2026, 10, 28, 8, 5, tzinfo=SHANGHAI),
+            "GitHub 热门项目",
+            f"<!DOCTYPE html><html><body>{source}</body></html>",
+            "示例\n",
+        )
+        remember_letter(
+            self.root,
+            "events",
+            "08:15",
+            datetime(2026, 10, 28, 8, 20, tzinfo=SHANGHAI),
+            "国内外大事",
+            "<!DOCTYPE html><html><body><a href='https://example.com'>新闻</a></body></html>",
+            "新闻\n",
+        )
+        rebuild_site(self.root, NOW)
+        published = (self.root / "docs" / "letters" / "2026-10-28" / "trending-0800.html").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('target="_blank"', published)
+        index = (self.root / "docs" / "index.html").read_text(encoding="utf-8")
+        self.assertIn(">MAJOR EVENTS</button>", index)
+        self.assertIn(">GITHUB TRENDING</button>", index)
 
     def test_trending_boards_become_tabs_on_the_page_only(self) -> None:
         letter = """<!DOCTYPE html><html><body>
