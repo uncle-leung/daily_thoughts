@@ -18,8 +18,16 @@ KIND_TITLE = {
     "ideas": "每日想法",
     "nba": "NBA直播",
 }
+KIND_TAB_LABEL = {
+    "trending": "GITHUB TRENDING",
+    "events": "MAJOR EVENTS",
+    "ideas": "DAILY THOUGHTS",
+    "nba": "NBA直播",
+}
+KIND_ORDER = ("trending", "events", "ideas", "nba")
 STEM_RE = re.compile(r"^(trending|events|ideas|nba)-(\d{4})$")
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.I | re.S)
+ANCHOR_RE = re.compile(r"<a\b([^>]*)>", re.I)
 RANK_SECTION_RE = re.compile(
     r"<h2\b[^>]*>\s*(今日热门|本周热门|本月热门|中文社区今日热门)\s*</h2>\s*"
     r"(?:<div class=\"rank-scroll\"[^>]*>\s*)?(?:<table\b.*?</table>|<p\b.*?</p>)(?:\s*</div>)?",
@@ -262,13 +270,55 @@ def _clock(sent_at: str) -> str:
     return parsed.strftime("%H:%M")
 
 
-def _letter_html(day: str, row: dict[str, str]) -> str:
+def open_links_in_new_tab(page: str) -> str:
+    """Make every anchor open in a new browser tab."""
+
+    def rewrite(match: re.Match[str]) -> str:
+        attrs = match.group(1)
+        if re.search(r"\btarget\s*=", attrs, re.I):
+            attrs = re.sub(
+                r"\btarget\s*=\s*(['\"]).*?\1",
+                'target="_blank"',
+                attrs,
+                count=1,
+                flags=re.I,
+            )
+        else:
+            attrs = f'{attrs} target="_blank"'
+        if not re.search(r"\brel\s*=", attrs, re.I):
+            attrs = f'{attrs} rel="noopener noreferrer"'
+        elif "noopener" not in attrs.casefold():
+            attrs = re.sub(
+                r"\brel\s*=\s*(['\"])(.*?)\1",
+                lambda found: f'rel="{found.group(2)} noopener noreferrer"',
+                attrs,
+                count=1,
+                flags=re.I,
+            )
+        return f"<a{attrs}>"
+
+    return ANCHOR_RE.sub(rewrite, page)
+
+
+def _sorted_day_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    rank = {kind: index for index, kind in enumerate(KIND_ORDER)}
+    return sorted(
+        rows,
+        key=lambda item: (
+            rank.get(item["kind"], 99),
+            item["sentAt"] or "9999",
+            item["slot"],
+        ),
+    )
+
+
+def _letter_html(day: str, row: dict[str, str], *, heading: bool = True) -> str:
     title = KIND_TITLE[row["kind"]]
     stem = f"{row['kind']}-{row['slot'].replace(':', '')}"
     clock = _clock(row["sentAt"])
     when = f"{clock} 发出" if clock else "已发出"
     subject = row["subject"]
-    head = f"<h2 id=\"letter-{stem}\">{html.escape(title)}</h2>"
+    head = f"<h2 id=\"letter-{stem}\">{html.escape(title)}</h2>" if heading else ""
     meta = f"<p class=\"meta\">{html.escape(when)}"
     if subject:
         meta += f" · {html.escape(subject)}"
@@ -278,7 +328,7 @@ def _letter_html(day: str, row: dict[str, str]) -> str:
         frame = (
             f"<iframe title=\"{html.escape(title)}\" src=\"{href}\" "
             "onload=\"fitLetter(this)\"></iframe>"
-            f"<p class=\"open\"><a href=\"{href}\">单独打开这封</a></p>"
+            f"<p class=\"open\"><a href=\"{href}\" target=\"_blank\" rel=\"noopener noreferrer\">单独打开这封</a></p>"
         )
         return f"<article class=\"letter\">{head}{meta}{frame}</article>"
     if row["text"]:
@@ -288,24 +338,63 @@ def _letter_html(day: str, row: dict[str, str]) -> str:
     return f"<article class=\"letter missing\">{head}{meta}<p>{note}</p></article>"
 
 
+def letter_tabs_markup(day: str, rows: list[dict[str, str]], *, prefix: str = "today") -> str:
+    """One tab per letter kind so the day fits without scrolling through every body."""
+    ordered = _sorted_day_rows(rows)
+    if not ordered:
+        return ""
+    if len(ordered) == 1:
+        return _letter_html(day, ordered[0])
+    kind_counts: dict[str, int] = {}
+    for row in ordered:
+        kind_counts[row["kind"]] = kind_counts.get(row["kind"], 0) + 1
+    buttons: list[str] = []
+    panels: list[str] = []
+    for index, row in enumerate(ordered):
+        key = f"{prefix}-{row['kind']}-{row['slot'].replace(':', '')}"
+        label = KIND_TAB_LABEL.get(row["kind"], KIND_TITLE[row["kind"]])
+        if kind_counts.get(row["kind"], 0) > 1:
+            label = f"{label} · {row['slot']}"
+        selected = "true" if index == 0 else "false"
+        hidden = "" if index == 0 else " hidden"
+        buttons.append(
+            f'<button type="button" role="tab" id="tab-{html.escape(key)}" '
+            f'aria-controls="panel-{html.escape(key)}" aria-selected="{selected}">'
+            f"{html.escape(label)}</button>"
+        )
+        panels.append(
+            f'<div class="letter-panel" id="panel-{html.escape(key)}" role="tabpanel" '
+            f'aria-labelledby="tab-{html.escape(key)}"{hidden}>'
+            f"{_letter_html(day, row, heading=False)}</div>"
+        )
+    return (
+        f'<div class="letter-switch" data-letters data-prefix="{html.escape(prefix)}">'
+        f'<div class="letter-tabs" role="tablist">{"".join(buttons)}</div>'
+        f'{"".join(panels)}</div>'
+    )
+
+
 def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> str:
     today_rows = next((rows for day, rows in days if day == today), [])
     earlier = [(day, rows) for day, rows in days if day != today and rows]
+    lead = f"今天 · {today}"
     if today_rows:
-        lead = f"今天 · {today}"
-        body = "".join(_letter_html(today, row) for row in today_rows)
-        stale = ""
+        body = letter_tabs_markup(today, today_rows, prefix="today")
     else:
-        lead = f"今天 · {today}"
         body = "<p class=\"empty\" id=\"empty\">今天还没有发出的邮件。</p>"
-        stale = ""
     earlier_html = ""
     if earlier:
         blocks = []
         for day, rows in earlier:
-            inner = "".join(_letter_html(day, row) for row in rows)
-            blocks.append(f"<section class=\"earlier-day\"><h2 class=\"day-label\">{html.escape(day)}</h2>{inner}</section>")
-        earlier_html = "<details class=\"earlier\"><summary>更早的信</summary>" + "".join(blocks) + "</details>"
+            inner = letter_tabs_markup(day, rows, prefix=f"day-{day}")
+            blocks.append(
+                f"<section class=\"earlier-day\"><h2 class=\"day-label\">{html.escape(day)}</h2>{inner}</section>"
+            )
+        earlier_html = (
+            "<details class=\"earlier\"><summary>更早的信</summary>"
+            + "".join(blocks)
+            + "</details>"
+        )
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -321,8 +410,20 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
     header.top p {{ margin: 8px 0 0; color: #c9d1d9; font-size: 14px; line-height: 1.6; }}
     h1 {{ margin: 0; font-size: 28px; }}
     #lead {{ margin-top: 8px; font-size: 15px; color: #c9d1d9; }}
+    .letter-switch {{ margin-top: 18px; }}
+    .letter-tabs {{
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+    }}
+    .letter-tabs button {{
+      appearance: none; border: 1px solid #d0d7de; background: #fff; color: #1f2328;
+      border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 13px; line-height: 1.2;
+      letter-spacing: 0.02em; cursor: pointer;
+    }}
+    .letter-tabs button[aria-selected="true"] {{
+      background: #1f2328; border-color: #1f2328; color: #fff;
+    }}
     article.letter {{
-      margin-top: 18px; background: #fff; border: 1px solid #d0d7de; border-radius: 16px; padding: 16px 16px 12px;
+      margin-top: 0; background: #fff; border: 1px solid #d0d7de; border-radius: 16px; padding: 16px 16px 12px;
     }}
     article.letter h2 {{ margin: 0; font-size: 18px; }}
     .meta {{ margin: 6px 0 12px; color: #57606a; font-size: 13px; }}
@@ -344,12 +445,11 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
     <header class="top">
       <h1>今日邮件</h1>
       <p id="lead" data-date="{html.escape(today)}">{html.escape(lead)}</p>
-      <p>这里是已经发出的信。定时任务发完一封，就会把正文留在这个页面上。</p>
+      <p>这里是已经发出的信。点上方标签切换，不用一直往下翻。</p>
       <p id="stale">今天的信还没发。下面是最近留下的内容。</p>
     </header>
     {body}
     {earlier_html}
-    {stale}
   </main>
   <script>
     function fitLetter(frame) {{
@@ -357,6 +457,28 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
         frame.style.height = (frame.contentDocument.documentElement.scrollHeight + 12) + "px";
       }} catch (err) {{}}
     }}
+    function showLetterPanel(root, id) {{
+      if (!root) return;
+      var panels = root.querySelectorAll(".letter-panel");
+      for (var i = 0; i < panels.length; i++) panels[i].hidden = panels[i].id !== id;
+      var bar = root.querySelector(".letter-tabs");
+      if (!bar) return;
+      var tabs = bar.querySelectorAll("[role='tab']");
+      for (var j = 0; j < tabs.length; j++) {{
+        tabs[j].setAttribute("aria-selected", tabs[j].getAttribute("aria-controls") === id ? "true" : "false");
+      }}
+      var active = document.getElementById(id);
+      if (!active) return;
+      var frame = active.querySelector("iframe");
+      if (frame) fitLetter(frame);
+    }}
+    document.addEventListener("click", function (event) {{
+      var tab = event.target.closest ? event.target.closest(".letter-tabs [role='tab']") : null;
+      if (!tab) return;
+      var root = tab.closest("[data-letters]");
+      if (!root) return;
+      showLetterPanel(root, tab.getAttribute("aria-controls"));
+    }});
     window.addEventListener("message", function (event) {{
       var data = event.data || {{}};
       if (data.source !== "daily-letter") return;
@@ -413,7 +535,7 @@ def rebuild_site(root: Path, now: datetime | None = None) -> Path:
             target = letters / day
             target.mkdir(parents=True, exist_ok=True)
             body = with_rank_tabs(row["html"]) if row["kind"] == "trending" else row["html"]
-            (target / f"{stem}.html").write_text(body, encoding="utf-8")
+            (target / f"{stem}.html").write_text(open_links_in_new_tab(body), encoding="utf-8")
     index = docs / "index.html"
     index.write_text(render_index(days, today), encoding="utf-8")
     (docs / ".nojekyll").write_text("", encoding="utf-8")
