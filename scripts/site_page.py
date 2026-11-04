@@ -16,8 +16,9 @@ KIND_TITLE = {
     "trending": "GitHub 热门项目",
     "events": "国内外大事",
     "ideas": "每日想法",
+    "nba": "NBA直播",
 }
-STEM_RE = re.compile(r"^(trending|events|ideas)-(\d{4})$")
+STEM_RE = re.compile(r"^(trending|events|ideas|nba)-(\d{4})$")
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.I | re.S)
 RANK_SECTION_RE = re.compile(
     r"<h2\b[^>]*>\s*(今日热门|本周热门|本月热门|中文社区今日热门)\s*</h2>\s*"
