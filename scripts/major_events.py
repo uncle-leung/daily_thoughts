@@ -369,10 +369,10 @@ def render_html(
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f8fa;">
     <tr><td align="center" style="padding:24px 12px;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;">
-        <tr><td style="background:#1f2328;color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;">
-          <div style="font-size:13px;letter-spacing:0.04em;color:#c9d1d9;">MAJOR EVENTS</div>
+        <tr><td style="background:linear-gradient(135deg,#0c2430 0%,#123a48 55%,#0f2f3c 100%);color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;border-bottom:2px solid #14b8a6;">
+          <div style="font-size:13px;letter-spacing:0.04em;color:#9ad7d0;">MAJOR EVENTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">国内 10 条 · 国外 10 条</div>
-          <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">{html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:15 与 18:15</div>
+          <div style="font-size:13px;color:#9ad7d0;margin-top:8px;">{html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:15 与 18:15</div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:8px 24px 22px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
           <h2 style="margin:18px 0 0;font-size:16px;">国内大事</h2>

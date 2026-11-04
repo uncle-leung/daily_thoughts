@@ -12,6 +12,7 @@ from site_page import (  # noqa: E402
     open_links_in_new_tab,
     remember_letter,
     rebuild_site,
+    theme_published_letter,
     with_rank_tabs,
 )
 
@@ -67,6 +68,44 @@ class SitePageTest(unittest.TestCase):
     def test_a_day_with_no_mail_says_so(self) -> None:
         page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")
         self.assertIn("今天还没有发出的邮件。", page)
+
+    def test_index_page_uses_the_tech_theme(self) -> None:
+        remember_letter(
+            self.root,
+            "trending",
+            "08:00",
+            datetime(2026, 10, 28, 8, 5, tzinfo=SHANGHAI),
+            "GitHub 热门项目",
+            "<!DOCTYPE html><html><head></head><body><a href='https://github.com/x'>x</a></body></html>",
+            "x\n",
+        )
+        remember_letter(
+            self.root,
+            "nba",
+            "08:45",
+            datetime(2026, 10, 28, 8, 50, tzinfo=SHANGHAI),
+            "NBA直播",
+            "<!DOCTYPE html><html><body><td style=\"background:#1f2328;color:#c9d1d9\">NBA</td></body></html>",
+            "nba\n",
+        )
+        rebuild_site(self.root, NOW)
+        index = (self.root / "docs" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("Space Grotesk", index)
+        self.assertIn("Daily Thoughts", index)
+        self.assertIn("--accent: #14b8a6", index)
+        self.assertIn(">NBA LIVE</button>", index)
+        letter = (self.root / "docs" / "letters" / "2026-10-28" / "nba-0845.html").read_text(encoding="utf-8")
+        self.assertIn("data-daily-theme", letter)
+        self.assertIn("#0c2430", letter)
+
+    def test_theme_published_letter_rewrites_flat_black_headers(self) -> None:
+        page = theme_published_letter(
+            '<html><head></head><body style="background:#f6f8fa">'
+            '<td style="background:#1f2328;color:#c9d1d9">X</td></body></html>'
+        )
+        self.assertIn("data-daily-theme", page)
+        self.assertIn("linear-gradient(135deg,#0c2430", page)
+        self.assertNotIn('style="background:#1f2328', page)
 
     def test_letter_links_open_in_a_new_tab(self) -> None:
         source = '<p><a href="https://github.com/example/repo">示例</a></p>'

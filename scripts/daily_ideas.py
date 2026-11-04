@@ -363,10 +363,10 @@ def render_html(ideas: list[dict[str, str]], now: datetime | None = None) -> str
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f8fa;">
     <tr><td align="center" style="padding:24px 12px;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;">
-        <tr><td style="background:#1f2328;color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;">
-          <div style="font-size:13px;letter-spacing:0.04em;color:#c9d1d9;">DAILY THOUGHTS</div>
+        <tr><td style="background:linear-gradient(135deg,#0c2430 0%,#123a48 55%,#0f2f3c 100%);color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;border-bottom:2px solid #14b8a6;">
+          <div style="font-size:13px;letter-spacing:0.04em;color:#9ad7d0;">DAILY THOUGHTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">十条想法</div>
-          <div style="font-size:13px;color:#c9d1d9;margin-top:8px;">
+          <div style="font-size:13px;color:#9ad7d0;margin-top:8px;">
             {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:30 与 18:30
           </div>
         </td></tr>
