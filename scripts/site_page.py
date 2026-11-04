@@ -22,7 +22,7 @@ KIND_TAB_LABEL = {
     "trending": "GITHUB TRENDING",
     "events": "MAJOR EVENTS",
     "ideas": "DAILY THOUGHTS",
-    "nba": "NBA直播",
+    "nba": "NBA LIVE",
 }
 KIND_ORDER = ("trending", "events", "ideas", "nba")
 STEM_RE = re.compile(r"^(trending|events|ideas|nba)-(\d{4})$")
