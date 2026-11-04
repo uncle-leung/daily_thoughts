@@ -40,14 +40,33 @@ RANK_LABEL = {
     "中文社区今日热门": "中文社区",
 }
 RANK_TAB_STYLE = """
-.rank-tabs { gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+.rank-tabs { gap: 6px; flex-wrap: wrap; margin: 0 0 16px; }
 .rank-tabs button {
-  appearance: none; border: 1px solid #d0d7de; background: #f6f8fa; color: #1f2328;
-  border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 14px; line-height: 1.2; cursor: pointer;
+  appearance: none; border: 1px solid #b7c7d6; background: rgba(255,255,255,0.7); color: #163041;
+  border-radius: 8px; padding: 7px 12px; font: inherit; font-size: 13px; line-height: 1.2; cursor: pointer;
+  letter-spacing: 0.04em; transition: background .18s ease, border-color .18s ease, color .18s ease;
 }
-.rank-tabs button[aria-selected="true"] { background: #1f2328; border-color: #1f2328; color: #fff; }
+.rank-tabs button[aria-selected="true"] {
+  background: #0c2430; border-color: #0c2430; color: #e8fbff;
+  box-shadow: inset 0 -2px 0 #14b8a6;
+}
 .rank-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .rank-panel table { min-width: 680px; }
+""".strip()
+LETTER_PUBLISH_STYLE = """
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+html, body {
+  background: transparent !important;
+  color: #102433 !important;
+  font-family: "IBM Plex Sans", "PingFang SC", "Noto Sans SC", sans-serif !important;
+}
+table[role="presentation"] { background: transparent !important; }
+td[style*="background:#1f2328"], td[style*="background: #1f2328"] {
+  background: linear-gradient(135deg, #0c2430 0%, #123a48 55%, #0f2f3c 100%) !important;
+  border-bottom: 2px solid #14b8a6 !important;
+}
+a { color: #0f766e !important; }
+.rank-tabs button { border-radius: 8px !important; }
 """.strip()
 RANK_TAB_SCRIPT = """
 (function () {
@@ -300,6 +319,25 @@ def open_links_in_new_tab(page: str) -> str:
     return ANCHOR_RE.sub(rewrite, page)
 
 
+def theme_published_letter(page: str) -> str:
+    """Restyle archived letter HTML for the public page without changing the mail archive."""
+    themed = page
+    themed = re.sub(r"background:\s*#f6f8fa", "background:transparent", themed, flags=re.I)
+    themed = re.sub(
+        r"background:\s*#1f2328",
+        "background:linear-gradient(135deg,#0c2430 0%,#123a48 55%,#0f2f3c 100%)",
+        themed,
+        flags=re.I,
+    )
+    themed = re.sub(r"color:\s*#c9d1d9", "color:#9ad7d0", themed, flags=re.I)
+    themed = re.sub(r"color:\s*#0969da", "color:#0f766e", themed, flags=re.I)
+    themed = re.sub(r"border-radius:\s*999px", "border-radius:8px", themed, flags=re.I)
+    style_tag = f"<style data-daily-theme>{LETTER_PUBLISH_STYLE}</style>"
+    if re.search(r"</head>", themed, re.I):
+        return re.sub(r"</head>", style_tag + "</head>", themed, count=1, flags=re.I)
+    return style_tag + themed
+
+
 def _sorted_day_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     rank = {kind: index for index, kind in enumerate(KIND_ORDER)}
     return sorted(
@@ -400,52 +438,243 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>今日邮件</title>
+  <title>今日邮件 · Daily Thoughts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root {{ color-scheme: light; }}
-    body {{ margin: 0; background: #f6f8fa; color: #1f2328;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }}
-    main {{ max-width: 960px; margin: 0 auto; padding: 28px 16px 64px; }}
-    header.top {{ background: #1f2328; color: #fff; border-radius: 16px; padding: 22px 24px; }}
-    header.top p {{ margin: 8px 0 0; color: #c9d1d9; font-size: 14px; line-height: 1.6; }}
-    h1 {{ margin: 0; font-size: 28px; }}
-    #lead {{ margin-top: 8px; font-size: 15px; color: #c9d1d9; }}
-    .letter-switch {{ margin-top: 18px; }}
+    :root {{
+      color-scheme: light;
+      --ink: #071822;
+      --panel: #0c2430;
+      --panel-2: #123a48;
+      --surface: #eef4f8;
+      --card: rgba(255,255,255,0.78);
+      --line: #b7c7d6;
+      --accent: #14b8a6;
+      --accent-ink: #0f766e;
+      --text: #102433;
+      --muted: #5b6f7e;
+      --glow: rgba(20,184,166,0.18);
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "IBM Plex Sans", "PingFang SC", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(1100px 520px at 8% -8%, #c7e8ef 0%, transparent 58%),
+        radial-gradient(900px 480px at 100% 0%, #d7e2f6 0%, transparent 52%),
+        linear-gradient(180deg, #eef5f8 0%, #e5eef5 48%, #e8f1f4 100%);
+    }}
+    body::before {{
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      background-image:
+        linear-gradient(rgba(7,24,34,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(7,24,34,0.045) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+    }}
+    main {{
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+      animation: rise 0.55s ease both;
+    }}
+    @keyframes rise {{
+      from {{ opacity: 0; transform: translateY(10px); }}
+      to {{ opacity: 1; transform: none; }}
+    }}
+    @keyframes accent-in {{
+      from {{ transform: scaleX(0); }}
+      to {{ transform: scaleX(1); }}
+    }}
+    header.top {{
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, var(--panel) 0%, var(--panel-2) 48%, #0f2f3c 100%);
+      color: #eef8fb;
+      border-radius: 18px;
+      padding: 26px 26px 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 40px rgba(7,24,34,0.16);
+    }}
+    header.top::before {{
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, #5eead4, #14b8a6 55%, #0ea5e9);
+      animation: accent-in 0.7s ease both;
+      transform-origin: top;
+    }}
+    header.top::after {{
+      content: "";
+      position: absolute;
+      right: -40px; top: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow), transparent 68%);
+      pointer-events: none;
+    }}
+    .brand {{
+      position: relative;
+      margin: 0;
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9ad7d0;
+      font-weight: 700;
+    }}
+    h1 {{
+      position: relative;
+      margin: 10px 0 0;
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      font-size: clamp(30px, 5vw, 40px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }}
+    header.top p {{
+      position: relative;
+      margin: 10px 0 0;
+      color: #b7ccd6;
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 42rem;
+    }}
+    #lead {{
+      margin-top: 12px;
+      font-size: 15px;
+      color: #dff7f3;
+      font-weight: 500;
+    }}
+    .letter-switch {{ margin-top: 20px; }}
     .letter-tabs {{
-      display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(183,199,214,0.9);
+      backdrop-filter: blur(10px);
     }}
     .letter-tabs button {{
-      appearance: none; border: 1px solid #d0d7de; background: #fff; color: #1f2328;
-      border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 13px; line-height: 1.2;
-      letter-spacing: 0.02em; cursor: pointer;
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #2b4556;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font: inherit;
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }}
+    .letter-tabs button:hover {{
+      background: rgba(20,184,166,0.1);
+      color: var(--ink);
     }}
     .letter-tabs button[aria-selected="true"] {{
-      background: #1f2328; border-color: #1f2328; color: #fff;
+      background: var(--panel);
+      border-color: var(--panel);
+      color: #e8fbff;
+      box-shadow: inset 0 -2px 0 var(--accent);
     }}
     article.letter {{
-      margin-top: 0; background: #fff; border: 1px solid #d0d7de; border-radius: 16px; padding: 16px 16px 12px;
+      margin-top: 0;
+      background: var(--card);
+      border: 1px solid rgba(183,199,214,0.95);
+      border-radius: 16px;
+      padding: 16px 16px 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 28px rgba(7,24,34,0.06);
+      animation: rise 0.35s ease both;
     }}
-    article.letter h2 {{ margin: 0; font-size: 18px; }}
-    .meta {{ margin: 6px 0 12px; color: #57606a; font-size: 13px; }}
-    article.missing {{ background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px 18px; }}
-    article.missing p:last-child {{ margin: 0; color: #57606a; line-height: 1.6; }}
-    iframe {{ width: 100%; min-height: 280px; border: 0; border-radius: 12px; background: #f6f8fa; display: block; }}
-    .open {{ margin: 8px 0 0; font-size: 13px; }}
-    .open a, a {{ color: #0969da; }}
-    pre {{ white-space: pre-wrap; background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; }}
-    .empty {{ background: #fff; border: 1px dashed #d0d7de; border-radius: 12px; padding: 18px; color: #57606a; }}
+    article.letter h2 {{
+      margin: 0;
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }}
+    .meta {{ margin: 6px 0 12px; color: var(--muted); font-size: 13px; }}
+    article.missing {{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }}
+    article.missing p:last-child {{ margin: 0; color: var(--muted); line-height: 1.6; }}
+    iframe {{
+      width: 100%;
+      min-height: 280px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(243,247,251,0.9);
+      display: block;
+    }}
+    .open {{ margin: 10px 0 0; font-size: 13px; }}
+    .open a, a {{ color: var(--accent-ink); text-decoration-thickness: 1px; }}
+    .open a:hover, a:hover {{ color: #0d9488; }}
+    pre {{
+      white-space: pre-wrap;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }}
+    .empty {{
+      background: var(--card);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--muted);
+      backdrop-filter: blur(8px);
+    }}
     details.earlier {{ margin-top: 36px; }}
-    details.earlier summary {{ cursor: pointer; color: #57606a; }}
-    .day-label {{ margin-top: 22px; font-size: 16px; color: #57606a; }}
-    #stale {{ display: none; margin-top: 14px; color: #57606a; }}
+    details.earlier summary {{
+      cursor: pointer;
+      color: var(--muted);
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      letter-spacing: 0.04em;
+    }}
+    .day-label {{
+      margin-top: 22px;
+      font-size: 15px;
+      color: var(--muted);
+      font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+      letter-spacing: 0.06em;
+    }}
+    #stale {{ display: none; margin-top: 14px; color: #fde68a; }}
+    @media (max-width: 640px) {{
+      header.top {{ padding: 22px 18px; }}
+      .letter-tabs button {{ padding: 9px 10px; letter-spacing: 0.04em; font-size: 11px; }}
+    }}
   </style>
 </head>
 <body>
   <main>
     <header class="top">
+      <p class="brand">Daily Thoughts</p>
       <h1>今日邮件</h1>
       <p id="lead" data-date="{html.escape(today)}">{html.escape(lead)}</p>
-      <p>这里是已经发出的信。点上方标签切换，不用一直往下翻。</p>
+      <p>已经发出的信会留在这里。点上方频道切换，不用一直往下翻。</p>
       <p id="stale">今天的信还没发。下面是最近留下的内容。</p>
     </header>
     {body}
@@ -535,7 +764,10 @@ def rebuild_site(root: Path, now: datetime | None = None) -> Path:
             target = letters / day
             target.mkdir(parents=True, exist_ok=True)
             body = with_rank_tabs(row["html"]) if row["kind"] == "trending" else row["html"]
-            (target / f"{stem}.html").write_text(open_links_in_new_tab(body), encoding="utf-8")
+            (target / f"{stem}.html").write_text(
+                theme_published_letter(open_links_in_new_tab(body)),
+                encoding="utf-8",
+            )
     index = docs / "index.html"
     index.write_text(render_index(days, today), encoding="utf-8")
     (docs / ".nojekyll").write_text("", encoding="utf-8")
