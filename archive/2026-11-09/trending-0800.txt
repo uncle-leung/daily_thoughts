@@ -1,0 +1,270 @@
+GitHub 热门项目 · 2026-11-09 08:04（上海）
+
+排名来自 GitHub Trending 官方榜，按该时段新增 Star 排序。每条用两三句话说明这个项目是做什么的。
+整理时间：2026-11-09 08:04 上海时间
+
+## 今日热门
+
+1. sherlock-project/sherlock
+   Hunt down social media accounts by username across social networks。
+   Python · 103,409 Star · 12,121 Fork · 今日 +2,373 Star
+   https://github.com/sherlock-project/sherlock
+
+2. dsx-ai-factory/nvke
+   NVIDIA Kubernetes Engine (NVKE).A management plane for GPU Kubernetes on bare metal。NICo is the sole compatible infrastructure provider at preview。
+   Go · 835 Star · 110 Fork · 今日 +345 Star
+   https://github.com/dsx-ai-factory/nvke
+
+3. milind-soni/OpenMausBot
+   Open-source Grok Bot alternative with a virtual machine that bots can use。OpenMausBot is an open-source Grok Bot alternative: an independent project inspired by Grok Bot, and the open-source alternative to Meta Muse, OpenAI dots and Cue by Manus — bring-your-own-agent, local-first, on the。
+   TypeScript · 18,218 Star · 2,532 Fork · 今日 +1,439 Star
+   https://github.com/milind-soni/OpenMausBot
+
+4. anthropics/claude-quickstarts
+   A collection of projects designed to help developers quickly get started with building deployable applications using the Claude API。Claude Quickstarts is a collection of projects designed to help developers quickly get started with building applications using the Claude API。
+   Python · 19,401 Star · 3,281 Fork · 今日 +32 Star
+   https://github.com/anthropics/claude-quickstarts
+
+5. vercel-labs/agent-browser
+   Browser automation CLI for AI agents。agent-browser is a native Rust CLI that gives an AI agent a browser it can drive one command at a time。
+   Rust · 47,560 Star · 3,257 Fork · 今日 +815 Star
+   https://github.com/vercel-labs/agent-browser
+
+6. meta/astryx
+   An open source design system that's fully customizable and agent ready。Astryx is an open source design system that grew inside Meta over the last eight years, where it became the most-used and largest design system in the company — powering 13,000+ apps and shaped by the engineers。
+   TypeScript · 16,667 Star · 1,317 Fork · 今日 +875 Star
+   https://github.com/meta/astryx
+
+7. anthropics/skills
+   Public repository for Agent Skills。
+   Python · 189,609 Star · 22,346 Fork · 今日 +792 Star
+   https://github.com/anthropics/skills
+
+8. google-deepmind/mujoco
+   Multi-Joint dynamics with Contact.A general purpose physics simulator。It is a general purpose physics engine that aims to facilitate research and development in robotics, biomechanics, graphics and animation, machine learning, and other areas which demand fast and accurate simulation of。
+   C++ · 16,392 Star · 1,952 Fork · 今日 +41 Star
+   https://github.com/google-deepmind/mujoco
+
+9. ranxianglei/billion-context
+   A context-compression plugin for month-long single sessions (billions of tokens) ,small context windows (a 100K context is enough) and token savings (5x fewer tokens) .上下文压缩插件，月级长会话会话， 兼顾小窗口(100k上下文足矣)省token(省5倍token) .billion-context is all you need。
+   TypeScript · 5,122 Star · 404 Fork · 今日 +460 Star
+   https://github.com/ranxianglei/billion-context
+
+## 本周热门
+
+1. NVIDIA/auto-ontology
+   Auto Ontology is a Python framework for building semantic, graph-based reasoning layers over data.It enables deterministic query generation, better context retrieval, and more explainable AI for LLM and agent workflows。NVIDIA Auto Ontology is an open library that builds that layer from enterprise metadata, reconciles definitions across systems, and exposes it to any agent harness through MCP, CLI, and API。
+   Python · 10,361 Star · 837 Fork · 本周 +9,327 Star
+   https://github.com/NVIDIA/auto-ontology
+
+2. thedotmack/claude-mem
+   Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions.Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More。
+   TypeScript · 114,893 Star · 9,980 Fork · 本周 +6,443 Star
+   https://github.com/thedotmack/claude-mem
+
+3. max-sixty/worktrunk
+   Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows。Worktrunk is a CLI for git worktree management, designed for running AI agents in parallel。
+   Rust · 12,114 Star · 468 Fork · 本周 +2,313 Star
+   https://github.com/max-sixty/worktrunk
+
+4. anthropics/skills
+   Public repository for Agent Skills。
+   Python · 189,609 Star · 22,346 Fork · 本周 +3,169 Star
+   https://github.com/anthropics/skills
+
+5. Donchitos/Claude-Code-Game-Studios
+   Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy。A fair question, and the answer is a measurement rather than a sample project。
+   Shell · 36,993 Star · 4,873 Fork · 本周 +5,235 Star
+   https://github.com/Donchitos/Claude-Code-Game-Studios
+
+6. milind-soni/OpenMausBot
+   Open-source Grok Bot alternative with a virtual machine that bots can use。OpenMausBot is an open-source Grok Bot alternative: an independent project inspired by Grok Bot, and the open-source alternative to Meta Muse, OpenAI dots and Cue by Manus — bring-your-own-agent, local-first, on the。
+   TypeScript · 18,218 Star · 2,532 Fork · 本周 +7,621 Star
+   https://github.com/milind-soni/OpenMausBot
+
+7. pingdotgg/t3code
+   T3 Code is an "agent harness control surface"。
+   TypeScript · 52,469 Star · 10,012 Fork · 本周 +15,379 Star
+   https://github.com/pingdotgg/t3code
+
+8. Nutlope/hallmark
+   Anti-AI-slop design skill for Claude Code, Cursor, and Codex。A theme is a material, not a plan: it never says what a page contains or in what order, so two prompts in one theme make two different pages。
+   CSS · 50,950 Star · 2,705 Fork · 本周 +6,356 Star
+   https://github.com/Nutlope/hallmark
+
+9. Renhuai123/ziwei-doushu
+   紫微斗数开源排盘引擎 — 基于倪海厦《天纪》体系，含完整排盘算法、四化系统、格局知识库、古籍原文数据。
+   TypeScript · 16,953 Star · 3,280 Fork · 本周 +4,191 Star
+   https://github.com/Renhuai123/ziwei-doushu
+
+10. D4Vinci/Scrapling
+   ️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl!Don't be shy, join here: https://discord.gg/EMgGbDceNQ and follow here for daily tips and tricks: https://x.com/Scrapling_dev。Scrapling is a Python Web Scraping framework that brings fast HTTP requests, stealth browsers, powerful parsing, and concurrent crawling into one library。
+   Python · 99,859 Star · 10,439 Fork · 本周 +8,342 Star
+   https://github.com/D4Vinci/Scrapling
+
+11. vercel-labs/agent-browser
+   Browser automation CLI for AI agents。agent-browser is a native Rust CLI that gives an AI agent a browser it can drive one command at a time。
+   Rust · 47,560 Star · 3,257 Fork · 本周 +2,190 Star
+   https://github.com/vercel-labs/agent-browser
+
+12. mattpocock/skills
+   Skills for Real Engineers.Straight from my .agents directory。There is a communication gap between you and the agent。
+   Shell · 318,495 Star · 26,655 Fork · 本周 +9,635 Star
+   https://github.com/mattpocock/skills
+
+13. jakubkrehel/skills
+   A collection of agent skills that help you build great interfaces。teardown: Creates a technical illustration of an object and lets you configure it, color it and download as an SVG, PNG or PDF。
+   Markdown · 11,719 Star · 456 Fork · 本周 +1,857 Star
+   https://github.com/jakubkrehel/skills
+
+14. github/spec-kit
+   Toolkit to help you get started with SDD or any other process。Spec Kit is an open source toolkit that gives AI coding agents structured processes, reusable templates, and documented outcomes。
+   Python · 148,705 Star · 13,356 Fork · 本周 +4,045 Star
+   https://github.com/github/spec-kit
+
+15. The-PR-Agent/pr-agent
+   PR Agent: The Original Open-Source PR Reviewer.This project is not the Qodo free tier。PR-Agent is an open-source, AI-powered code review agent and a community-maintained legacy project of Qodo。
+   Python · 15,601 Star · 2,150 Fork · 本周 +1,706 Star
+   https://github.com/The-PR-Agent/pr-agent
+
+## 本月热门
+
+1. morluto/rea
+   Reverse engineer anything with agents, from app behavior down to native binaries。rea --update is an alias for this verified workflow and accepts the same global output flags。
+   TypeScript · 443,723 Star · 109,608 Fork · 本月 +425,123 Star
+   https://github.com/morluto/rea
+
+2. Nutlope/hallmark
+   Anti-AI-slop design skill for Claude Code, Cursor, and Codex。A theme is a material, not a plan: it never says what a page contains or in what order, so two prompts in one theme make two different pages。
+   CSS · 50,950 Star · 2,705 Fork · 本月 +21,146 Star
+   https://github.com/Nutlope/hallmark
+
+3. cloudflare/security-audit-skill
+   A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings。A coding-agent skill that turns your agent into a security auditor。
+   JavaScript · 66,822 Star · 4,357 Fork · 本月 +40,289 Star
+   https://github.com/cloudflare/security-audit-skill
+
+4. storytold/artcraft
+   ArtCraft is an intentional crafting engine for artists, designers, and filmmakers。ArtCraft is the IDE for interactive AI image and video creation。
+   Rust · 39,892 Star · 6,253 Fork · 本月 +33,780 Star
+   https://github.com/storytold/artcraft
+
+5. heygen-com/hyperframes
+   Write HTML，Render video，Built for agents。HyperFrames is a free, open-source framework for turning HTML, CSS, media, and seekable animations into deterministic MP4 videos。
+   TypeScript · 81,080 Star · 7,485 Fork · 本月 +22,360 Star
+   https://github.com/heygen-com/hyperframes
+
+6. debpalash/VoiceStudio
+   VoiceStudio is the open-source, fully-local ElevenLabs alternative — voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages。
+   Python · 104,969 Star · 11,668 Fork · 本月 +50,169 Star
+   https://github.com/debpalash/VoiceStudio
+
+7. pingdotgg/t3code
+   T3 Code is an "agent harness control surface"。
+   TypeScript · 52,469 Star · 10,012 Fork · 本月 +25,840 Star
+   https://github.com/pingdotgg/t3code
+
+8. thedotmack/claude-mem
+   Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions.Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More。
+   TypeScript · 114,893 Star · 9,980 Fork · 本月 +17,296 Star
+   https://github.com/thedotmack/claude-mem
+
+9. boykopovar/AnyPS5
+   Tool for automatic PS5 executables porting to Linux and Windows。AnyPS5 is an independent project and is not affiliated with, authorized or endorsed by Sony Interactive Entertainment。
+   C++ · 52,332 Star · 4,975 Fork · 本月 +39,354 Star
+   https://github.com/boykopovar/AnyPS5
+
+10. pbakaus/impeccable
+   The design vocabulary for your coding agent.Steer with polish and bolder, review with critique and audit, catch AI slop before it ships。Review | critique is a scored UX review · audit is a technical quality report。
+   Rust · 106,195 Star · 6,309 Fork · 本月 +28,008 Star
+   https://github.com/pbakaus/impeccable
+
+11. HKUDS/DeepTutor
+   DeepTutor: Lifelong Personalized Tutoring.https://deeptutor.info/。
+   Python · 56,984 Star · 6,947 Fork · 本月 +16,065 Star
+   https://github.com/HKUDS/DeepTutor
+
+12. NationalSecurityAgency/ghidra
+   Ghidra is a software reverse engineering (SRE) framework。
+   Java · 98,777 Star · 11,213 Fork · 本月 +17,344 Star
+   https://github.com/NationalSecurityAgency/ghidra
+
+## 中文社区今日热门
+
+1. xiaojieonly/Ehviewer_CN_SXJ
+   ehviewer，用爱发电，快乐前行。这是一个 E-Hentai Android 平台的浏览器。
+   C · 28,857 Star · 769 Fork · 今日 +49 Star
+   https://github.com/xiaojieonly/Ehviewer_CN_SXJ
+
+2. immersive-translate/immersive-translate
+   沉浸式双语网页翻译扩展 , 支持输入框翻译， 鼠标悬停翻译， PDF, Epub, 字幕文件, TXT 文件翻译 - Immersive Dual Web Page Translation Extension。在适用的官方翻译服务范围内，翻译内容不用于 AI 模型训练。
+   未标注语言 · 19,649 Star · 1,159 Fork · 今日 +25 Star
+   https://github.com/immersive-translate/immersive-translate
+
+3. halo-dev/halo
+   Halo 是一款强大易用的开源建站工具。从个人博客、知识库。到企业官网、在线商城。
+   Java · 40,164 Star · 10,316 Fork · 今日 +19 Star
+   https://github.com/halo-dev/halo
+
+4. 521xueweihan/GitHub520
+   让你“爱”上 GitHub，解决访问时图裂、加载慢的问题。（无需安装）。
+   Python · 30,173 Star · 2,767 Fork · 今日 +20 Star
+   https://github.com/521xueweihan/GitHub520
+
+5. lionsoul2014/ip2region
+   Ip2region is an offline IP-to-Region localization library and IP data management framework with both IPv4 and IPv6 supports, 10-microsecond level query efficiency, xdb search client for many programming languages。ip2region - is an offline IP address localization library and IP localization data management framework。
+   Go · 19,863 Star · 3,100 Fork · 今日 +7 Star
+   https://github.com/lionsoul2014/ip2region
+
+6. Johnshall/Shadowrocket-ADBlock-Rules-Forever
+   提供多款 Shadowrocket 规则，拥有强劲的广告过滤功能。每日 8 时重新构建规则。如果大家在上网过程中不经意看到了某些观点，务必保留自己独立思考的能力，如果你是一个容易被带偏的人，则建议回到屏障之中。
+   未标注语言 · 31,926 Star · 2,122 Fork · 今日 +30 Star
+   https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever
+
+7. shadow1ng/fscan
+   一款内网综合扫描工具，方便一键自动化、全方位漏扫扫描。SDK嵌入 - pkg/fscan提供Go SDK，可嵌入Agent或安全平台，支持任务控制(Pause/Resume)、实时进度回调、TaskID追溯 Web管理界面 - 可视化扫描任务管理(条件编译 -tags web) Lab靶场环境 - 内置Docker靶场用于测试学习 插件化架构 - 服务插件/Web插件/本地插件分离，易于扩展 多语言支持 - 中英文界面切换(-lang zh/en) 性能统计 -。
+   Go · 14,768 Star · 1,955 Fork · 今日 +8 Star
+   https://github.com/shadow1ng/fscan
+
+8. auto-novel/auto-novel
+   轻小说机翻网站，支持网络小说/文库小说/本地小说。轻小说机翻机器人是一个自动生成轻小说机翻并分享的网站。
+   TypeScript · 1,257 Star · 108 Fork · 今日 +5 Star
+   https://github.com/auto-novel/auto-novel
+
+9. nilaoda/N_m3u8DL-RE
+   English/简体中文/繁體中文。Cookie 会按请求的域名、路径、HTTPS 条件及有效期匹配，适用于清单、密钥、初始化文件和分片，支持点播及直播。
+   C# · 9,049 Star · 892 Fork · 今日 +6 Star
+   https://github.com/nilaoda/N_m3u8DL-RE
+
+10. pymumu/smartdns
+   一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验。SmartDNS 是一个运行在本地的 DNS 服务器。它接受来自本地客户端的 DNS 查询请求。
+   C · 11,389 Star · 1,252 Fork · 今日 +4 Star
+   https://github.com/pymumu/smartdns
+
+11. d2l-ai/d2l-zh
+   《动手学深度学习》：面向中文读者、能运行、可讨论。中英文版被70多个国家的500多所大学用于教学。
+   Python · 82,352 Star · 12,483 Fork · 今日 +33 Star
+   https://github.com/d2l-ai/d2l-zh
+
+12. maotoumao/MusicFree
+   插件化、定制化、无广告的免费音乐播放器。插件化：本软件仅仅是一个播放器，本身并不集成任何平台的任何音源，所有的搜索、播放、歌单导入等功能全部基于插件。
+   TypeScript · 28,360 Star · 2,024 Fork · 今日 +45 Star
+   https://github.com/maotoumao/MusicFree
+
+13. zhayujie/CowAgent
+   Open-source personal AI assistant & Agent Harness.Plans tasks, runs tools and skills, self-evolves with memory and knowledge.Multi-agent, multi-model, multi-channel.
+   Python · 47,839 Star · 10,420 Fork · 今日 +10 Star
+   https://github.com/zhayujie/CowAgent
+
+14. ScottSloan/Bili23-Downloader
+   开源、免费、跨平台的 B 站视频下载工具，支持多线程加速、音视频分离、弹幕元数据获取、自定义命名与分类等功能。下载管理 | 下载列表显示进度百分比与预计剩余时间，以标签展示画质、编码、音质、格式与附加内容；支持按标题、文件名、UP 主、合集名、BV 号搜索，并可按状态与媒体类型筛选，批量操作只作用于当前显示的任务。
+   Python · 8,921 Star · 636 Fork · 今日 +18 Star
+   https://github.com/ScottSloan/Bili23-Downloader
+
+15. RayWangQvQ/BiliBiliToolPro
+   B 站（bilibili）自动任务工具，支持docker、青龙、k8s等多种部署方式。全面拥抱AI。
+   C# · 9,184 Star · 1,929 Fork · 今日 +10 Star
+   https://github.com/RayWangQvQ/BiliBiliToolPro
+
+每天 08:00 和 18:00（上海时间）自动发送。
+来源：https://github.com/trending
