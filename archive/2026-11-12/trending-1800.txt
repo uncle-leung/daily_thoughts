@@ -1,0 +1,280 @@
+GitHub 热门项目 · 2026-11-13 01:49（上海）
+
+排名来自 GitHub Trending 官方榜，按该时段新增 Star 排序。每条用两三句话说明这个项目是做什么的。
+整理时间：2026-11-13 01:49 上海时间
+
+## 今日热门
+
+1. GoogleChrome/modern-web-guidance-src
+   此存储库是 GoogleChrome/modern-web-guidance 的源存储库，包括用于创作、校准和评估其内容的代码和文档。
+   TypeScript · 2,566 Star · 180 Fork · 今日 +799 Star
+   https://github.com/GoogleChrome/modern-web-guidance-src
+
+2. openai/codex-security
+   OpenAI 的 Codex Security CLI 和 TypeScript SDK 用于查找、验证和修复安全漏洞。npm：https://www.npmjs.com/package/@openai/codex-security。Codex Security 可帮助您查找、调查和修复代码中的漏洞。
+   TypeScript · 12,238 Star · 970 Fork · 今日 +663 Star
+   https://github.com/openai/codex-security
+
+3. nvm-sh/nvm
+   Node Version Manager - 符合 POSIX 的 bash 脚本，用于管理多个活动的 Node.js 版本。nvm 是 Node.js 的版本管理器，设计为按用户安装并按 shell 调用。
+   Shell · 95,969 Star · 10,755 Fork · 今日 +107 Star
+   https://github.com/nvm-sh/nvm
+
+4. pookjw/HermesEnabler
+   在任何 Apple Watch 设备上启用 Hermès 表盘。
+   Objective-C · 1,449 Star · 136 Fork · 今日 +390 Star
+   https://github.com/pookjw/HermesEnabler
+
+5. we-promise/sure
+   适合所有人（所有人）的个人理财应用程序。该存储库是存档 Maybe Finance 存储库的社区分支。
+   Ruby · 13,698 Star · 1,016 Fork · 今日 +974 Star
+   https://github.com/we-promise/sure
+
+6. QwenLM/qwen-code
+   位于您终端中的开源人工智能编程智能体。
+   TypeScript · 29,682 Star · 3,389 Fork · 今日 +151 Star
+   https://github.com/QwenLM/qwen-code
+
+7. ashhart/TensorFold
+   适用于 Metal、CUDA 和 Vulkan 的大型语言模型推理引擎。
+   Zig · 1,881 Star · 390 Fork · 今日 +94 Star
+   https://github.com/ashhart/TensorFold
+
+8. nodejs/node
+   Node.js JavaScript 运行时。Node.js 是一个开源、跨平台的 JavaScript 运行时环境。
+   JavaScript · 123,545 Star · 38,052 Fork · 今日 +133 Star
+   https://github.com/nodejs/node
+
+9. addyosmani/agent-skills
+   AI 编程智能体的生产级工程技能。
+   JavaScript · 116,516 Star · 12,202 Fork · 今日 +812 Star
+   https://github.com/addyosmani/agent-skills
+
+10. meta/astryx
+   一个完全可定制且可供代理使用的开源设计系统。Astryx 是一个开源设计系统，在过去八年里在 Meta 内部发展，成为公司中使用最广泛、最大的设计系统 — 为 13,000 多个应用程序提供支持，并由工程师塑造。
+   TypeScript · 26,252 Star · 2,034 Fork · 今日 +1,789 Star
+   https://github.com/meta/astryx
+
+11. CopilotKit/OpenBot
+   开源人工智能同事每人都有一台自己的计算机：浏览器、文件和工具，每一个动作在发生之前就决定并在发生之后记录。带上任何 AG-UI 代理。此配置是单用户的：任何可以访问它的人都是管理员。
+   TypeScript · 11,403 Star · 1,413 Fork · 今日 +291 Star
+   https://github.com/CopilotKit/OpenBot
+
+12. Alishahryar1/free-claude-code
+   从您的终端、应用程序、IDE 或手机免费使用 Claude Code、Codex、Antigravity、VSCode、Pi 和 OpenCode（以及其他 6 个框架）（1.3B+ 免费代币），现在可以从具有本机浏览器会话（多框架 + 多模型）的浏览器（如 OpenClaw（支持语音 + ToS 友好））使用。
+   Python · 69,064 Star · 10,739 Fork · 今日 +461 Star
+   https://github.com/Alishahryar1/free-claude-code
+
+13. ggml-org/llama.cpp
+   C/C++ 中的大型语言模型推理。没有任何依赖性的纯 C/C++ 实现 Apple 芯片是一等公民 - 通过 ARM NEON、Accelerate 和 Metal 框架 AVX、AVX2、AVX512 和 AMX 对 x86 架构 RVV、ZVFH 支持进行优化。
+   C++ · 134,407 Star · 25,490 Fork · 今日 +287 Star
+   https://github.com/ggml-org/llama.cpp
+
+## 本周热门
+
+1. anthropics/skills
+   代理技能的公共存储库。
+   Python · 193,592 Star · 22,772 Fork · 本周 +5,738 Star
+   https://github.com/anthropics/skills
+
+2. milind-soni/OpenMausBot
+   开源 Grok Bot 替代品，带有机器人可以使用的虚拟机。OpenMausBot 是一个开源的 Grok Bot 替代品：一个受 Grok Bot 启发的独立项目，也是 Meta Muse、OpenAIdots 和 Manus 的 Cue 的开源替代品——自带代理，本地优先。
+   TypeScript · 21,632 Star · 3,011 Fork · 本周 +9,257 Star
+   https://github.com/milind-soni/OpenMausBot
+
+3. vercel-labs/agent-browser
+   用于 AI 代理的浏览器自动化 CLI。agent-browser 是一个原生 Rust CLI，它为 AI 代理提供了一个浏览器，它可以一次驱动一个命令。
+   Rust · 50,252 Star · 3,498 Fork · 本周 +4,183 Star
+   https://github.com/vercel-labs/agent-browser
+
+4. NVIDIA/auto-ontology
+   Auto Ontology 是一个 Python 框架，用于在数据上构建语义、基于图形的推理层。它可以为大型语言模型和代理工作流程提供确定性查询生成、更好的上下文检索以及更可解释的人工智能。NVIDIA Auto Ontology 是一个开放库，它根据企业元数据构建该层，协调跨系统的定义，并通过 MCP、CLI 和 API 将其公开给任何智能体框架。
+   Python · 12,165 Star · 1,004 Fork · 本周 +7,947 Star
+   https://github.com/NVIDIA/auto-ontology
+
+5. cloudflare/security-audit-skill
+   用于多阶段安全审计的编程智能体技能，具有独立验证、机器可读的结果。一种编程智能体技能，可将你的智能体变成安全审核员。
+   JavaScript · 70,980 Star · 4,718 Fork · 本周 +11,507 Star
+   https://github.com/cloudflare/security-audit-skill
+
+6. vercel-labs/agent-desktop
+   计算机使用 CLI 进行 AI 代理。引用每个引用（'@s8f3k2p9:e8'），因为裸露的@token是splatting操作符。
+   Rust · 22,607 Star · 1,676 Fork · 本周 +7,772 Star
+   https://github.com/vercel-labs/agent-desktop
+
+7. mattpocock/skills
+   真正工程师的技能，直接来自我的 .agents 目录。您和代理之间存在沟通鸿沟。
+   Shell · 322,807 Star · 27,071 Fork · 本周 +9,575 Star
+   https://github.com/mattpocock/skills
+
+8. zed-industries/zed
+   以思想的速度编写代码 – Zed 是一款高性能、多人代码编辑器，由 Atom 和 Tree-sitter 的创建者开发。
+   Rust · 94,806 Star · 11,655 Fork · 本周 +2,310 Star
+   https://github.com/zed-industries/zed
+
+9. google-deepmind/mujoco
+   具有接触的多关节动力学，通用物理模拟器。它是一种通用物理引擎，旨在促进机器人、生物力学、图形和动画、机器学习以及其他需要快速准确模拟的领域的研究和开发。
+   C++ · 17,738 Star · 2,180 Fork · 本周 +1,535 Star
+   https://github.com/google-deepmind/mujoco
+
+10. google/skills
+   Google 产品和技术的代理技能。
+   Python · 24,035 Star · 2,002 Fork · 本周 +2,013 Star
+   https://github.com/google/skills
+
+11. D4Vinci/Scrapling
+   ️ 最好的网络抓取框架，可以处理从单个请求到全面抓取的所有内容。不要害羞，加入这里：https://discord.gg/EMgGbDceNQ，并按照这里获取日常提示和技巧：https://x.com/Scrapling_dev。Scrapling 是一种 Python Web Scraping 框架，它将快速 HTTP 请求、隐形浏览器、强大的解析和并发爬虫集成到一个库中。
+   Python · 102,040 Star · 10,618 Fork · 本周 +5,814 Star
+   https://github.com/D4Vinci/Scrapling
+
+## 本月热门
+
+1. morluto/rea
+   使用代理对任何内容进行逆向工程，从应用程序行为到本机二进制文件。rea --update 是此已验证工作流程的别名，并接受相同的全局输出标志。
+   TypeScript · 454,769 Star · 111,711 Fork · 本月 +366,818 Star
+   https://github.com/morluto/rea
+
+2. Nutlope/hallmark
+   Claude Code、Cursor、Codex 的防 AI 设计技巧。主题是一种材料，而不是计划：它从不说明页面包含什么内容或按什么顺序排列，因此一个主题中的两个提示会生成两个不同的页面。
+   CSS · 53,884 Star · 2,874 Fork · 本月 +23,478 Star
+   https://github.com/Nutlope/hallmark
+
+3. cloudflare/security-audit-skill
+   用于多阶段安全审计的编程智能体技能，具有独立验证、机器可读的结果。一种编程智能体技能，可将你的智能体变成安全审核员。
+   JavaScript · 70,980 Star · 4,718 Fork · 本月 +42,138 Star
+   https://github.com/cloudflare/security-audit-skill
+
+4. thedotmack/claude-mem
+   每个座席跨会话的持久上下文 – 捕获座席在会话期间所做的所有操作，使用 AI 对其进行压缩，并将相关上下文注入到未来的会话中。适用于 Claude Code、OpenClaw、Codex、Gemini、Hermes、Copilot、OpenCode 等。
+   TypeScript · 116,485 Star · 10,105 Fork · 本月 +17,247 Star
+   https://github.com/thedotmack/claude-mem
+
+5. pingdotgg/t3code
+   从任何计算机或手机控制 Claude Code、Codex 等的最佳方式。性能是这里的一个特点。
+   TypeScript · 58,067 Star · 10,635 Fork · 本月 +29,814 Star
+   https://github.com/pingdotgg/t3code
+
+6. pbakaus/impeccable
+   编程智能体的设计词汇。更加优雅和大胆地进行引导，通过批评和审计进行审查，在人工智能发布之前抓住它。评论 |批评是评分的用户体验审查。
+   Rust · 108,847 Star · 6,480 Fork · 本月 +28,902 Star
+   https://github.com/pbakaus/impeccable
+
+7. heygen-com/hyperframes
+   编写 HTML，渲染视频，专为智能体打造。HyperFrames 是一个免费的开源框架，用于将 HTML、CSS、媒体和可搜索动画转换为确定性 MP4 视频。
+   TypeScript · 83,317 Star · 7,694 Fork · 本月 +22,422 Star
+   https://github.com/heygen-com/hyperframes
+
+8. HKUDS/DeepTutor
+   DeepTutor：终身个性化辅导。https://deeptutor.info/。
+   Python · 58,608 Star · 7,121 Fork · 本月 +17,406 Star
+   https://github.com/HKUDS/DeepTutor
+
+9. anthropics/skills
+   代理技能的公共存储库。
+   Python · 193,592 Star · 22,772 Fork · 本月 +13,018 Star
+   https://github.com/anthropics/skills
+
+10. debpalash/VoiceStudio
+   VoiceStudio 是 ElevenLabs 的开源、完全本地化替代方案 — 提供 646 种语言的语音克隆、语音设计、视频配音、听写、转录和有声读物创建。
+   Python · 108,985 Star · 12,073 Fork · 本月 +50,619 Star
+   https://github.com/debpalash/VoiceStudio
+
+11. anthropics/claude-plugins-official
+   由 Anthropic 管理的官方高品质 Claude 代码插件目录。这个存储库是 Anthropic 自己的插件的所在地。
+   Python · 47,021 Star · 4,886 Fork · 本月 +9,448 Star
+   https://github.com/anthropics/claude-plugins-official
+
+12. Leonxlnx/taste-skill
+   为编程智能体提供品味的代理技能：艺术指导、参考图像和浏览器检查，而不是通用的人工智能页面。Taste Skill (tasteskill 2.5.1) 是一种代理技能，可让编程智能体在Figma.com 和x.ai 级别构建专业公司网站，而不是组装通用登陆页面。
+   JavaScript · 114,100 Star · 7,678 Fork · 本月 +19,310 Star
+   https://github.com/Leonxlnx/taste-skill
+
+13. AgriciDaniel/claude-seo
+   Claude Code 的通用 SEO 技能。26 个子技能 + 19 个子代理，涵盖技术 SEO、E-E-A-T、模式、GEO/AEO、代理准备情况（Lighthouse Agentic Browsing、WebMCP、llms.txt）、反向链接、本地 SEO、电子商务、国际 SEO、Google API 和 PDF/Excel 报告。实时 SEO 数据的 9 种可选扩展。
+   Python · 28,564 Star · 3,668 Fork · 本月 +9,470 Star
+   https://github.com/AgriciDaniel/claude-seo
+
+14. anthropics/knowledge-work-plugins
+   主要供知识工作者在 Claude Cowork 中使用的开源插件存储库。Cowork 让您设定目标，Claude 交付专业的成品工作。
+   Python · 35,554 Star · 3,934 Fork · 本月 +6,534 Star
+   https://github.com/anthropics/knowledge-work-plugins
+
+## 中文社区今日热门
+
+1. 1c7/chinese-independent-developer
+   ‍ ‍ ‍ ‍ ‍ 中国独立开发者项目列表 -- 分享大家都在做什么。* :white_check_mark: 知音：贴网易云「我喜欢的音乐」或 QQ 音乐主页的分享链接。不用登录。
+   未标注语言 · 62,073 Star · 5,599 Fork · 今日 +19 Star
+   https://github.com/1c7/chinese-independent-developer
+
+2. ScottSloan/Bili23-Downloader
+   开源、免费、跨平台的 B 站视频下载工具，支持多线程加速、音视频分离、弹幕元数据获取、自定义命名与分类等功能。下载管理 | 下载列表显示进度百分比与预计剩余时间，以标签展示画质、编码、音质、格式与附加内容；支持按标题、文件名、UP 主、合集名、BV 号搜索，并可按状态与媒体类型筛选，批量操作只作用于当前显示的任务。
+   Python · 9,071 Star · 648 Fork · 今日 +39 Star
+   https://github.com/ScottSloan/Bili23-Downloader
+
+3. krahets/hello-algo
+   《Hello 算法》：动画图解、一键运行的数据结构与算法教程。本项目旨在打造一本开源免费、新手友好的数据结构与算法入门教程。
+   Python · 132,269 Star · 15,620 Fork · 今日 +71 Star
+   https://github.com/krahets/hello-algo
+
+4. smallfawn/QLScriptPublic
+   青龙面板脚本公共仓库 企鹅交流1021185005。
+   JavaScript · 3,760 Star · 476 Fork · 今日 +6 Star
+   https://github.com/smallfawn/QLScriptPublic
+
+5. AstrBotDevs/AstrBot
+   AI Agent Assistant & 开发框架，集成了大量 IM 平台、大型语言模型、插件和 AI 功能，可以成为您 openclaw 的替代方案。AstrBot 是一款开源一体化智能体聊天机器人平台，与主流即时通讯应用程序集成。
+   Python · 46,778 Star · 3,535 Fork · 今日 +94 Star
+   https://github.com/AstrBotDevs/AstrBot
+
+6. Johnshall/Shadowrocket-ADBlock-Rules-Forever
+   提供多款 Shadowrocket 规则，拥有强劲的广告过滤功能。每日 8 时重新构建规则。如果大家在上网过程中不经意看到了某些观点，务必保留自己独立思考的能力，如果你是一个容易被带偏的人，则建议回到屏障之中。
+   未标注语言 · 32,078 Star · 2,127 Fork · 今日 +44 Star
+   https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever
+
+7. hiroi-sora/Umi-OCR
+   开源、免费的离线OCR软件。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。单栏-保留缩进：适用于解析代码截图，保留行首缩进和行中空格。
+   Python · 48,616 Star · 4,742 Fork · 今日 +35 Star
+   https://github.com/hiroi-sora/Umi-OCR
+
+8. immersive-translate/immersive-translate
+   沉浸式双语网页翻译扩展 , 支持输入框翻译， 鼠标悬停翻译， PDF, Epub, 字幕文件, TXT 文件翻译 - Immersive Dual Web Page Translation Extension。在适用的官方翻译服务范围内，翻译内容不用于 AI 模型训练。
+   未标注语言 · 19,768 Star · 1,164 Fork · 今日 +21 Star
+   https://github.com/immersive-translate/immersive-translate
+
+9. 521xueweihan/HelloGitHub
+   分享 GitHub 上有趣、入门级的开源项目。
+   Python · 188,426 Star · 13,260 Fork · 今日 +236 Star
+   https://github.com/521xueweihan/HelloGitHub
+
+10. OI-wiki/OI-wiki
+   （某大型游戏线上攻略，内含炫酷算术魔法）。
+   TypeScript · 27,143 Star · 4,704 Fork · 今日 +8 Star
+   https://github.com/OI-wiki/OI-wiki
+
+11. fmz200/wool_scripts
+   收集一些Loon、Surge、QuantumultX、ShadowRocket、Egern的配置与去广告规则。
+   Vim Snippet · 5,960 Star · 328 Fork · 今日 +10 Star
+   https://github.com/fmz200/wool_scripts
+
+12. ryanhanwu/How-To-Ask-Questions-The-Smart-Way
+   本文原文由知名 Hacker Eric S。Raymond 所撰寫，教你如何正確的提出技術問題並獲得你滿意的答案。當你提出問題的時候，請先表明你已經做了上述的努力；這將有助於樹立你並不是一個不勞而獲且浪費別人的時間的提問者。
+   JavaScript · 36,124 Star · 5,820 Fork · 今日 +14 Star
+   https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way
+
+13. langbot-app/LangBot
+   LangBot 是一个开源生产级平台，用于构建人工智能驱动的即时消息机器人。
+   Python · 18,938 Star · 1,706 Fork · 今日 +24 Star
+   https://github.com/langbot-app/LangBot
+
+14. HIllya51/LunaTranslator
+   视觉小说翻译器 / Visual Novel Translator。
+   C++ · 14,135 Star · 1,183 Fork · 今日 +16 Star
+   https://github.com/HIllya51/LunaTranslator
+
+15. ccfos/nightingale
+   针对指标、日志和数据库的开源、自托管警报，包括内置 AI 代理和 MCP 服务器。Categraf 是主机、中间件、数据库和网络设备的可选收集器。
+   Go · 13,480 Star · 1,801 Fork · 今日 +4 Star
+   https://github.com/ccfos/nightingale
+
+每天 08:00 和 18:00（上海时间）自动发送。
+来源：https://github.com/trending
