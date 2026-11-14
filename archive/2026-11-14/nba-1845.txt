@@ -1,0 +1,77 @@
+NBA直播 · 11-15 09:00 底特律活塞@迈阿密热火 · NBA TV
+
+今天直播与明天预告（开球为中国时间）。全国转播场次对照 iptv-org 体育源频道。
+整理时间：2026-11-14 20:25 上海时间
+本赛季（2026-27）美国全国转播以 ESPN / ABC / NBA TV / NBC / Peacock / Prime Video 为主；TNT 本季不转 NBA。Sportsnet 是加拿大转播网。
+体育源：https://iptv-org.github.io/iptv/categories/sports.m3u
+
+今天直播 · 2026-11-14
+
+1. 08:00  密尔沃基雄鹿 @ 奥兰多魔术
+   转播：MyMi、Bucks App
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+2. 08:00  纽约尼克斯 @ 印第安纳步行者
+   转播：Prime Video
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+3. 09:00  亚特兰大老鹰 @ 芝加哥公牛
+   转播：地方台 / League Pass
+   iptv 频道：地方台 / League Pass
+
+4. 09:00  克利夫兰骑士 @ 迈阿密热火
+   转播：DAZN CLE
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+5. 09:00  孟菲斯灰熊 @ 新奥尔良鹈鹕
+   转播：GCSEN、Pelicans.com、DAZN MEM
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+6. 09:30  犹他爵士 @ 休斯顿火箭
+   转播：KJZZ-TV、Jazz+
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+7. 10:30  金州勇士 @ 圣安东尼奥马刺
+   转播：Prime Video、ERADM
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+8. 11:00  波特兰开拓者 @ 萨克拉门托国王
+   转播：KUNP 16、BlazerVision
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+9. 11:30  俄克拉荷马城雷霆 @ 洛杉矶快船
+   转播：KSBI、Thunder App、KTLA、ClipperVision
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+明天预告 · 2026-11-15
+
+1. 08:00  丹佛掘金 @ 新奥尔良鹈鹕
+   转播：GCSEN、Pelicans.com
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+2. 08:30  达拉斯独行侠 @ 克利夫兰骑士
+   转播：KFAA-TV、MavsTV
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+3. 09:00  布鲁克林篮网 @ 孟菲斯灰熊
+   转播：DAZN (YES)、DAZN MEM
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+4. 09:00  芝加哥公牛 @ 明尼苏达森林狼
+   转播：DAZN MIN
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+5. 09:00  底特律活塞 @ 迈阿密热火
+   转播：NBA TV
+   iptv 频道：NBA TV (720p) · sports.m3u
+
+iptv-org 可对照频道
+
+- NBA TV (720p)（NBATV.us）· sports.m3u 有源
+- ESPN (United States) HD (720p)（ESPN.us）· sports.m3u 有源
+- ESPN 2 (United States) HD (720p)（ESPN2.us）· sports.m3u 有源
+- TNT（TNT.us）· API 有源 · 本季美国不转 NBA
+- ABC 6 Austin TX (KAAL)（ABC.us）· API 有源 · 全国场次；iptv 多为地方台信号
+- Sportsnet（Sportsnet.ca）· 暂无源 · iptv-org 暂无可用流
+
+流地址可能失效或受版权/地区限制，仅作频道对照。每天 08:45 与 18:45（上海）自动发送。
