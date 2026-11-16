@@ -118,6 +118,39 @@ class DailyIdeasTest(unittest.TestCase):
             self.assertGreaterEqual(sentence_count(idea["body"]), 3)
             self.assertLessEqual(sentence_count(idea["body"]), 4)
 
+    def test_every_reflection_has_study_english(self) -> None:
+        from daily_ideas import ERA_EN, ERA_FALLBACK, REFLECTION_EN, REFLECTIONS, _reflection
+
+        for rows in REFLECTIONS.values():
+            for text in rows:
+                self.assertIn(text, REFLECTION_EN)
+                self.assertNotRegex(REFLECTION_EN[text], r"[\u4e00-\u9fff]")
+        for item in ERA_FALLBACK:
+            english = ERA_EN[item["title"]]
+            self.assertTrue(english["title_en"])
+            self.assertNotRegex(english["body_en"], r"[\u4e00-\u9fff]")
+        samples = (
+            {"title": "某公司完成新一轮融资", "topic": "ai"},
+            {"title": "人口老龄化继续加快", "topic": "society"},
+            {"title": "号称在家就能确诊", "topic": "health"},
+            {"title": "埃博拉病例继续增加", "topic": "health"},
+        )
+        for signal in samples:
+            for variant in range(3):
+                text = _reflection(signal, variant)
+                self.assertIn(text, REFLECTION_EN, text[:40])
+
+    def test_fallback_letter_shows_chinese_and_english(self) -> None:
+        from daily_ideas import render_html
+
+        ideas = select_ideas(datetime(2026, 10, 28, 9, 30, tzinfo=SHANGHAI), [])
+        page = render_html(ideas, datetime(2026, 10, 28, 9, 30, tzinfo=SHANGHAI))
+        self.assertIn("Ten thoughts", page)
+        self.assertIn('data-study="en"', page)
+        self.assertIn(">EN</span>", page)
+        self.assertIn("· Knowledge", page)
+        self.assertTrue(all(idea.get("title_en") and idea.get("body_en") for idea in ideas))
+
     def test_slot_labels(self) -> None:
         self.assertEqual(slot_for(datetime(2026, 10, 28, 8, 30, tzinfo=SHANGHAI)), "08:30")
         self.assertEqual(slot_for(datetime(2026, 10, 28, 18, 30, tzinfo=SHANGHAI)), "18:30")

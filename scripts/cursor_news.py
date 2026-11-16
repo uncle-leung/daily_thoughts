@@ -10,6 +10,7 @@ from collections.abc import Callable
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from bilingual import usable_english
 from cursor_agent import CursorResearchError, api_key, run_research
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
@@ -79,7 +80,7 @@ def _event(row: dict, scope: str) -> dict[str, str] | None:
     body = clip_sentences(str(row.get("body") or ""))
     if len(title) < 6 or len(source) < 2 or not usable_link(link) or sentence_count(body) < 3:
         return None
-    return {
+    item = {
         "title": title.rstrip("。"),
         "source": source,
         "link": link,
@@ -87,6 +88,13 @@ def _event(row: dict, scope: str) -> dict[str, str] | None:
         "scope": scope,
         "via": "cursor",
     }
+    title_en = usable_english(str(row.get("title_en") or ""))
+    body_en = usable_english(str(row.get("body_en") or ""))
+    if title_en:
+        item["title_en"] = title_en
+    if body_en:
+        item["body_en"] = body_en
+    return item
 
 
 def _dedupe(items: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -123,18 +131,23 @@ def parse_ideas(text: str) -> list[dict[str, str]]:
             continue
         if len(title) < 4 or len(source) < 2 or not usable_link(link) or sentence_count(body) < 3:
             continue
-        ideas.append(
-            {
-                "category": category,
-                "title": title,
-                "body": body,
-                "source": source,
-                "link": link,
-                "topic": topic,
-                "grounded": "yes",
-                "via": "cursor",
-            }
-        )
+        idea = {
+            "category": category,
+            "title": title,
+            "body": body,
+            "source": source,
+            "link": link,
+            "topic": topic,
+            "grounded": "yes",
+            "via": "cursor",
+        }
+        title_en = usable_english(str(row.get("title_en") or ""))
+        body_en = usable_english(str(row.get("body_en") or ""))
+        if title_en:
+            idea["title_en"] = title_en
+        if body_en:
+            idea["body_en"] = body_en
+        ideas.append(idea)
     return _dedupe(ideas)[:10]
 
 
@@ -151,11 +164,13 @@ def events_prompt(now: datetime) -> str:
 没有打开过的页面不要写进结果。不要改文件，不要提代码。这是没有代码仓库的检索。
 
 只输出一个 JSON 对象，不要 Markdown：
-{{"domestic":[{{"title":"","source":"","link":"","body":""}}],"world":[{{"title":"","source":"","link":"","body":""}}]}}
+{{"domestic":[{{"title":"","title_en":"","source":"","link":"","body":"","body_en":""}}],"world":[{{"title":"","title_en":"","source":"","link":"","body":"","body_en":""}}]}}
 
 domestic 恰好 10 条中国国内大事，world 恰好 10 条国外大事。{focus}
 title 用中文，不超过 40 字。source 是媒体名。link 必须是你 web_fetch 打开过的 https 原文，不要用搜索引擎的跳转链接。
 body 从该网页摘 3 到 4 句中文，保留事实，不要评论，不要写「这说明」。
+title_en 是 title 的英文，给正在学英语的读者，清楚、自然、不要俚语，不超过 18 个词。
+body_en 是 body 的逐句英文译文，句数与 body 相同，用书面英语，专有名词用常见英文，不要另加评论。
 避开文旅花絮、赛事开幕式、广告和同一事件的重复稿。国内和国外不要写成同一件事。
 """
 
@@ -169,13 +184,15 @@ def ideas_prompt(now: datetime) -> str:
 不要改文件。不要输出记忆里的旧闻。
 
 只输出一个 JSON 对象，不要 Markdown：
-{{"ideas":[{{"category":"","title":"","body":"","source":"","link":"","topic":""}}]}}
+{{"ideas":[{{"category":"","title":"","title_en":"","body":"","body_en":"","source":"","link":"","topic":""}}]}}
 
 恰好 10 条。category 只能是：世间、人生、工作、健康、财富、知识。
 topic 只能是：ai、world、work、climate、health、wealth、society。
 数量：ai 3 条，world 2 条，work、climate、health、wealth、society 各 1 条。
 title 用中文，不超过 28 字，不要照抄报道标题。
 body 正好 3 或 4 句。第一句复述你打开的报道里的事实，并点出媒体名。后面的句子给读者一个今天用得上的判断。
+title_en 是 title 的英文，给正在学英语的读者，清楚、自然、不要俚语，不超过 16 个词。
+body_en 是 body 的逐句英文译文，句数与 body 相同，用书面英语，不要另加评论。
 不要写成投资建议或医疗建议。link 必须是你 web_fetch 打开过的 https 原文。
 """
 

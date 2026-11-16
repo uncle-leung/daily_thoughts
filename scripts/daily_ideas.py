@@ -15,6 +15,18 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from bilingual import (
+    IDEAS_SUBTITLE_EN,
+    STUDY_NOTE_EN,
+    attach_study_english,
+    category_label,
+    english_body_html,
+    english_title_html,
+    header_en_html,
+    study_note_html,
+    text_lines,
+    vocab_html,
+)
 from current_signals import load_signals, simplify_signal
 from cursor_news import load_cursor_ideas
 from mail_schedule import begin_send, require_recipient
@@ -133,6 +145,89 @@ ERA_FALLBACK = (
 )
 
 
+REFLECTION_EN = {
+    "这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。": "This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.",
+    "模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。": "The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.",
+    "跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。": "Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.",
+    "人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。": "Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.",
+    "就业的变化先表现为结构，而不是一句「赶紧转行」。对照你自己的一周，圈出一件只有你能负责的事，再记下一件可以交给工具或别人的事。": "A shift in jobs shows up first as a change in structure, not as a line that says switch careers now. Look at your own week: circle one thing only you can own, and write down one thing you can hand to a tool or to someone else.",
+    "灵活的用工和远程协作会继续增加。对你有没有好处，取决于你有没有自己的节奏和一门不容易被替换的手艺，今天先保住这两样。": "Flexible hiring and remote collaboration will keep growing. Whether that helps you depends on whether you have your own rhythm and a craft that is hard to replace. Protect those two things today.",
+    "这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。": "This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.",
+    "选举、冲突和制裁很少按标题的音量进入家里，它们先改变运费、零件和人们说话的口气。碰得到你的生活，就调整一个安排；碰不到，看完就可以停。": "Elections, conflicts, and sanctions rarely enter a home at the volume of the headline. They first change freight costs, parts, and the way people talk. If one of them can reach your life, adjust one plan. If it cannot, you can stop after reading.",
+    "时事值得知道，是为了下次讨论时手里有事实，而不是只有转发。记住这一条的主体和结果，其余的评论可以先放下。": "Current events are worth knowing so that the next conversation leaves you with facts, not only a repost. Remember who acted and what resulted. The rest of the commentary can wait.",
+    "极端天气和旧的环境事故都在提醒，稳定比一条新闻看起来更脆。个人改变不了那一季热浪或那次泄漏，但可以把这周的作息、出行和身体留出余量。": "Extreme weather and older environmental accidents both remind you that stability is more fragile than a headline looks. One person cannot undo that season's heat wave or that leak, but you can leave slack this week in your schedule, your travel, and your body.",
+    "这类消息的用处不是增加无力感，而是把风险从抽象变成你日历上的一件小事。睡眠、饮水和别把户外劳动排满，比把报道看完更有用。": "The use of news like this is not to add a sense of helplessness. It is to turn a risk from an abstraction into one small item on your calendar. Sleep, water, and not filling every outdoor hour matter more than finishing the article.",
+    "环境的账单不会按新闻的热度结算，它会落在电、水和身体上。知道了，就在这周留一个缓冲，而不是等到自己遇到才想起。": "The bill for the environment is not settled by how hot the news is. It lands on electricity, water, and the body. Once you know, leave a buffer this week, instead of remembering only when it reaches you.",
+    "融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。": "The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.",
+    "热钱正挤向少数赛道，热闹不等于你该跟买。想参与这个时代，就参与到自己用得上的技能，而不是参与到别人的估值故事里。": "Hot money is crowding into a few tracks. Noise does not mean you should buy along. If you want to take part in this era, take part through a skill you can use, not through someone else's valuation story.",
+    "价格一动，就有人催你马上行动。马上行动通常在替情绪服务。涉及一笔会后悔一阵的钱，留一个晚上再看它是否仍然成立。": "The moment a price moves, someone urges you to act at once. Acting at once usually serves the emotion. If the money is enough that you would regret it for a while, leave it overnight and see whether it still holds.",
+    "把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。": "Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.",
+    "健康传播里，早期研究和确定的建议经常用同一种肯定语气。先看它是一项人群研究，还是一个要你立刻购买的说法；身体上的决定走正规渠道。": "In health coverage, an early study and settled advice often use the same tone of certainty. First see whether it is a study of a population, or a claim that wants you to buy something now. Decisions about your body go through a proper channel.",
+    "你改变不了远处的病例数字，但可以把自己的检查和作息放回日历。担心而不行动，只会让你在这条新闻上多停一会儿。": "You cannot change a case count far away, but you can put your own checkup and your daily routine back on the calendar. Worry without an action only keeps you on this story a little longer.",
+    "人口、养老、消费和平台规则，正在改写普通人的日程和账单。读的时候找一个具体的人，而不是只记住一个大词；具体了，才知道它离你有多远。": "Population, elder care, spending, and platform rules are rewriting ordinary schedules and bills. While you read, look for one specific person, not only a big word. Once it is specific, you can tell how far it is from you.",
+    "社会的热潮会催你参加、下单或站队。参加之前问一句：这个安排三个月后还成不成立。不成，就让它停留在知道。": "A social rush will push you to join, to order, or to pick a side. Before you join, ask whether the plan will still make sense in three months. If it will not, let it stay at knowing about it.",
+    "时代的变化通常先出现在别人的班次、房租和等待里。近，就改一个自己的安排；远，就保持关注，不必把今晚交出去。": "Change usually shows up first in someone else's shift, rent, and waiting. If it is close, change one plan of your own. If it is far, keep watching, and do not hand over your evening.",
+    "这笔钱说明人工智能已经是资本开支的主赛道，估值和算力在抢同一批资金。对个人来说，值得跟的不是那一轮融资，而是这些工具会不会在你自己的工作里变得更好用。": "This money shows that artificial intelligence is already a main lane for capital spending, where valuation and computing power compete for the same funds. For you, what is worth following is not that funding round, but whether these tools become more useful in your own work.",
+    "模型和芯片的账单被放在一起谈，说明算力本身成了稀缺品。你用得上的部分，是以后这些工具的价格和门槛，而不是去猜谁的估值更高。": "Models and chips are being discussed on the same bill, which means computing power itself has become scarce. The part you can use is the future price and the barrier of these tools, not a guess about whose valuation is higher.",
+    "资本扎堆时，新闻会把每一次融资写成转折点。转折对你是否成立，只看一件事：它有没有让你手头的工作更省时间；没有，就当背景。": "When capital crowds together, the news writes every funding round as a turning point. For you, it is a turning point only if it saves time on the work in your hands. If it does not, treat it as background.",
+    "老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。": "An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.",
+    "标题里的早筛神器，常常把一项普通检查说成了诊断。看到在家就能确诊，先当成待核对的说法；真正的筛查走医院和正规项目，不走购物链接。": "A headline about a miracle early test often turns an ordinary check into a diagnosis. If you see a claim that you can confirm it at home, treat that as something still to check. Real screening goes through a hospital or a proper program, not a shopping link.",
+    "这是公共卫生消息，不是给你的治疗方案。防治方法只看卫生机构的说法，远方的数字改变不了今晚的作息，但提醒人不要把稳定当成永远。": "This is public-health news, not a treatment plan for you. For prevention and treatment, read only what health authorities say. A number far away does not change tonight's routine, but it is a reminder not to treat stability as permanent.",
+}
+
+
+ERA_EN = {
+    "模型变便宜以后，判断更贵": {
+        "title_en": "After models get cheap, judgment gets expensive",
+        "body_en": "The clearest change this year is that generative tools have gone from a demo to something you can open at any moment. Once the capability is cheap, what is scarce is no longer a paragraph of copy, but whether you will take responsibility for the result. Today, try it once on a single repeated chore, and keep the decision in your own hands. Keeping up with AI means letting it into a specific piece of work, not watching launches.",
+    },
+    "岗位在拆成人和工具的配合": {
+        "title_en": "Jobs are being split between a person and a tool",
+        "body_en": "Many companies are no longer hiring one person who can do everything. They split the process: repeated work goes to a tool, and judgment stays with a person. How steady your place is depends on whether that judgment can do without you. Mark this week's work in two columns: what a tool can take, and what you must finish. The second column is where you need to get stronger.",
+    },
+    "远处的冲突会先变成物价和情绪": {
+        "title_en": "A distant conflict arrives first as prices and mood",
+        "body_en": "War, elections, and sanctions rarely walk into a home at the volume of the headline. They first change freight, parts, and the tone people use. Following the news is for knowing which changes might touch your work and your life. If one cannot reach you, stop after the headline and do not give the day to the feed. A sense of proportion is itself a skill of this era.",
+    },
+    "热钱的故事不是你的账单": {
+        "title_en": "A hot-money story is not your bill",
+        "body_en": "Funding and valuations at AI companies are large enough to make you feel you should do something at once. Those numbers describe a crowd of capital, not a reason for your next expense. First check whether your cash flow and your emergency money are still there. If you want to take part in this era, take part through a skill you can use, not through someone else's share price.",
+    },
+    "屏幕上的健康突破先打个问号": {
+        "title_en": "Put a question mark on a health breakthrough on a screen",
+        "body_en": "Health information travels fast, and rumors and early studies often use the same tone of certainty. When you see a claim that you can confirm it at home, or reverse aging in one step, treat it first as something to check. Sleep, walking, and the checkup you already need do not wait for the next breakthrough. Decisions about your body go through a proper channel, not the comments.",
+    },
+    "知道很多，不等于被时代拖着跑": {
+        "title_en": "Knowing a lot is not the same as being dragged along",
+        "body_en": "A feed packs the speed of society into your evening and makes a pause feel like falling behind. Keeping up means letting a new fact revise an old habit, not turning every hot topic into your task. Leave one stretch of the day unrefreshed, and turn what you already know into one action. News with no action can stay at knowing.",
+    },
+    "开放工具在把门槛放低": {
+        "title_en": "Open tools are lowering the barrier",
+        "body_en": "The gap between closed and open models has been shrinking, and more people can afford a capability that once belonged to large labs. After the barrier drops, the difference is who uses it on a real problem. Pick one small process you already run, and take it through one open tool. That is more useful than saving ten links. Only after one real use do you know what it actually saved.",
+    },
+    "裁员新闻先拿来对照结构": {
+        "title_en": "Use a layoff story to look at the structure",
+        "body_en": "When a large company cuts staff, the same output is being finished by fewer people plus tools. Passing on the anxiety does nothing. What helps is seeing whether your skill sits on the side that is shrinking, or on the side that stays responsible. Today, write down three pieces of work that are not done until you finish them. Those three say more about your place than the tool names on a resume.",
+    },
+    "社会的变化先出现在具体的人身上": {
+        "title_en": "Social change shows up first on one specific person",
+        "body_en": "Changes in jobs, elder care, and platform rules are not written into your diary first. They show up first in someone else's shift, bill, and waiting. When you read this news, find one specific person, not only a big word. Once it is specific, you can tell how far it is from your life. If it is far, keep watching. If it is close, change one plan of your own.",
+    },
+    "消费被标题推着走的时候慢一夜": {
+        "title_en": "When a headline pushes you to spend, wait one night",
+        "body_en": "The gold price, housing prices, and a product launch all create a mood of acting at once. The mood is not your budget. If the money is enough that you would regret it for a while, leave it for one night and see whether it is a need or a fear of missing out. This era does not lack news of opportunities. It lacks an account that the news cannot rewrite.",
+    },
+    "久坐和熬夜比新名词更影响明天": {
+        "title_en": "Sitting too long and sleeping too late shape tomorrow",
+        "body_en": "Artificial intelligence will keep changing the schedule, but the body still settles its accounts through sleep and movement. A tool can let you finish later. That does not mean you should also give away the night's recovery. If you need a clear judgment tomorrow, sleep enough tonight. However new the era is, no model can recover for you.",
+    },
+    "用新事实修正一个旧习惯": {
+        "title_en": "Use one new fact to revise one old habit",
+        "body_en": "Keeping up does not require replacing your whole self at once. Pick one habit this era has already changed: how you get information, how you finish work, or how you work with people. Change only one of them, and watch it for a week. If it holds, keep it. If it does not, go back to the old way. That is how you follow a change without being scattered by it.",
+    },
+}
+
+
 def sentence_count(text: str) -> int:
     return len([part for part in SENTENCE_RE.split(text) if part.strip()])
 
@@ -217,12 +312,15 @@ def _reflection(signal: dict[str, str], variant: int) -> str:
 def compose_signal(signal: dict[str, str], variant: int) -> dict[str, str]:
     topic = signal.get("topic") or "world"
     reflection = _reflection(signal, variant)
+    fact = fact_sentence(signal)
     title = signal["title"].strip().rstrip("。")
     category = signal.get("category") or "世间"
     return {
         "category": category,
         "title": title,
-        "body": fact_sentence(signal) + reflection,
+        "body": fact + reflection,
+        "fact": fact,
+        "reflection_en": REFLECTION_EN.get(reflection, ""),
         "source": signal.get("source", ""),
         "link": signal.get("link", ""),
         "grounded": "yes",
@@ -261,7 +359,11 @@ def _fallback(now: datetime, excluded: set[str], count: int) -> list[dict[str, s
     current = _stamp(now)
     slot = 0 if slot_for(current) == "08:30" else 1
     rng = random.Random(current.date().toordinal() * 10 + slot)
-    pool = [dict(item, source="", link="", grounded="no") for item in ERA_FALLBACK if item["title"] not in excluded]
+    pool = [
+        dict(item, source="", link="", grounded="no", **ERA_EN.get(item["title"], {}))
+        for item in ERA_FALLBACK
+        if item["title"] not in excluded
+    ]
     rng.shuffle(pool)
     return pool[:count]
 
@@ -313,13 +415,20 @@ def render_text(ideas: list[dict[str, str]], now: datetime | None = None) -> str
     lines = [
         subject_for(current),
         "",
-        "十条想法，对照今天的时事、人工智能和社会变化。每条三四句话。",
+        "十条想法，对照今天的时事。每条先给中文，再给学习用英文。",
+        f"EN: {IDEAS_SUBTITLE_EN}. {STUDY_NOTE_EN}",
         f"整理时间：{current.strftime('%Y-%m-%d %H:%M')} 上海时间",
         "",
     ]
     for index, idea in enumerate(ideas, start=1):
-        lines.append(f"{index}. [{idea['category']}] {idea['title']}")
-        lines.append(idea["body"])
+        lines.extend(
+            text_lines(
+                f"{index}. [{category_label(idea['category'])}] {idea['title']}",
+                idea.get("title_en", ""),
+                idea["body"],
+                idea.get("body_en", ""),
+            )
+        )
         lines.append("")
     if any(idea.get("via") == "cursor" for idea in ideas):
         lines.append("每条都对照 Cursor 云端代理当场搜到并打开的公开报道，不使用模型记忆。默认模型是 Grok 4.7。")
@@ -345,14 +454,20 @@ def render_html(ideas: list[dict[str, str]], now: datetime | None = None) -> str
                 f"<a href=\"{html.escape(link, quote=True)}\" style=\"color:#0969da;text-decoration:none;\">"
                 f"{html.escape(source)}</a></div>"
             )
+        title_en = idea.get("title_en", "")
+        body_en = idea.get("body_en", "")
+        vocab = vocab_html(idea["title"] + idea["body"]) if title_en or body_en else ""
         blocks.append(
             "<div style=\"padding:16px 0;border-bottom:1px solid #e6e8eb;\">"
             f"<div style=\"font-size:12px;letter-spacing:0.04em;color:#57606a;\">"
-            f"{html.escape(idea['category'])}</div>"
+            f"{html.escape(category_label(idea['category']))}</div>"
             f"<div style=\"margin-top:4px;font-size:18px;font-weight:700;color:#1f2328;\">"
             f"{index}. {html.escape(idea['title'])}</div>"
-            f"<p style=\"margin:8px 0 0;font-size:15px;line-height:1.7;color:#24292f;\">"
+            f"{english_title_html(title_en)}"
+            f"<p style=\"margin:8px 0 0;font-size:15px;line-height:1.75;color:#24292f;\">"
             f"{html.escape(idea['body'])}</p>"
+            f"{english_body_html(body_en)}"
+            f"{vocab}"
             f"{source_html}"
             "</div>"
         )
@@ -366,14 +481,13 @@ def render_html(ideas: list[dict[str, str]], now: datetime | None = None) -> str
         <tr><td style="background:linear-gradient(135deg,#0c2430 0%,#123a48 55%,#0f2f3c 100%);color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;border-bottom:2px solid #14b8a6;">
           <div style="font-size:13px;letter-spacing:0.04em;color:#9ad7d0;">DAILY THOUGHTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">十条想法</div>
+          {header_en_html(IDEAS_SUBTITLE_EN)}
           <div style="font-size:13px;color:#9ad7d0;margin-top:8px;">
             {html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:30 与 18:30
           </div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:8px 24px 22px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
-          <p style="margin:16px 0 0;color:#57606a;font-size:14px;line-height:1.6;">
-            对照今天的时事、人工智能和社会变化。每条三四句话，供你挑一件用在今天。
-          </p>
+          {study_note_html()}
           {''.join(blocks)}
         </td></tr>
       </table>
@@ -410,6 +524,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"signal load failed: {exc}", file=sys.stderr)
             signals = []
         ideas = select_ideas(now, signals, simplify=True)
+    attach_study_english(ideas)
     subject = subject_for(now)
     text = render_text(ideas, now)
     html_body = render_html(ideas, now)

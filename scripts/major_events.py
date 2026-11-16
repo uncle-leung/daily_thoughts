@@ -18,6 +18,18 @@ from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from bilingual import (  # noqa: E402
+    EVENTS_SUBTITLE_EN,
+    STUDY_NOTE_EN,
+    attach_study_english,
+    english_body_html,
+    english_title_html,
+    header_en_html,
+    section_heading,
+    study_note_html,
+    text_lines,
+    vocab_html,
+)
 from cursor_news import load_cursor_events  # noqa: E402
 from mail_schedule import begin_send, require_recipient  # noqa: E402
 from github_trending_digest import USER_AGENT, finish_delivery  # noqa: E402
@@ -314,21 +326,34 @@ def render_text(
     lines = [
         subject_for(current),
         "",
-        "国内大事 10 条，国外大事 10 条。每条用报道里的三四句话说明。",
+        "国内大事 10 条，国外大事 10 条。每条先给中文，再给学习用英文。",
+        f"EN: {EVENTS_SUBTITLE_EN}. {STUDY_NOTE_EN}",
         f"整理时间：{current.strftime('%Y-%m-%d %H:%M')} 上海时间",
         "",
-        "国内大事",
+        "国内大事 / China",
         "",
     ]
     for index, item in enumerate(domestic, start=1):
-        lines.append(f"{index}. {item['title']}")
-        lines.append(item["body"])
+        lines.extend(
+            text_lines(
+                f"{index}. {item['title']}",
+                item.get("title_en", ""),
+                item["body"],
+                item.get("body_en", ""),
+            )
+        )
         lines.append("")
-    lines.append("国外大事")
+    lines.append("国外大事 / World")
     lines.append("")
     for index, item in enumerate(world, start=1):
-        lines.append(f"{index}. {item['title']}")
-        lines.append(item["body"])
+        lines.extend(
+            text_lines(
+                f"{index}. {item['title']}",
+                item.get("title_en", ""),
+                item["body"],
+                item.get("body_en", ""),
+            )
+        )
         lines.append("")
     lines.append(material_note(list(domestic) + list(world)))
     lines.append("每天 08:15 和 18:15（上海时间）自动发送，上下午不是同一组。")
@@ -347,11 +372,16 @@ def _blocks(items: list[dict[str, str]]) -> str:
                 f"<a href=\"{html.escape(link, quote=True)}\" style=\"color:#0969da;text-decoration:none;\">"
                 f"{html.escape(label)}</a></div>"
             )
+        title_en = item.get("title_en", "")
+        body_en = item.get("body_en", "")
+        vocab = vocab_html(item["title"] + item["body"]) if title_en or body_en else ""
         blocks.append(
             "<div style=\"padding:16px 0;border-bottom:1px solid #e6e8eb;\">"
             f"<div style=\"font-size:18px;font-weight:700;color:#1f2328;\">{index}. {html.escape(item['title'])}</div>"
+            f"{english_title_html(title_en)}"
             f"<p style=\"margin:8px 0 0;font-size:15px;line-height:1.75;color:#24292f;\">{html.escape(item['body'])}</p>"
-            f"{source}</div>"
+            f"{english_body_html(body_en)}"
+            f"{vocab}{source}</div>"
         )
     return "".join(blocks)
 
@@ -372,12 +402,14 @@ def render_html(
         <tr><td style="background:linear-gradient(135deg,#0c2430 0%,#123a48 55%,#0f2f3c 100%);color:#ffffff;padding:22px 24px;border-radius:12px 12px 0 0;border-bottom:2px solid #14b8a6;">
           <div style="font-size:13px;letter-spacing:0.04em;color:#9ad7d0;">MAJOR EVENTS</div>
           <div style="font-size:22px;font-weight:700;margin-top:6px;">国内 10 条 · 国外 10 条</div>
+          {header_en_html(EVENTS_SUBTITLE_EN)}
           <div style="font-size:13px;color:#9ad7d0;margin-top:8px;">{html.escape(current.strftime("%Y-%m-%d %H:%M"))} 上海时间 · 每天 08:15 与 18:15</div>
         </td></tr>
         <tr><td style="background:#ffffff;padding:8px 24px 22px;border:1px solid #d0d7de;border-top:0;border-radius:0 0 12px 12px;">
-          <h2 style="margin:18px 0 0;font-size:16px;">国内大事</h2>
+          {study_note_html()}
+          {section_heading("国内大事", "China", margin="18px 0 0")}
           {_blocks(domestic)}
-          <h2 style="margin:22px 0 0;font-size:16px;">国外大事</h2>
+          {section_heading("国外大事", "World", margin="22px 0 0")}
           {_blocks(world)}
         </td></tr>
       </table>
@@ -416,6 +448,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"event load failed: {exc}", file=sys.stderr)
             return 3
         domestic, world = select_events(now, domestic_ready, world_ready)
+    attach_study_english(list(domestic) + list(world))
     if len(domestic) < 10 or len(world) < 10:
         print(
             f"only found domestic {len(domestic)} and world {len(world)}; still sending what is ready",

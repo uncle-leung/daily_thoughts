@@ -156,7 +156,9 @@ class CursorNewsTest(unittest.TestCase):
             )
 
             def events_runner(prompt: str, name: str) -> tuple[str, list[str]]:
-                del prompt, name
+                self.assertIn("title_en", prompt)
+                self.assertIn("body_en", prompt)
+                del name
                 return json_of(
                     {
                         "domestic": [story("domestic", number) for number in range(1, 11)],
@@ -165,7 +167,9 @@ class CursorNewsTest(unittest.TestCase):
                 ), ["web_search", "web_fetch"]
 
             def ideas_runner(prompt: str, name: str) -> tuple[str, list[str]]:
-                del prompt, name
+                self.assertIn("title_en", prompt)
+                self.assertIn("body_en", prompt)
+                del name
                 return json_of({"ideas": [idea(number, category, topic) for number, (category, topic) in enumerate(topics, start=1)]}), [
                     "web_search",
                     "web_fetch",
@@ -202,6 +206,22 @@ class CursorNewsTest(unittest.TestCase):
         now = datetime(2026, 10, 28, 9, 30, tzinfo=SHANGHAI)
         self.assertIsNone(load_cursor_events(now, boom))
         self.assertIsNone(load_cursor_ideas(now, boom))
+
+    def test_study_english_is_kept_only_when_it_is_english(self) -> None:
+        row = story("domestic", 1)
+        row["title_en"] = "A result that already happened"
+        row["body_en"] = (
+            "The first sentence states the fact. The second adds the place. The third gives the result."
+        )
+        domestic, _world = parse_events(json_of({"domestic": [row], "world": []}))
+        self.assertEqual(domestic[0]["title_en"], "A result that already happened")
+        self.assertIn("third gives the result", domestic[0]["body_en"])
+        bad = story("world", 2)
+        bad["title_en"] = "这不是英文标题"
+        bad["body_en"] = "这也不是英文。"
+        _domestic, world = parse_events(json_of({"domestic": [], "world": [bad]}))
+        self.assertNotIn("title_en", world[0])
+        self.assertNotIn("body_en", world[0])
 
     def test_ideas_drop_bad_categories(self) -> None:
         raw = idea(1, "娱乐", "ai")

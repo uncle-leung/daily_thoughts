@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from bilingual import annotate_study_letter
+
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 KIND_TITLE = {
     "trending": "GitHub 热门项目",
@@ -763,7 +765,11 @@ def rebuild_site(root: Path, now: datetime | None = None) -> Path:
             stem = f"{row['kind']}-{row['slot'].replace(':', '')}"
             target = letters / day
             target.mkdir(parents=True, exist_ok=True)
-            body = with_rank_tabs(row["html"]) if row["kind"] == "trending" else row["html"]
+            body = row["html"]
+            if row["kind"] == "trending":
+                body = with_rank_tabs(body)
+            elif row["kind"] in {"events", "ideas"}:
+                body = annotate_study_letter(body)
             (target / f"{stem}.html").write_text(
                 theme_published_letter(open_links_in_new_tab(body)),
                 encoding="utf-8",
