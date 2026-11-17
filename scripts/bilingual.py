@@ -8,6 +8,7 @@ import html
 import json
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -157,8 +158,9 @@ GLOSSARY = {
 }
 
 PAIR_RE = re.compile(
-    r'<div style="(?P<title_style>[^"]*font-size:18px;font-weight:700;[^"]*)">(?P<title>.*?)</div>\s*'
-    r'<p style="(?P<body_style>margin:8px 0 0;font-size:15px;line-height:[^"]*)">(?P<body>.*?)</p>',
+    r'<div style="(?P<title_style>[^"]*font-size:18px;font-weight:700;[^"]*)">(?P<title>[^<]*)</div>\s*'
+    r'(?P<title_en><div[^>]*data-study="en"[^>]*>.*?</div>\s*)?'
+    r'<p style="(?P<body_style>margin:8px 0 0;font-size:15px;line-height:[^"]*)">(?P<body>[^<]*)</p>',
     re.S,
 )
 HEADING_RE = re.compile(r'(<h2 style="margin:[^"]*">)(.*?)(</h2>)', re.S)
@@ -195,6 +197,12 @@ def usable_english(text: str) -> str:
     han = len(HAN_RE.findall(cleaned))
     if letters < 3 or letters < han:
         return ""
+    for wrong, right in (
+        ("Jen-Hsun Huang", "Jensen Huang"),
+        ("Huang Jen-Hsun", "Jensen Huang"),
+        ("Huang Renxun", "Jensen Huang"),
+    ):
+        cleaned = cleaned.replace(wrong, right)
     return cleaned
 
 
@@ -243,27 +251,74 @@ def _chunks(text: str, limit: int = 420) -> list[str]:
     return packed
 
 
+_google_paused = False
+
+
 def _google_one(text: str) -> str:
+    """One Google request. A 429 pauses Google for the rest of this process."""
+    global _google_paused
+    if _google_paused or not text:
+        return ""
     last_error: Exception | None = None
     url = "https://translate.googleapis.com/translate_a/single?" + urllib.parse.urlencode(
-        {"client": "gtx", "sl": "auto", "tl": "en", "dt": "t", "q": text}
+        {"client": "gtx", "sl": "zh-CN", "tl": "en", "dt": "t", "q": text}
     )
     request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    for attempt in range(4):
+    for attempt in range(2):
         try:
             with urllib.request.urlopen(request, timeout=25) as response:
                 payload = json.loads(response.read().decode("utf-8"))
             return "".join(row[0] for row in payload[0] if row and row[0])
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                _google_paused = True
+                print("translate paused: Google returned 429, switching to the backup translator")
+                return ""
+            last_error = exc
+            time.sleep(0.8 * (attempt + 1))
         except (OSError, ValueError, IndexError, TypeError, json.JSONDecodeError) as exc:
             last_error = exc
-            time.sleep(0.7 * (attempt + 1))
+            time.sleep(0.8 * (attempt + 1))
     print(f"translate failed: {last_error}")
     return ""
 
 
 def google_translate(text: str) -> str:
+    if _google_paused:
+        return ""
     pieces = [_google_one(piece) for piece in _chunks(normalize(text))]
     return re.sub(r"\s+", " ", " ".join(piece for piece in pieces if piece)).strip()
+
+
+def _mymemory_one(text: str) -> str:
+    url = "https://api.mymemory.translated.net/get?" + urllib.parse.urlencode(
+        {"q": text, "langpair": "zh-CN|en"}
+    )
+    request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(request, timeout=25) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"backup translate failed: {exc}")
+        return ""
+    translated = str((payload.get("responseData") or {}).get("translatedText") or "")
+    if payload.get("quotaFinished") or "MYMEMORY WARNING" in translated.upper():
+        print("backup translate quota finished")
+        return ""
+    return translated
+
+
+def mymemory_translate(text: str) -> str:
+    pieces = [_mymemory_one(piece) for piece in _chunks(normalize(text), limit=400)]
+    return re.sub(r"\s+", " ", " ".join(piece for piece in pieces if piece)).strip()
+
+
+def study_translate(text: str) -> str:
+    """Google first. When GitHub Actions is rate-limited, MyMemory fills the gap."""
+    english = usable_english(google_translate(text))
+    if english:
+        return english
+    return usable_english(mymemory_translate(text))
 
 
 def glossary_hits(text: str, limit: int = 5) -> list[tuple[str, str]]:
@@ -381,23 +436,31 @@ def annotate_study_letter(page: str, *, cache: dict[str, str] | None = None) -> 
         return usable_english(known.get(normalize(text), ""))
 
     def replace_pair(match: re.Match[str]) -> str:
-        tail = page[match.end() : match.end() + 160]
-        if 'data-study="en"' in tail:
+        tail = page[match.end() : match.end() + 220]
+        has_body_en = 'data-study="en"' in tail
+        existing_title = match.group("title_en") or ""
+        if existing_title and has_body_en:
             return match.group(0)
         title = normalize(match.group("title"))
         body = normalize(match.group("body"))
         _prefix, core = _split_index(title)
         title_en = lookup(core)
         body_en = lookup(body)
-        if not title_en or not body_en:
+        if not existing_title and not title_en:
             return match.group(0)
-        return (
-            f'<div style="{match.group("title_style")}">{match.group("title")}</div>'
-            f"{english_title_html(title_en)}"
-            f'<p style="{match.group("body_style")}">{match.group("body")}</p>'
-            f"{english_body_html(body_en)}"
-            f"{vocab_html(core + body)}"
-        )
+        if not body_en and not has_body_en:
+            return match.group(0)
+        title_html = f'<div style="{match.group("title_style")}">{match.group("title")}</div>'
+        if existing_title:
+            title_html += existing_title
+        elif title_en:
+            title_html += english_title_html(title_en)
+        body_html = f'<p style="{match.group("body_style")}">{match.group("body")}</p>'
+        if body_en and not has_body_en:
+            body_html += english_body_html(body_en)
+            if 'data-study="vocab"' not in tail:
+                body_html += vocab_html(core + body)
+        return title_html + body_html
 
     page = PAIR_RE.sub(replace_pair, page)
 
@@ -458,7 +521,7 @@ def attach_study_english(
     """Fill title_en and body_en. Uses a saved translation before calling out."""
     stored = cache if cache is not None else load_cache()
     dirty = False
-    translate = translator or google_translate
+    translate = translator or study_translate
 
     def lookup(text: str) -> str:
         nonlocal dirty
@@ -496,6 +559,8 @@ def attach_study_english(
         body_en = lookup(item.get("body", ""))
         if body_en:
             item["body_en"] = body_en
+        elif reflection_en:
+            item["body_en"] = reflection_en
     if dirty and write_cache and cache is None:
         save_cache(stored)
 
@@ -544,7 +609,7 @@ def warm_cache(root: Path | None = None, *, workers: int = 4) -> int:
         return 0
 
     def job(text: str) -> tuple[str, str]:
-        return text, google_translate(text)
+        return text, study_translate(text)
 
     done = 0
     with ThreadPoolExecutor(max_workers=workers) as executor:

@@ -524,7 +524,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"signal load failed: {exc}", file=sys.stderr)
             signals = []
         ideas = select_ideas(now, signals, simplify=True)
-    attach_study_english(ideas)
+    attach_study_english(ideas, write_cache=True)
     subject = subject_for(now)
     text = render_text(ideas, now)
     html_body = render_html(ideas, now)

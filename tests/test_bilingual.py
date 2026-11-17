@@ -1,12 +1,15 @@
 import pathlib
 import sys
 import unittest
+import unittest.mock
+import urllib.error
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
-from bilingual import annotate_study_letter, glossary_hits, usable_english  # noqa: E402
+import bilingual  # noqa: E402
+from bilingual import annotate_study_letter, attach_study_english, glossary_hits, usable_english  # noqa: E402
 from major_events import render_html  # noqa: E402
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
@@ -64,6 +67,41 @@ class BilingualTest(unittest.TestCase):
         self.assertIn("中国新闻网", page)
         again = annotate_study_letter(page, cache=CACHE)
         self.assertEqual(again.count("Cold air brings a sharp drop"), 1)
+
+    def test_google_429_stops_further_calls(self) -> None:
+        bilingual._google_paused = False
+        calls = {"n": 0}
+
+        def boom(*_args, **_kwargs):
+            calls["n"] += 1
+            raise urllib.error.HTTPError(
+                "https://translate.example", 429, "Too Many Requests", hdrs=None, fp=None
+            )
+
+        with unittest.mock.patch("bilingual.urllib.request.urlopen", boom):
+            self.assertEqual(bilingual._google_one("冷空气"), "")
+            self.assertEqual(bilingual._google_one("冷空气"), "")
+        self.assertEqual(calls["n"], 1)
+        self.assertTrue(bilingual._google_paused)
+        bilingual._google_paused = False
+
+    def test_study_translate_uses_the_backup(self) -> None:
+        with (
+            unittest.mock.patch("bilingual.google_translate", return_value=""),
+            unittest.mock.patch("bilingual.mymemory_translate", return_value="Cold air arrives."),
+        ):
+            self.assertEqual(bilingual.study_translate("冷空气"), "Cold air arrives.")
+
+    def test_failed_fact_still_keeps_the_reflection(self) -> None:
+        item = {
+            "title": "一条新消息",
+            "body": "事实句子。值得留下的是一件具体事实。",
+            "fact": "事实句子。",
+            "reflection_en": "What is worth keeping is one concrete fact.",
+        }
+        attach_study_english([item], translator=lambda _text: "", cache={}, write_cache=False)
+        self.assertEqual(item["body_en"], "What is worth keeping is one concrete fact.")
+        self.assertFalse(item.get("title_en"))
 
 
 if __name__ == "__main__":

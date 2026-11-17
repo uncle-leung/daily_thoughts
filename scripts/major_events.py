@@ -448,7 +448,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"event load failed: {exc}", file=sys.stderr)
             return 3
         domestic, world = select_events(now, domestic_ready, world_ready)
-    attach_study_english(list(domestic) + list(world))
+    attach_study_english(list(domestic) + list(world), write_cache=True)
     if len(domestic) < 10 or len(world) < 10:
         print(
             f"only found domestic {len(domestic)} and world {len(world)}; still sending what is ready",
