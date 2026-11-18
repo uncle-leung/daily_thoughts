@@ -1,0 +1,305 @@
+GitHub 热门项目 · 2026-11-18 10:19（上海）
+
+排名来自 GitHub Trending 官方榜，按该时段新增 Star 排序。每条用两三句话说明这个项目是做什么的。
+整理时间：2026-11-18 10:19 上海时间
+
+## 今日热门
+
+1. elementalsouls/Claude-BugHunter
+   A Claude Code skill bundle for bug hunting and external red-team work - 82 skills, 15 slash commands, 681 disclosed-report patterns curated across 24 core vulnerability classes, plus enterprise identity + infrastructure attack matrices。claude-bughunter is a drop-in skill bundle for the Claude Code skills system。
+   Python · 9,436 Star · 1,365 Fork · 今日 +1,005 Star
+   https://github.com/elementalsouls/Claude-BugHunter
+
+2. mvanhorn/last30days-skill
+   AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary。The runtime skill spec lives in skills/last30days/SKILL.md, which is the source of truth for the latest command and setup behavior。
+   Python · 69,128 Star · 6,149 Fork · 今日 +696 Star
+   https://github.com/mvanhorn/last30days-skill
+
+3. alibaba/open-code-review
+   Secure, fast, efficient, battle-tested at Alibaba's scale.Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible。Open Code Review is an AI-powered code review CLI tool。
+   Go · 53,786 Star · 4,433 Fork · 今日 +763 Star
+   https://github.com/alibaba/open-code-review
+
+4. Tencent/LoopForge
+   Self-hosted workflows for coding-agent delivery.Orchestrate CodeBuddy, Codex and Claude Code with scripts and human approval gates.Includes Local workflows for coding assistants。
+   Go · 3,255 Star · 447 Fork · 今日 +591 Star
+   https://github.com/Tencent/LoopForge
+
+5. dream-num/univer
+   Build your own AI office with Univer Office SDK.Bring editing, calculation, collaboration, and file processing into your product for people and AI agents.Built on an extensible open-source core。
+   TypeScript · 28,935 Star · 2,622 Fork · 今日 +1,774 Star
+   https://github.com/dream-num/univer
+
+6. getarcaneapp/arcane
+   Modern Docker Management, Designed for Everyone。
+   Go · 9,364 Star · 516 Fork · 今日 +618 Star
+   https://github.com/getarcaneapp/arcane
+
+7. google-labs-code/stitch-skills
+   A library of Agent Skills designed to work with the Stitch MCP server.Each skill follows the Agent Skills open standard, for compatibility with coding agents such as Antigravity, Gemini CLI, Claude Code, Cursor。
+   TypeScript · 10,130 Star · 1,334 Fork · 今日 +350 Star
+   https://github.com/google-labs-code/stitch-skills
+
+8. cursor/plugins
+   Cursor plugin specification and official plugins。This is a multi-plugin marketplace repository。
+   TypeScript · 16,918 Star · 1,831 Fork · 今日 +201 Star
+   https://github.com/cursor/plugins
+
+9. obra/superpowers
+   An agentic skills framework & software development methodology that works。Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them。
+   Shell · 319,380 Star · 28,481 Fork · 今日 +1,917 Star
+   https://github.com/obra/superpowers
+
+10. ag-ui-protocol/ag-ui
+   AG-UI: the Agent-User Interaction Protocol.Bring Agents into Frontend Applications。AG-UI is an open, lightweight, event-based protocol that standardizes how AI agents connect to user-facing applications。
+   TypeScript · 20,043 Star · 2,071 Fork · 今日 +1,445 Star
+   https://github.com/ag-ui-protocol/ag-ui
+
+11. backnotprop/plannotator
+   The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click。⭐️ NEW: Plannotator Inbox is the missing review layer between you and multi-agent work。
+   TypeScript · 13,091 Star · 1,315 Fork · 今日 +691 Star
+   https://github.com/backnotprop/plannotator
+
+12. sveltejs/svelte
+   web development for the rest of us。Svelte is a new way to build web applications。
+   JavaScript · 89,622 Star · 6,251 Fork · 今日 +477 Star
+   https://github.com/sveltejs/svelte
+
+13. affaan-m/ECC
+   The agent harness performance optimization system.Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond。
+   JavaScript · 305,569 Star · 44,985 Fork · 今日 +883 Star
+   https://github.com/affaan-m/ECC
+
+14. jingyaogong/minimind
+   Train a 64M-parameter LLM from scratch in just 2h。* 此开源项目旨在完全从 0 开始，仅用 3 块钱成本与 2 小时训练时间，即可训练出规模约为 64M 的超小语言模型 MiniMind。
+   Python · 66,050 Star · 8,665 Fork · 今日 +192 Star
+   https://github.com/jingyaogong/minimind
+
+15. google-research/paper-orchestra
+   PaperOrchestra is a multi-agent framework for automated AI research paper writing。
+   Python · 3,095 Star · 420 Fork · 今日 +1,072 Star
+   https://github.com/google-research/paper-orchestra
+
+## 本周热门
+
+1. GoogleChrome/modern-web-guidance-src
+   Keep your coding agent up to date with the latest web best practices。This repo is the source repository for GoogleChrome/modern-web-guidance and includes the code and documentation for authoring, calibrating, and evaluating its contents。
+   TypeScript · 8,470 Star · 727 Fork · 本周 +7,015 Star
+   https://github.com/GoogleChrome/modern-web-guidance-src
+
+2. backnotprop/plannotator
+   The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click。⭐️ NEW: Plannotator Inbox is the missing review layer between you and multi-agent work。
+   TypeScript · 13,091 Star · 1,315 Fork · 本周 +2,926 Star
+   https://github.com/backnotprop/plannotator
+
+3. meta/astryx
+   An open source design system that's fully customizable and agent ready。Astryx is an open source design system that grew inside Meta over the last eight years, where it became the most-used and largest design system in the company — powering 13,000+ apps and shaped by the engineers。
+   TypeScript · 30,191 Star · 2,355 Fork · 本周 +8,700 Star
+   https://github.com/meta/astryx
+
+4. we-promise/sure
+   The personal finance app for everyone (by everyone)。This repo is a community fork of the archived Maybe Finance repo。
+   Ruby · 16,280 Star · 1,415 Fork · 本周 +4,786 Star
+   https://github.com/we-promise/sure
+
+5. ZhuLinsen/daily_stock_analysis
+   LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。
+   Python · 73,101 Star · 57,789 Fork · 本周 +3,653 Star
+   https://github.com/ZhuLinsen/daily_stock_analysis
+
+6. anthropics/skills
+   Public repository for Agent Skills。
+   Python · 196,770 Star · 23,066 Fork · 本周 +4,847 Star
+   https://github.com/anthropics/skills
+
+7. elementalsouls/Claude-BugHunter
+   A Claude Code skill bundle for bug hunting and external red-team work - 82 skills, 15 slash commands, 681 disclosed-report patterns curated across 24 core vulnerability classes, plus enterprise identity + infrastructure attack matrices。claude-bughunter is a drop-in skill bundle for the Claude Code skills system。
+   Python · 9,436 Star · 1,365 Fork · 本周 +2,508 Star
+   https://github.com/elementalsouls/Claude-BugHunter
+
+8. alibaba/open-code-review
+   Secure, fast, efficient, battle-tested at Alibaba's scale.Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible。Open Code Review is an AI-powered code review CLI tool。
+   Go · 53,786 Star · 4,433 Fork · 本周 +3,675 Star
+   https://github.com/alibaba/open-code-review
+
+9. vercel-labs/agent-browser
+   Browser automation CLI for AI agents。agent-browser is a native Rust CLI that gives an AI agent a browser it can drive one command at a time。
+   Rust · 52,396 Star · 3,664 Fork · 本周 +3,429 Star
+   https://github.com/vercel-labs/agent-browser
+
+10. ChromeDevTools/chrome-devtools-mcp
+   Chrome DevTools for coding agents。Chrome DevTools for agents (chrome-devtools-mcp) lets your coding agent (such as Antigravity, Claude, Cursor or Copilot) control and inspect a live Chrome browser。
+   TypeScript · 58,054 Star · 4,869 Fork · 本周 +2,948 Star
+   https://github.com/ChromeDevTools/chrome-devtools-mcp
+
+11. tradermonty/claude-trading-skills
+   Claude Code skills for equity investors and traders — market analysis, technical charting, economic calendars, screeners, and trading strategy development。Claude Trading Skills is a Claude Skills-based trading workflow toolkit for time-constrained individual investors。
+   Python · 6,883 Star · 1,412 Fork · 本周 +2,985 Star
+   https://github.com/tradermonty/claude-trading-skills
+
+12. google-labs-code/stitch-skills
+   A library of Agent Skills designed to work with the Stitch MCP server.Each skill follows the Agent Skills open standard, for compatibility with coding agents such as Antigravity, Gemini CLI, Claude Code, Cursor。
+   TypeScript · 10,130 Star · 1,334 Fork · 本周 +1,197 Star
+   https://github.com/google-labs-code/stitch-skills
+
+13. openai/codex-security
+   OpenAI's Codex Security CLI and TypeScript SDK for finding, validating, and fixing security vulnerabilities.npm: https://www.npmjs.com/package/@openai/codex-security。Codex Security helps you find, investigate, and fix vulnerabilities in your code。
+   TypeScript · 13,970 Star · 1,094 Fork · 本周 +2,531 Star
+   https://github.com/openai/codex-security
+
+14. addyosmani/agent-skills
+   Production-grade engineering skills for AI coding agents。
+   JavaScript · 118,678 Star · 12,378 Fork · 本周 +3,884 Star
+   https://github.com/addyosmani/agent-skills
+
+## 本月热门
+
+1. Nutlope/hallmark
+   Anti-AI-slop design skill for Claude Code, Cursor, and Codex。A theme is a material, not a plan: it never says what a page contains or in what order, so two prompts in one theme make two different pages。
+   CSS · 56,928 Star · 3,078 Fork · 本月 +26,594 Star
+   https://github.com/Nutlope/hallmark
+
+2. cloudflare/security-audit-skill
+   A coding-agent skill for multi-phase security audits with independently verified, machine-readable findings。A coding-agent skill that turns your agent into a security auditor。
+   JavaScript · 74,840 Star · 5,013 Fork · 本月 +44,314 Star
+   https://github.com/cloudflare/security-audit-skill
+
+3. pingdotgg/t3code
+   The best way to control Claude Code, Codex and more from any computer or phone。Performance is a feature here。
+   TypeScript · 64,205 Star · 11,312 Fork · 本月 +35,748 Star
+   https://github.com/pingdotgg/t3code
+
+4. anthropics/skills
+   Public repository for Agent Skills。
+   Python · 196,770 Star · 23,066 Fork · 本月 +15,351 Star
+   https://github.com/anthropics/skills
+
+5. thedotmack/claude-mem
+   Persistent Context Across Sessions for Every Agent – Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions.Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More。
+   TypeScript · 118,009 Star · 10,253 Fork · 本月 +17,236 Star
+   https://github.com/thedotmack/claude-mem
+
+6. pbakaus/impeccable
+   The design vocabulary for your coding agent.Steer with polish and bolder, review with critique and audit, catch AI slop before it ships。Review | critique is a scored UX review · audit is a technical quality report。
+   Rust · 112,248 Star · 6,696 Fork · 本月 +30,177 Star
+   https://github.com/pbakaus/impeccable
+
+7. HKUDS/DeepTutor
+   DeepTutor: Lifelong Personalized Tutoring.https://deeptutor.info/。
+   Python · 60,097 Star · 7,273 Fork · 本月 +18,753 Star
+   https://github.com/HKUDS/DeepTutor
+
+8. backnotprop/plannotator
+   The workspace to stay in the loop and on top of agents - shape, decide, plan, annotate, review code, share with team, and send all feedback to agents with one click。⭐️ NEW: Plannotator Inbox is the missing review layer between you and multi-agent work。
+   TypeScript · 13,091 Star · 1,315 Fork · 本月 +3,475 Star
+   https://github.com/backnotprop/plannotator
+
+9. sherlock-project/sherlock
+   Hunt down social media accounts by username across social networks。
+   Python · 113,801 Star · 13,100 Fork · 本月 +19,596 Star
+   https://github.com/sherlock-project/sherlock
+
+10. heygen-com/hyperframes
+   Write HTML，Render video，Built for agents。HyperFrames is a free, open-source framework for turning HTML, CSS, media, and seekable animations into deterministic MP4 videos。
+   TypeScript · 86,030 Star · 7,968 Fork · 本月 +20,425 Star
+   https://github.com/heygen-com/hyperframes
+
+11. Leonxlnx/taste-skill
+   Agent skills that give coding agents taste: art direction, reference images and a browser check instead of generic AI pages。Taste Skill (tasteskill 2.5.1) is an Agent Skill that makes coding agents build professional company websites at the figma.com and x.ai level instead of assembling a generic landing page。
+   JavaScript · 117,787 Star · 7,884 Fork · 本月 +19,688 Star
+   https://github.com/Leonxlnx/taste-skill
+
+12. AgriciDaniel/claude-seo
+   Universal SEO skill for Claude Code.26 sub-skills + 19 sub-agents covering technical SEO, E-E-A-T, schema, GEO/AEO, agent readiness (Lighthouse Agentic Browsing, WebMCP, llms.txt), backlinks, local SEO, e-commerce, international SEO, Google APIs, and PDF/Excel reporting.9 optional extensions for live SEO data。
+   Python · 30,419 Star · 3,799 Fork · 本月 +11,246 Star
+   https://github.com/AgriciDaniel/claude-seo
+
+13. vercel-labs/agent-browser
+   Browser automation CLI for AI agents。agent-browser is a native Rust CLI that gives an AI agent a browser it can drive one command at a time。
+   Rust · 52,396 Star · 3,664 Fork · 本月 +8,282 Star
+   https://github.com/vercel-labs/agent-browser
+
+14. anthropics/knowledge-work-plugins
+   Open source repository of plugins primarily intended for knowledge workers to use in Claude Cowork。Cowork lets you set the goal and Claude delivers finished, professional work。
+   Python · 36,442 Star · 4,024 Fork · 本月 +6,565 Star
+   https://github.com/anthropics/knowledge-work-plugins
+
+## 中文社区今日热门
+
+1. 521xueweihan/HelloGitHub
+   分享 GitHub 上有趣、入门级的开源项目。
+   Python · 189,606 Star · 13,323 Fork · 今日 +257 Star
+   https://github.com/521xueweihan/HelloGitHub
+
+2. fanmingming/live
+   可直连访问的电视/广播图标库与相关工具项目 永久免费 直连访问 完整开源 不断完善的台标 支持IPv4/IPv6双栈访问。
+   JavaScript · 28,877 Star · 4,228 Fork · 今日 +13 Star
+   https://github.com/fanmingming/live
+
+3. aoaostar/legado
+   阅读APP书源。
+   HTML · 7,464 Star · 325 Fork · 今日 +34 Star
+   https://github.com/aoaostar/legado
+
+4. ccfos/nightingale
+   Open-source, self-hosted alerting for metrics, logs, and databases.Includes a built-in AI agent and MCP server。Categraf is an optional collector for hosts, middleware, databases, and network devices。
+   Go · 13,498 Star · 1,800 Fork · 今日 +6 Star
+   https://github.com/ccfos/nightingale
+
+5. Anduin2017/HowToCook
+   Programmer's guide about how to cook at home。同样，我希望它是一个由社区驱动和维护的开源项目，使更多人能够一起做一个有趣的仓库。
+   未标注语言 · 104,076 Star · 11,236 Fork · 今日 +43 Star
+   https://github.com/Anduin2017/HowToCook
+
+6. YunaiV/ruoyi-vue-pro
+   官方推荐 RuoYi-Vue 全新 Pro 版本，优化重构所有功能。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Flowable 工作流、三方登录、支付、短信、商城、CRM、ERP、MES、IM、AI 大模型、IoT 物联网等功能。系统内置多种多种业务功能，可以用于快速你的业务系统：。
+   Java · 40,480 Star · 8,686 Fork · 今日 +25 Star
+   https://github.com/YunaiV/ruoyi-vue-pro
+
+7. auto-novel/auto-novel
+   轻小说机翻网站，支持网络小说/文库小说/本地小说。轻小说机翻机器人是一个自动生成轻小说机翻并分享的网站。
+   TypeScript · 1,314 Star · 112 Fork · 今日 +9 Star
+   https://github.com/auto-novel/auto-novel
+
+8. hiroi-sora/Umi-OCR
+   开源、免费的离线OCR软件。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。单栏-保留缩进：适用于解析代码截图，保留行首缩进和行中空格。
+   Python · 48,774 Star · 4,762 Fork · 今日 +28 Star
+   https://github.com/hiroi-sora/Umi-OCR
+
+9. langbot-app/LangBot
+   LangBot is an open-source, production-grade platform for building AI-powered instant messaging bots。
+   Python · 19,063 Star · 1,713 Fork · 今日 +17 Star
+   https://github.com/langbot-app/LangBot
+
+10. RapidAI/RapidOCR
+   Awesome OCR multiple programing languages toolkits based on ONNX Runtime, OpenVINO, MNN, PaddlePaddle, TensorRT and PyTorch。RapidOCR is a completely open-source, free OCR tool that supports multi-platform, multi-language operation and rapid offline deployment。
+   Python · 8,559 Star · 779 Fork · 今日 +13 Star
+   https://github.com/RapidAI/RapidOCR
+
+11. ruanyf/weekly
+   科技爱好者周刊，每周五发布。第 411 期：OpenClaw 2.0 是一个缩影。
+   未标注语言 · 108,251 Star · 4,588 Fork · 今日 +80 Star
+   https://github.com/ruanyf/weekly
+
+12. wanglin2/mind-map
+   SimpleMindMap（思绪思维导图）：一个强大的思维导图。
+   JavaScript · 12,966 Star · 1,697 Fork · 今日 +13 Star
+   https://github.com/wanglin2/mind-map
+
+13. coolsnowwolf/lede
+   Lean's LEDE source。支持 OpenWrt、Debian、Armbian 等多种系统，可应用于网关、轻量服务器或开发板等领域。
+   C · 31,627 Star · 19,032 Fork · 今日 +0 Star
+   https://github.com/coolsnowwolf/lede
+
+14. yaklang/yakit
+   Cyber Security ALL-IN-ONE Platform。Yak引擎手动实现了HTTP库，所以用户可以自定义畸形的请求包、响应包，应用于一些特殊场景下的漏洞利用。
+   TypeScript · 7,898 Star · 835 Fork · 今日 +3 Star
+   https://github.com/yaklang/yakit
+
+15. hanxinhao000/ZeroTermux
+   ZeroTermux is a non-profit software developed based on Termux。
+   Java · 3,139 Star · 242 Fork · 今日 +3 Star
+   https://github.com/hanxinhao000/ZeroTermux
+
+每天 08:00 和 18:00（上海时间）自动发送。
+来源：https://github.com/trending
