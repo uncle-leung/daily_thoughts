@@ -1,0 +1,67 @@
+每日想法 · 2026-11-20 09:05（上海）
+
+十条想法，对照今天的时事。每条先给中文，再给学习用英文。
+EN: Ten thoughts. Read the Chinese first, then the English in the green box. The English is a study translation.
+整理时间：2026-11-20 09:05 上海时间
+
+1. [世间 · World] 又一移民船在塞内加尔沿海倾覆 数十人失踪
+EN: Another migrant boat capsizes off the coast of Senegal, leaving dozens missing
+新华网客户端报道，又一移民船在塞内加尔沿海倾覆 数十人失踪。这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。
+EN: According to a report from the Xinhua News Agency app, another migrant boat capsized off the coast of Senegal, with dozens of people missing. This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.
+生词: prices 物价 · supply chain 供应链
+
+2. [知识 · Knowledge] 黄仁勋的下台可能削弱开放权重模型让闭源模型受益
+EN: Jensen Huang's stepping down could weaken open-weight models and benefit closed-source models.
+Solidot报道，黄仁勋的下台可能削弱开放权重模型生态，让 OpenAI 和 Anthropic 等闭源模型开发商受益。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: Solidot reports that Jensen Huang's stepping down could weaken the open-weight model ecosystem, benefiting closed-source model developers like OpenAI and Anthropic. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: open weights 开放权重 · model 模型 · closed source 闭源 · artificial intelligence 人工智能 · funding 融资
+
+3. [工作 · Work] 文明系列游戏开发商裁员三分之一
+EN: The developer of the Civilization series of games lays off one-third of its staff
+Solidot报道，《文明》系列和《XCOM》系列策略游戏开发商 Firaxis Games 工作室裁员三分之一约 60 名员工，其中包括工作室负责人 Heather Hazen。人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。
+EN: According to a report by Solidot, Firaxis Games, the developer of the "Civilization" and "XCOM" strategy game series, has laid off approximately 60 employees, representing one-third of its workforce. This includes the studio's head, Heather Hazen. Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.
+生词: layoffs 裁员 · job 岗位
+
+4. [人生 · Life] 我国持续推动积极应对人口老龄化国家战略走深走实
+EN: China continues to promote the deepening and implementation of its national strategy for actively responding to population aging.
+中国日报网报道，我国持续推动积极应对人口老龄化国家战略走深走实。老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。
+EN: According to China Daily, China continues to promote the deepening and implementation of its national strategy for actively addressing the aging population. An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.
+生词: an aging population 人口老龄化 · aging population 老龄化 · job 岗位
+
+5. [财富 · Wealth] 一年时间，进出口增速从2.7%跃升至35.7% 重庆的“亚太生意”越做越大
+EN: In one year, the growth rate of imports and exports jumped from 2.7% to 35.7%. Chongqing's "Asia-Pacific business" is growing bigger and bigger.
+华龙网报道，一年时间，进出口增速从2.7%跃升至35.7% 重庆的“亚太生意”越做越大。融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。
+EN: According to a report by Hualong.net, over the course of a year, the growth rate of imports and exports surged from 2.7% to 35.7%, indicating that Chongqing's "Asia-Pacific business" is expanding steadily. The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.
+生词: exports 出口 · funding 融资 · trade 贸易 · valuation 估值 · cash flow 现金流
+
+6. [健康 · Health] FGF-9联合CHIR99021与丙戊酸诱导脐带间充质干细胞生成神经祖细胞及其在阿尔茨海默病大鼠模型中的神经保护与神经再生作用
+EN: FGF-9 combined with CHIR99021 and valproic acid to induce umbilical cord mesenchymal stem cells to generate neural progenitor cells and their neuroprotective and neuroregenerative effects in an Alzheimer's disease rat model
+生物通报道，FGF-9联合CHIR99021与丙戊酸诱导脐带间充质干细胞生成神经祖细胞及其在阿尔茨海默病大鼠模型中的神经保护与神经再生作用。把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。
+EN: Bioon reported that FGF-9 combined with CHIR99021 and valproic acid induced the generation of neural progenitor cells from umbilical cord mesenchymal stem cells and their neuroprotective and neuroregenerative effects in a rat model of Alzheimer's disease. Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.
+生词: Alzheimer's disease 阿尔茨海默病 · model 模型 · public health 公共卫生 · prescription 处方 · sleep 睡眠
+
+7. [世间 · World] 普京：克里米亚大桥遭袭后 俄方不会再讨论海上停火
+EN: Putin: Russia will no longer discuss a maritime ceasefire after the attack on the Crimean Bridge
+东方财富网报道，普京：克里米亚大桥遭袭后 俄方不会再讨论海上停火。选举、冲突和制裁很少按标题的音量进入家里，它们先改变运费、零件和人们说话的口气。碰得到你的生活，就调整一个安排；碰不到，看完就可以停。
+EN: According to Eastmoney.com, Putin stated that Russia will no longer discuss a maritime ceasefire following the attack on the Crimean Bridge. Elections, conflicts, and sanctions rarely enter a home at the volume of the headline. They first change freight costs, parts, and the way people talk. If one of them can reach your life, adjust one plan. If it cannot, you can stop after reading.
+生词: ceasefire 停火 · election 选举 · conflict 冲突 · sanctions 制裁
+
+8. [知识 · Knowledge] 美国最近接连发生的技术故障源自为修复 AI 发现的漏洞
+EN: The recent string of technical glitches in the United States stems from fixes for vulnerabilities discovered by AI.
+Solidot报道，过去几天美国经历了一系列技术故障，全国航班停飞、银行在线服务中断，甚至 NSA 的一个机密通信网络瘫痪。模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。
+EN: Solidot reported that the United States has experienced a series of technical glitches over the past few days, including nationwide flight groundings, disruptions to banks' online services, and even the shutdown of a classified communications network belonging to the NSA. The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.
+生词: flight 航班 · ground stop 停飞 · model 模型
+
+9. [世间 · World] IEA 警告称到 2030 年数据中心碳排放量将增加七成
+EN: The IEA warns that carbon emissions from data centers will increase by 70% by 2030.
+Solidot报道，国际能源署（IEA）发表报告警告，到 2030 年数据中心碳排放量将增加七成。极端天气和旧的环境事故都在提醒，稳定比一条新闻看起来更脆。个人改变不了那一季热浪或那次泄漏，但可以把这周的作息、出行和身体留出余量。
+EN: Solidot reported that the International Energy Agency (IEA) published a report warning that carbon emissions from data centers will increase by 70% by 2030. Extreme weather and older environmental accidents both remind you that stability is more fragile than a headline looks. One person cannot undo that season's heat wave or that leak, but you can leave slack this week in your schedule, your travel, and your body.
+生词: emissions 排放 · energy 能源 · heat wave 热浪
+
+10. [知识 · Knowledge] AI是做精神導師，發佈教法裁決？穆斯林對此意見不一
+EN: Is AI to be a spiritual guide and issue fatwas? Muslims have differing opinions on this matter.
+BBC中文报道，穆斯林社群因伊斯蘭AI助手Qaf能否頒布教法裁決爆發爭議，開發者強調僅供學習，學者則警告不可取代專業裁決，反映AI與傳統宗教的張力。跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。
+EN: According to a BBC Chinese report, the Muslim community is embroiled in controversy over whether the Islamic AI assistant Qaf can issue fatwas. The developers emphasize that it is for learning purposes only, while scholars warn that it cannot replace professional fatwas, reflecting the tension between AI and traditional religion. Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.
+
+材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。
+每天 08:30 和 18:30（上海时间）自动发送。
