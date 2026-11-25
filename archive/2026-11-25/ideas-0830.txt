@@ -1,0 +1,68 @@
+每日想法 · 2026-11-25 12:13（上海）
+
+十条想法，对照今天的时事。每条先给中文，再给学习用英文。
+EN: Ten thoughts. Read the Chinese first, then the English in the green box. The English is a study translation.
+整理时间：2026-11-25 12:13 上海时间
+
+1. [世间 · World] 一艘移民船从塞内加尔出发两周后失联 约175人下落不明
+EN: A migrant ship disappeared two weeks after setting off from Senegal, leaving around 175 people unaccounted for
+中国新闻网报道，一艘移民船从塞内加尔出发两周后失联 约175人下落不明。这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。
+EN: China News Network reported that a migrant ship disappeared two weeks after setting off from Senegal, and about 175 people were missing. This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.
+生词: prices 物价 · supply chain 供应链
+
+2. [知识 · Knowledge] Google 申请专利为用户量身定制 AI 电视频道
+EN: Google applies for patent to customize AI TV channels for users
+Solidot报道，Google 提交了一项专利申请，利用它所掌握的关于你的信息，创造一个由 AI 生成的电视频道。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: Solidot reports that Google has filed a patent application to use the information it holds about you to create an AI-generated TV channel. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: artificial intelligence 人工智能 · model 模型 · funding 融资
+
+3. [工作 · Work] OpenAI与Anthropic员工与管理层产生冲突因安全分歧_CNMO
+EN: OpenAI and Anthropic employees and management clash over security differences_CNMO
+OpenAI与Anthropic员工与管理层产生冲突因安全分歧_CNMO。人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。
+EN: OpenAI and Anthropic employees and management clash over security differences_CNMO. Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.
+生词: conflict 冲突 · job 岗位 · layoffs 裁员
+
+4. [人生 · Life] 日本人口年龄中位数首次超过 50 岁
+EN: Median age of Japanese population exceeds 50 for first time
+Solidot报道，日本 2025 年的国势调查显示，日本人口年龄中位数首次超过 50 岁，半个世纪里上升了约 20 岁。老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。
+EN: Solidot reported that Japan’s 2025 national census showed that the median age of Japan’s population exceeded 50 years old for the first time, an increase of about 20 years in half a century. An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.
+生词: investigation 调查 · aging population 老龄化 · job 岗位
+
+5. [财富 · Wealth] 北京：金价连跌提振黄金消费 菜百金饰热销
+EN: Beijing: Continuous decline in gold prices boosts gold consumption; Caibai gold jewelry sells well
+央广网报道，北京：金价连跌提振黄金消费 菜百金饰热销。融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。
+EN: China Central Broadcasting Network reported that Beijing: The continuous decline in gold prices has boosted gold consumption, and Caibai gold jewelry is selling well. The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.
+生词: gold 黄金 · funding 融资 · trade 贸易 · valuation 估值 · cash flow 现金流
+
+6. [健康 · Health] 空气污染是痴呆症的一个诱因
+EN: Air pollution a cause of dementia
+Solidot报道，根据发表在《Journal of Neuroinflammation》期刊上的一项研究，微小的空气污染颗粒可能会通过改变大脑免疫细胞的行为对大脑造成损害。把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。
+EN: Solidot reports that tiny air pollution particles may cause damage to the brain by changing the behavior of the brain's immune cells, according to a study published in the Journal of Neuroinflammation. Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.
+生词: public health 公共卫生 · prescription 处方 · sleep 睡眠
+
+7. [世间 · World] 美媒：美国战争部与多家车厂商讨 借用生产线大规模造无人机
+EN: US media: The U.S. Department of War is in discussions with several automakers to borrow production lines to manufacture drones on a large scale
+8world报道，美媒：美国战争部与多家车厂商讨 借用生产线大规模造无人机。选举、冲突和制裁很少按标题的音量进入家里，它们先改变运费、零件和人们说话的口气。碰得到你的生活，就调整一个安排；碰不到，看完就可以停。
+EN: 8world reported that US media: The US Department of War is discussing with a number of car manufacturers to borrow production lines to manufacture drones on a large scale. Elections, conflicts, and sanctions rarely enter a home at the volume of the headline. They first change freight costs, parts, and the way people talk. If one of them can reach your life, adjust one plan. If it cannot, you can stop after reading.
+生词: drone 无人机 · election 选举 · conflict 冲突 · sanctions 制裁
+
+8. [知识 · Knowledge] 11月24日AI人工智能ETF平安（512930）份额减少3600.00万份，最新份额49.37亿份，最新规模22.46亿元
+EN: On November 24, the share of AI artificial intelligence ETF Ping An (512930) decreased by 36 million shares, with the latest share of 4.937 billion shares and the latest scale of 2.246 billion yuan.
+新浪财经报道，11月24日AI人工智能ETF平安（512930）份额减少3600.00万份，最新份额49.37亿份，最新规模22.46亿元。模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。
+EN: Sina Finance reported that on November 24, the share of AI artificial intelligence ETF Ping An (512930) decreased by 36 million shares, with the latest share of 4.937 billion shares and the latest scale of 2.246 billion yuan. The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.
+生词: artificial intelligence 人工智能 · model 模型
+
+9. [世间 · World] COP31 气候谈判未达成任何共识
+EN: COP31 climate talks failed to reach any consensus
+Solidot报道，经过两周密集谈判和两天加时磋商，第三十一届联合国气候变化大会（COP31）周日在土耳其安塔利亚落下帷幕。极端天气和旧的环境事故都在提醒，稳定比一条新闻看起来更脆。个人改变不了那一季热浪或那次泄漏，但可以把这周的作息、出行和身体留出余量。
+EN: Solidot reported that after two weeks of intensive negotiations and two days of overtime consultations, the 31st United Nations Climate Change Conference (COP31) came to an end on Sunday in Antalya, Turkey. Extreme weather and older environmental accidents both remind you that stability is more fragile than a headline looks. One person cannot undo that season's heat wave or that leak, but you can leave slack this week in your schedule, your travel, and your body.
+生词: climate 气候 · heat wave 热浪
+
+10. [知识 · Knowledge] 11月24日创业板人工智能ETF招商（159243）份额增加1300.00万份，最新份额2.01亿份，最新规模1.60亿元
+EN: On November 24, the share of GEM Artificial Intelligence ETF Investment (159243) increased by 13 million shares, with the latest share of 201 million shares and the latest scale of 160 million yuan.
+新浪财经报道，11月24日创业板人工智能ETF招商（159243）份额增加1300.00万份，最新份额2.01亿份，最新规模1.60亿元。跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。
+EN: Sina Finance reported that on November 24, the share of the GEM Artificial Intelligence ETF Investment Promotion (159243) increased by 13 million shares, with the latest share of 201 million shares and the latest scale of 160 million yuan. Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.
+生词: startup 创业 · artificial intelligence 人工智能
+
+材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。
+每天 08:30 和 18:30（上海时间）自动发送。
