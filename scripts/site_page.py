@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Keep a public page of letters that were actually sent."""
+"""Keep a public page of letters that were actually sent.
+
+The page lists only Shanghai calendar today and yesterday. Each channel
+shows the single newest letter in that window.
+"""
 
 from __future__ import annotations
 
@@ -7,7 +11,7 @@ import html
 import json
 import re
 import shutil
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -340,29 +344,52 @@ def theme_published_letter(page: str) -> str:
     return style_tag + themed
 
 
-def _sorted_day_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    rank = {kind: index for index, kind in enumerate(KIND_ORDER)}
-    return sorted(
-        rows,
-        key=lambda item: (
-            rank.get(item["kind"], 99),
-            item["sentAt"] or "9999",
-            item["slot"],
-        ),
-    )
+def _shift_day(day: str, delta: int) -> str:
+    return (date.fromisoformat(day) + timedelta(days=delta)).isoformat()
+
+
+def _window_days(today: str) -> set[str]:
+    """Shanghai calendar today and yesterday. Not a rolling 48-hour span."""
+    return {today, _shift_day(today, -1)}
+
+
+def _recency_key(day: str, row: dict[str, str]) -> tuple[str, str, str]:
+    slot = row.get("slot") or ""
+    sent = row.get("sentAt") or f"{day}T{slot or '00:00'}:00+08:00"
+    return (sent, day, slot)
+
+
+def latest_letters(
+    days: list[tuple[str, list[dict[str, str]]]], today: str
+) -> dict[str, tuple[str, dict[str, str]] | None]:
+    """Newest letter per channel inside today and yesterday."""
+    allowed = _window_days(today)
+    chosen: dict[str, tuple[str, dict[str, str]] | None] = {kind: None for kind in KIND_ORDER}
+    for day, rows in days:
+        if day not in allowed:
+            continue
+        for row in rows:
+            kind = row["kind"]
+            if kind not in chosen:
+                continue
+            current = chosen[kind]
+            if current is None or _recency_key(day, row) > _recency_key(current[0], current[1]):
+                chosen[kind] = (day, row)
+    return chosen
 
 
 def _letter_html(day: str, row: dict[str, str], *, heading: bool = True) -> str:
     title = KIND_TITLE[row["kind"]]
     stem = f"{row['kind']}-{row['slot'].replace(':', '')}"
     clock = _clock(row["sentAt"])
-    when = f"{clock} 发出" if clock else "已发出"
+    when = f"{day} {clock} 发出" if clock else f"{day} 已发出"
     subject = row["subject"]
     head = f"<h2 id=\"letter-{stem}\">{html.escape(title)}</h2>" if heading else ""
     meta = f"<p class=\"meta\">{html.escape(when)}"
     if subject:
         meta += f" · {html.escape(subject)}"
     meta += "</p>"
+    attrs = f' data-day="{html.escape(day)}" data-channel="{html.escape(row["kind"])}"'
     if row["html"]:
         href = f"letters/{day}/{stem}.html"
         frame = (
@@ -370,71 +397,69 @@ def _letter_html(day: str, row: dict[str, str], *, heading: bool = True) -> str:
             "onload=\"fitLetter(this)\"></iframe>"
             f"<p class=\"open\"><a href=\"{href}\" target=\"_blank\" rel=\"noopener noreferrer\">单独打开这封</a></p>"
         )
-        return f"<article class=\"letter\">{head}{meta}{frame}</article>"
+        return f"<article class=\"letter\"{attrs}>{head}{meta}{frame}</article>"
     if row["text"]:
         body = f"<pre>{html.escape(row['text'])}</pre>"
-        return f"<article class=\"letter\">{head}{meta}{body}</article>"
+        return f"<article class=\"letter\"{attrs}>{head}{meta}{body}</article>"
     note = "这封已经发出。当时没有把正文留在页面上，之后发出的信会完整显示在这里。"
-    return f"<article class=\"letter missing\">{head}{meta}<p>{note}</p></article>"
+    return f"<article class=\"letter missing\"{attrs}>{head}{meta}<p>{note}</p></article>"
 
 
-def letter_tabs_markup(day: str, rows: list[dict[str, str]], *, prefix: str = "today") -> str:
-    """One tab per letter kind so the day fits without scrolling through every body."""
-    ordered = _sorted_day_rows(rows)
-    if not ordered:
-        return ""
-    if len(ordered) == 1:
-        return _letter_html(day, ordered[0])
-    kind_counts: dict[str, int] = {}
-    for row in ordered:
-        kind_counts[row["kind"]] = kind_counts.get(row["kind"], 0) + 1
+def channel_tabs_markup(chosen: dict[str, tuple[str, dict[str, str]] | None]) -> str:
+    """One tab per channel, labeled with the channel name and no send time."""
+    selected_index = 0
+    for index, kind in enumerate(KIND_ORDER):
+        if chosen.get(kind) is not None:
+            selected_index = index
+            break
     buttons: list[str] = []
     panels: list[str] = []
-    for index, row in enumerate(ordered):
-        key = f"{prefix}-{row['kind']}-{row['slot'].replace(':', '')}"
-        label = KIND_TAB_LABEL.get(row["kind"], KIND_TITLE[row["kind"]])
-        if kind_counts.get(row["kind"], 0) > 1:
-            label = f"{label} · {row['slot']}"
-        selected = "true" if index == 0 else "false"
-        hidden = "" if index == 0 else " hidden"
+    for index, kind in enumerate(KIND_ORDER):
+        key = f"channel-{kind}"
+        label = KIND_TAB_LABEL.get(kind, KIND_TITLE[kind])
+        selected = "true" if index == selected_index else "false"
+        hidden = "" if index == selected_index else " hidden"
         buttons.append(
-            f'<button type="button" role="tab" id="tab-{html.escape(key)}" '
-            f'aria-controls="panel-{html.escape(key)}" aria-selected="{selected}">'
+            f'<button type="button" role="tab" id="tab-{key}" '
+            f'aria-controls="panel-{key}" aria-selected="{selected}">'
             f"{html.escape(label)}</button>"
         )
+        item = chosen.get(kind)
+        if item is None:
+            body = (
+                f'<p class="empty" data-channel="{html.escape(kind)}" data-empty="true">'
+                "今天和昨天都还没有这封信。</p>"
+            )
+        else:
+            day, row = item
+            body = _letter_html(day, row, heading=False)
         panels.append(
-            f'<div class="letter-panel" id="panel-{html.escape(key)}" role="tabpanel" '
-            f'aria-labelledby="tab-{html.escape(key)}"{hidden}>'
-            f"{_letter_html(day, row, heading=False)}</div>"
+            f'<div class="letter-panel" id="panel-{key}" role="tabpanel" '
+            f'aria-labelledby="tab-{key}"{hidden}>{body}</div>'
         )
     return (
-        f'<div class="letter-switch" data-letters data-prefix="{html.escape(prefix)}">'
+        '<div class="letter-switch" data-letters data-prefix="channel">'
         f'<div class="letter-tabs" role="tablist">{"".join(buttons)}</div>'
         f'{"".join(panels)}</div>'
     )
 
 
+def _pending_copy(today_sent: bool, yesterday_shown: bool) -> tuple[str, str]:
+    if today_sent:
+        return " hidden", "今天还没有发出的邮件。"
+    if yesterday_shown:
+        return "", "今天还没有发出的邮件。下面是昨天的信。"
+    return "", "今天还没有发出的邮件。"
+
+
 def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> str:
-    today_rows = next((rows for day, rows in days if day == today), [])
-    earlier = [(day, rows) for day, rows in days if day != today and rows]
+    chosen = latest_letters(days, today)
+    yesterday = _shift_day(today, -1)
+    today_sent = any(item is not None and item[0] == today for item in chosen.values())
+    yesterday_shown = any(item is not None and item[0] == yesterday for item in chosen.values())
+    pending_attr, pending_text = _pending_copy(today_sent, yesterday_shown)
     lead = f"今天 · {today}"
-    if today_rows:
-        body = letter_tabs_markup(today, today_rows, prefix="today")
-    else:
-        body = "<p class=\"empty\" id=\"empty\">今天还没有发出的邮件。</p>"
-    earlier_html = ""
-    if earlier:
-        blocks = []
-        for day, rows in earlier:
-            inner = letter_tabs_markup(day, rows, prefix=f"day-{day}")
-            blocks.append(
-                f"<section class=\"earlier-day\"><h2 class=\"day-label\">{html.escape(day)}</h2>{inner}</section>"
-            )
-        earlier_html = (
-            "<details class=\"earlier\"><summary>更早的信</summary>"
-            + "".join(blocks)
-            + "</details>"
-        )
+    body = channel_tabs_markup(chosen)
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -663,7 +688,8 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
       font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
       letter-spacing: 0.06em;
     }}
-    #stale {{ display: none; margin-top: 14px; color: #fde68a; }}
+    #pending {{ margin-top: 14px; color: #fde68a; }}
+    #pending[hidden] {{ display: none; }}
     @media (max-width: 640px) {{
       header.top {{ padding: 22px 18px; }}
       .letter-tabs button {{ padding: 9px 10px; letter-spacing: 0.04em; font-size: 11px; }}
@@ -676,11 +702,10 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
       <p class="brand">Daily Thoughts</p>
       <h1>今日邮件</h1>
       <p id="lead" data-date="{html.escape(today)}">{html.escape(lead)}</p>
-      <p>已经发出的信会留在这里。点上方频道切换，不用一直往下翻。</p>
-      <p id="stale">今天的信还没发。下面是最近留下的内容。</p>
+      <p>这里显示今天和昨天的信。点上方频道切换，不用一直往下翻。</p>
+      <p id="pending"{pending_attr}>{html.escape(pending_text)}</p>
     </header>
     {body}
-    {earlier_html}
   </main>
   <script>
     function fitLetter(frame) {{
@@ -721,14 +746,55 @@ def render_index(days: list[tuple[str, list[dict[str, str]]]], today: str) -> st
       }}
     }});
     (function () {{
+      function pad(n) {{ return n < 10 ? "0" + n : String(n); }}
+      function shanghaiDay(offset) {{
+        var parts = new Intl.DateTimeFormat("en-US", {{
+          timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit"
+        }}).formatToParts(new Date());
+        var y = 0, m = 0, d = 0;
+        for (var i = 0; i < parts.length; i++) {{
+          if (parts[i].type === "year") y = Number(parts[i].value);
+          if (parts[i].type === "month") m = Number(parts[i].value);
+          if (parts[i].type === "day") d = Number(parts[i].value);
+        }}
+        var utc = new Date(Date.UTC(y, m - 1, d));
+        utc.setUTCDate(utc.getUTCDate() - offset);
+        return utc.getUTCFullYear() + "-" + pad(utc.getUTCMonth() + 1) + "-" + pad(utc.getUTCDate());
+      }}
+      var today = shanghaiDay(0);
+      var yesterday = shanghaiDay(1);
       var lead = document.getElementById("lead");
-      var today = new Intl.DateTimeFormat("en-CA", {{
-        timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit"
-      }}).format(new Date());
-      if (lead.dataset.date !== today) {{
-        lead.textContent = lead.dataset.date + " · 上海";
-        var stale = document.getElementById("stale");
-        if (stale) stale.style.display = "block";
+      if (lead) {{
+        lead.dataset.date = today;
+        lead.textContent = "今天 · " + today;
+      }}
+      var letters = document.querySelectorAll("article.letter[data-day]");
+      var todayCount = 0;
+      for (var n = 0; n < letters.length; n++) {{
+        var day = letters[n].getAttribute("data-day");
+        if (day === today) {{
+          todayCount++;
+        }} else if (day !== yesterday) {{
+          var note = document.createElement("p");
+          note.className = "empty";
+          note.setAttribute("data-empty", "true");
+          note.textContent = "今天和昨天都还没有这封信。";
+          letters[n].replaceWith(note);
+        }}
+      }}
+      var pending = document.getElementById("pending");
+      if (pending) {{
+        pending.hidden = todayCount > 0;
+        if (todayCount === 0) {{
+          var still = document.querySelectorAll("article.letter[data-day]");
+          var yesterdayCount = 0;
+          for (var k = 0; k < still.length; k++) {{
+            if (still[k].getAttribute("data-day") === yesterday) yesterdayCount++;
+          }}
+          pending.textContent = yesterdayCount
+            ? "今天还没有发出的邮件。下面是昨天的信。"
+            : "今天还没有发出的邮件。";
+        }}
       }}
     }})();
   </script>

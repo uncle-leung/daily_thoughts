@@ -56,7 +56,7 @@ DIGEST_TO=发信邮箱 DIGEST_ALSO=另一个邮箱 QQ_SMTP_AUTH_CODE=你的授�
 
 https://uncle-leung.github.io/daily_thoughts/
 
-页面只展示已经发出的信。2026-10-28 上午 10:17 那三封是页面做好之前发的，只有发送记录，没有正文。之后每一封都会整封留在页面上。
+页面只展示上海日历的今天和昨天，每个频道只留这两天里最近发出的一封。更早的正文仍在 `archive/`，页面上不再列出。2026-10-28 上午 10:17 那三封是页面做好之前发的，只有发送记录，没有正文。
 
 GitHub Free 只给公开仓库提供 Pages。仓库改为公开后，在 **Settings → Pages** 选择 **GitHub Actions**。这一步还没选时，部署会失败，信仍然会发出。
 
