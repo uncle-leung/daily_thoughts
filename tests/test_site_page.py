@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from site_page import (  # noqa: E402
     collect_day,
+    latest_letters,
     open_links_in_new_tab,
     remember_letter,
     rebuild_site,
@@ -166,6 +167,94 @@ class SitePageTest(unittest.TestCase):
         self.assertIn(">中文社区</button>", published)
         self.assertIn('style="display:none"', published)
         self.assertNotIn('hidden', with_rank_tabs(letter).split("<script>")[0])
+
+    def _store(self, kind: str, slot: str, when: datetime, subject: str | None = None) -> None:
+        remember_letter(
+            self.root,
+            kind,
+            slot,
+            when,
+            subject or f"{kind} {slot}",
+            f"<!DOCTYPE html><html><body><p>{kind} {slot}</p></body></html>",
+            f"{kind} {slot}\n",
+        )
+
+    def test_page_keeps_latest_letter_per_channel_inside_two_shanghai_days(self) -> None:
+        self._store("trending", "18:00", datetime(2026, 10, 26, 18, 5, tzinfo=SHANGHAI))
+        self._store("trending", "08:00", datetime(2026, 10, 27, 8, 5, tzinfo=SHANGHAI))
+        self._store("trending", "18:00", datetime(2026, 10, 27, 18, 5, tzinfo=SHANGHAI))
+        self._store("events", "08:15", datetime(2026, 10, 27, 8, 20, tzinfo=SHANGHAI))
+        self._store("trending", "08:00", datetime(2026, 10, 28, 8, 5, tzinfo=SHANGHAI))
+        self._store("ideas", "08:30", datetime(2026, 10, 28, 8, 35, tzinfo=SHANGHAI))
+        self._store("ideas", "18:30", datetime(2026, 10, 28, 18, 35, tzinfo=SHANGHAI))
+        page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")
+        self.assertIn(">GITHUB TRENDING</button>", page)
+        self.assertIn(">MAJOR EVENTS</button>", page)
+        self.assertIn(">DAILY THOUGHTS</button>", page)
+        self.assertIn(">NBA LIVE</button>", page)
+        self.assertNotIn("GITHUB TRENDING ·", page)
+        self.assertNotIn("MAJOR EVENTS ·", page)
+        self.assertNotIn("DAILY THOUGHTS ·", page)
+        self.assertNotIn("NBA LIVE ·", page)
+        self.assertIn('src="letters/2026-10-28/trending-0800.html"', page)
+        self.assertNotIn("letters/2026-10-27/trending-", page)
+        self.assertNotIn("letters/2026-10-26/", page)
+        self.assertIn('src="letters/2026-10-28/ideas-1830.html"', page)
+        self.assertNotIn("ideas-0830.html", page)
+        self.assertIn('src="letters/2026-10-27/events-0815.html"', page)
+        self.assertIn('data-channel="nba" data-empty="true"', page)
+        self.assertIn("今天和昨天都还没有这封信。", page)
+        self.assertNotIn("更早的信", page)
+        self.assertNotIn("下面是最近留下的内容", page)
+        self.assertIn('id="pending" hidden', page)
+        self.assertTrue((self.root / "docs" / "letters" / "2026-10-26" / "trending-1800.html").is_file())
+        buttons = [part.split("</button>")[0] for part in page.split("<button ")[1:]]
+        self.assertEqual(
+            buttons,
+            [
+                'type="button" role="tab" id="tab-channel-trending" aria-controls="panel-channel-trending" aria-selected="true">GITHUB TRENDING',
+                'type="button" role="tab" id="tab-channel-events" aria-controls="panel-channel-events" aria-selected="false">MAJOR EVENTS',
+                'type="button" role="tab" id="tab-channel-ideas" aria-controls="panel-channel-ideas" aria-selected="false">DAILY THOUGHTS',
+                'type="button" role="tab" id="tab-channel-nba" aria-controls="panel-channel-nba" aria-selected="false">NBA LIVE',
+            ],
+        )
+
+    def test_missing_today_shows_yesterday_and_not_older_days(self) -> None:
+        self._store("nba", "08:45", datetime(2026, 10, 27, 8, 50, tzinfo=SHANGHAI))
+        self._store("nba", "18:45", datetime(2026, 10, 27, 18, 50, tzinfo=SHANGHAI))
+        self._store("nba", "18:45", datetime(2026, 10, 26, 18, 50, tzinfo=SHANGHAI))
+        self._store("trending", "18:00", datetime(2026, 10, 31, 18, 5, tzinfo=SHANGHAI))
+        page = rebuild_site(self.root, NOW).read_text(encoding="utf-8")
+        self.assertIn("今天还没有发出的邮件。下面是昨天的信。", page)
+        self.assertNotIn('id="pending" hidden', page)
+        self.assertIn('src="letters/2026-10-27/nba-1845.html"', page)
+        self.assertNotIn("nba-0845.html", page)
+        self.assertNotIn("letters/2026-10-26/", page)
+        self.assertNotIn("letters/2026-10-31/", page)
+        self.assertIn('data-day="2026-10-27"', page)
+
+    def test_window_uses_shanghai_calendar_days_across_month_boundary(self) -> None:
+        morning = datetime(2026, 11, 1, 9, 0, tzinfo=SHANGHAI)
+        self._store("events", "18:15", datetime(2026, 10, 30, 18, 20, tzinfo=SHANGHAI))
+        self._store("events", "08:15", datetime(2026, 10, 31, 8, 20, tzinfo=SHANGHAI))
+        self._store("events", "18:15", datetime(2026, 10, 31, 18, 20, tzinfo=SHANGHAI))
+        page = rebuild_site(self.root, morning).read_text(encoding="utf-8")
+        self.assertIn("今天 · 2026-11-01", page)
+        self.assertIn('src="letters/2026-10-31/events-1815.html"', page)
+        self.assertNotIn("events-0815.html", page)
+        self.assertNotIn("letters/2026-10-30/", page)
+        self.assertIn("今天还没有发出的邮件。下面是昨天的信。", page)
+        picked = latest_letters(
+            [
+                ("2026-10-30", [{"kind": "events", "slot": "18:15", "sentAt": "2026-10-30T18:20:00+08:00"}]),
+                ("2026-10-31", [{"kind": "events", "slot": "08:15", "sentAt": "2026-10-31T08:20:00+08:00"}]),
+                ("2026-10-31", [{"kind": "events", "slot": "18:15", "sentAt": "2026-10-31T18:20:00+08:00"}]),
+            ],
+            "2026-11-01",
+        )
+        self.assertEqual(picked["events"][0], "2026-10-31")
+        self.assertEqual(picked["events"][1]["slot"], "18:15")
+        self.assertIsNone(picked["nba"])
 
 
 if __name__ == "__main__":
