@@ -1,0 +1,67 @@
+每日想法 · 2026-11-26 13:08（上海）
+
+十条想法，对照今天的时事。每条先给中文，再给学习用英文。
+EN: Ten thoughts. Read the Chinese first, then the English in the green box. The English is a study translation.
+整理时间：2026-11-26 13:08 上海时间
+
+1. [世间 · World] 台灣「九合一」選舉：六都市長候選人簡介
+EN: Taiwan's "Nine-in-One" Elections: Profiles of Mayoral Candidates in the Six Municipalities
+這場選舉將影響藍綠政治版圖，六都選情備受關注，包括台北、新北、桃園、台中、台南、高雄，BBC中文整理各地候選人的簡介。这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。
+EN: This election will impact the political landscape of the Blue and Green camps. The electoral situations in the six major cities—Taipei, New Taipei, Taoyuan, Taichung, Tainan, and Kaohsiung—are attracting significant attention. BBC Chinese has compiled profiles of candidates from each region. This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.
+生词: prices 物价 · supply chain 供应链
+
+2. [知识 · Knowledge] Claude 和 ChatGPT 在蛋白质结构预测和设计上挑战 AlphaFold
+EN: Claude and ChatGPT challenge AlphaFold in protein structure prediction and design
+Solidot报道，AI 生物科技公司 Phylo 研究员 Xinming Tu 本月初使用 OpenAI、Anthropic 和 Google 的大模型测试了它们预测鲜为人知细菌蛋白质序列的能力。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: Solidot reported that earlier this month, Xinming Tu, a researcher at the AI biotech company Phylo, tested the ability of large models from OpenAI, Anthropic, and Google to predict the protein sequences of little-known bacteria. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: model 模型 · artificial intelligence 人工智能 · funding 融资
+
+3. [工作 · Work] 梅奥诊所向每天用自己的时间启动电脑的员工补发工资
+EN: The Mayo Clinic is back-paying employees who used their own time to turn on their computers every day.
+Solidot报道，梅奥诊所（Mayo Clinic）同意向负责安排患者预约的员工支付逾 90.6万美元的补发工资。人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。
+EN: Solidot reported that the Mayo Clinic has agreed to pay over $906,000 in back wages to employees responsible for scheduling patient appointments. Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.
+生词: job 岗位 · layoffs 裁员
+
+4. [人生 · Life] 数智时代如何有效应对人口老龄化
+EN: How to Effectively Address Population Aging in the Digital Intelligence Era
+求是报道，数智时代如何有效应对人口老龄化。老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。
+EN: Qiushi Journal reports on how to effectively address population aging in the digital intelligence era. An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.
+生词: an aging population 人口老龄化 · aging population 老龄化 · job 岗位
+
+5. [财富 · Wealth] 国际金价深V反转提振港股黄金股 紫金黄金国际涨近6%领跑相关个股
+EN: The sharp V-shaped reversal in international gold prices has boosted Hong Kong-listed gold stocks, with Zijin Mining Group Co., Ltd. and China National Gold Group Corporation leading the way with gains of nearly 6%.
+财联社报道，国际金价深V反转提振港股黄金股 紫金黄金国际涨近6%领跑相关个股。融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。
+EN: According to a report by China Finance Online, the sharp V-shaped reversal in international gold prices has boosted Hong Kong-listed gold stocks, with Zijin Mining Group Co., Ltd. leading the pack with a nearly 6% rise. The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.
+生词: gold 黄金 · funding 融资 · trade 贸易 · valuation 估值 · cash flow 现金流
+
+6. [健康 · Health] 空气污染是痴呆症的一个诱因
+EN: Air pollution a cause of dementia
+Solidot报道，根据发表在《Journal of Neuroinflammation》期刊上的一项研究，微小的空气污染颗粒可能会通过改变大脑免疫细胞的行为对大脑造成损害。把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。
+EN: Solidot reports that tiny air pollution particles may cause damage to the brain by changing the behavior of the brain's immune cells, according to a study published in the Journal of Neuroinflammation. Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.
+生词: public health 公共卫生 · prescription 处方 · sleep 睡眠
+
+7. [世间 · World] CIA 部分非机密信息泄漏
+EN: Leak of some non-classified CIA information
+Solidot报道，中央情报局（CIA）和国家情报总监办公室（ODNI）最近发现了一起网络入侵事件，导致部分非机密信息遭到泄露。极端天气和旧的环境事故都在提醒，稳定比一条新闻看起来更脆。个人改变不了那一季热浪或那次泄漏，但可以把这周的作息、出行和身体留出余量。
+EN: Solidot reports that the Central Intelligence Agency (CIA) and the Office of the Director of National Intelligence (ODNI) recently discovered a cyber breach that resulted in the leak of some non-classified information. Extreme weather and older environmental accidents both remind you that stability is more fragile than a headline looks. One person cannot undo that season's heat wave or that leak, but you can leave slack this week in your schedule, your travel, and your body.
+生词: heat wave 热浪
+
+8. [知识 · Knowledge] EA Sports FC 利用 AI 数字重现已故解说员 John Motson 的声音
+EN: EA Sports FC uses AI to digitally recreate the voice of the late commentator John Motson
+Solidot报道，EA 透露其足球游戏《EA Sports FC 27》利用 AI 数字重现了已故解说员 John Motson 的声音。模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。
+EN: Solidot reported that EA revealed that its soccer game, EA Sports FC 27, uses AI to digitally recreate the voice of the late commentator John Motson. The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.
+生词: model 模型
+
+9. [知识 · Knowledge] Google 申请专利为用户量身定制 AI 电视频道
+EN: Google applies for patent to customize AI TV channels for users
+Solidot报道，Google 提交了一项专利申请，利用它所掌握的关于你的信息，创造一个由 AI 生成的电视频道。跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。
+EN: Solidot reports that Google has filed a patent application to use the information it holds about you to create an AI-generated TV channel. Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.
+
+10. [知识 · Knowledge] BBC事實查核：與中國有關帳號用AI生成影攻擊台灣選舉候選人
+EN: BBC Fact Check: China-linked accounts use AI-generated videos to attack Taiwanese election candidates
+BBC中文报道，一波與中國有關的帳號用AI生成影片，攻擊台灣執政黨關鍵人物，包括總統賴清德和台北市長候選人沈伯洋。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: BBC Chinese reported that a wave of China-linked accounts used AI-generated videos to attack key figures of Taiwan's ruling party, including President Lai Ching-te and Taipei mayoral candidate Shen Bo-yang. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: artificial intelligence 人工智能 · model 模型 · funding 融资
+
+材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。
+每天 08:30 和 18:30（上海时间）自动发送。
