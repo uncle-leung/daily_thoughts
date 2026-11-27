@@ -1,0 +1,67 @@
+每日想法 · 2026-11-27 13:38（上海）
+
+十条想法，对照今天的时事。每条先给中文，再给学习用英文。
+EN: Ten thoughts. Read the Chinese first, then the English in the green box. The English is a study translation.
+整理时间：2026-11-27 13:38 上海时间
+
+1. [世间 · World] 台灣「九合一」選舉：六都市長候選人簡介
+EN: Taiwan's "Nine-in-One" Elections: Profiles of Mayoral Candidates in the Six Municipalities
+這場選舉將影響藍綠政治版圖，六都選情備受關注，包括台北、新北、桃園、台中、台南、高雄，BBC中文整理各地候選人的簡介。这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。
+EN: This election will impact the political landscape of the Blue and Green camps. The electoral situations in the six major cities—Taipei, New Taipei, Taoyuan, Taichung, Tainan, and Kaohsiung—are attracting significant attention. BBC Chinese has compiled profiles of candidates from each region. This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.
+生词: prices 物价 · supply chain 供应链
+
+2. [知识 · Knowledge] Claude 和 ChatGPT 在蛋白质结构预测和设计上挑战 AlphaFold
+EN: Claude and ChatGPT challenge AlphaFold in protein structure prediction and design
+Solidot报道，AI 生物科技公司 Phylo 研究员 Xinming Tu 本月初使用 OpenAI、Anthropic 和 Google 的大模型测试了它们预测鲜为人知细菌蛋白质序列的能力。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: Solidot reported that earlier this month, Xinming Tu, a researcher at the AI biotech company Phylo, tested the ability of large models from OpenAI, Anthropic, and Google to predict the protein sequences of little-known bacteria. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: model 模型 · artificial intelligence 人工智能 · funding 融资
+
+3. [工作 · Work] 18家重点平台完成算法协商 覆盖新就业形态劳动者超2500万人
+EN: 18 Key Platforms Complete Algorithm Negotiations, Covering Over 25 Million Workers in New Forms of Employment
+中国科技网报道，18家重点平台完成算法协商 覆盖新就业形态劳动者超2500万人。人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。
+EN: According to a report by China Science and Technology Network, 18 key platforms have completed algorithm negotiations, covering over 25 million workers in new forms of employment. Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.
+生词: algorithm 算法 · job 岗位 · layoffs 裁员
+
+4. [人生 · Life] 沪60岁以上户籍老年人口超580万！这所高校“出手”直面“大城养老”难题
+EN: The registered elderly population aged 60 and above in Shanghai exceeds 5.8 million! This university "steps in" to directly address the challenges of "elderly care in a big city"
+上观新闻报道，沪60岁以上户籍老年人口超580万，这所高校“出手”直面“大城养老”难题。老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。
+EN: According to a report by Shangguan News, there are over 5.8 million registered elderly residents aged 60 and above in Shanghai. This university has taken action to directly address the challenges of "elderly care in a major city.". An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.
+生词: elder care 养老 · aging population 老龄化 · job 岗位
+
+5. [财富 · Wealth] 服务贸易发展“十五五”规划出台
+EN: Release of the "15th Five-Year Plan" for the Development of Trade in Services
+新浪财经_金融信息服务商报道，服务贸易发展“十五五”规划出台。融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。
+EN: Sina Finance_Financial Information Service Provider reports that the "15th Five-Year Plan" for the Development of Services Trade has been issued. The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.
+生词: trade 贸易 · funding 融资 · valuation 估值 · cash flow 现金流
+
+6. [健康 · Health] 艾滋病疫苗终于触手可及
+EN: An AIDS vaccine is finally within reach
+Solidot报道，本世纪初，南非 KwaZulu-Natal 省的一名年轻女性感染了 HIV。把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。
+EN: Solidot reported that at the beginning of this century, a young woman in South Africa's KwaZulu-Natal province was infected with HIV. Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.
+生词: vaccine 疫苗 · public health 公共卫生 · prescription 处方 · sleep 睡眠
+
+7. [世间 · World] 台灣九合一選舉：從「洋流」看民進黨戰略性擱置「抗中保台」牌
+EN: Taiwan's Nine-in-One Elections: Examining the DPP's Strategic Shelving of the "Resist China, Protect Taiwan" Card from the Perspective of "Foreign Currents"
+BBC中文报道，有學者指出，這並非「中國因素」消失，而是地方選舉本質以市政民生為主，民進黨也吸取去年大罷免的教訓，戰略性擱置了統獨議題，以此拉攏中間選民。选举、冲突和制裁很少按标题的音量进入家里，它们先改变运费、零件和人们说话的口气。碰得到你的生活，就调整一个安排；碰不到，看完就可以停。
+EN: According to a BBC Chinese report, some scholars have pointed out that this does not mean the "China factor" has disappeared, but rather that the nature of local elections is primarily focused on municipal affairs and people's livelihoods. The Democratic Progressive Party (DPP) has also learned from the lessons of last year's recall election and strategically set aside the issue of reunification or independence to win over centrist voters. Elections, conflicts, and sanctions rarely enter a home at the volume of the headline. They first change freight costs, parts, and the way people talk. If one of them can reach your life, adjust one plan. If it cannot, you can stop after reading.
+生词: election 选举 · conflict 冲突 · sanctions 制裁
+
+8. [知识 · Knowledge] EA Sports FC 利用 AI 数字重现已故解说员 John Motson 的声音
+EN: EA Sports FC uses AI to digitally recreate the voice of the late commentator John Motson
+Solidot报道，EA 透露其足球游戏《EA Sports FC 27》利用 AI 数字重现了已故解说员 John Motson 的声音。模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。
+EN: Solidot reported that EA revealed that its soccer game, EA Sports FC 27, uses AI to digitally recreate the voice of the late commentator John Motson. The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.
+生词: model 模型
+
+9. [世间 · World] 1Password 源代码以及部分客户数据泄漏
+EN: 1Password source code and some customer data leaked
+Solidot报道，密码管理器 1Password 披露了一起安全事件：2026 年 11 月 19 日黑客入侵了该公司一名员工的企业 GitHub 账户，访问了源代码，向后端服务推送恶意代码，下载了客户相关的管理数据。极端天气和旧的环境事故都在提醒，稳定比一条新闻看起来更脆。个人改变不了那一季热浪或那次泄漏，但可以把这周的作息、出行和身体留出余量。
+EN: Solidot reported that the password manager 1Password disclosed a security incident: On November 19, 2023, hackers breached the corporate GitHub account of one of the company's employees, accessed the source code, pushed malicious code to the backend services, and downloaded customer-related administrative data. Extreme weather and older environmental accidents both remind you that stability is more fragile than a headline looks. One person cannot undo that season's heat wave or that leak, but you can leave slack this week in your schedule, your travel, and your body.
+生词: heat wave 热浪
+
+10. [知识 · Knowledge] 图库平台充斥着生成式 AI 图像
+EN: Stock image platforms are flooded with generative AI images.
+Solidot报道，根据发表在《The Quarterly Journal of Economics》期刊上的一项研究，今天的大型图库平台充斥着生成式 AI 图像。跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。
+EN: According to a study published in The Quarterly Journal of Economics, today's large image gallery platforms are flooded with generative AI images, Solidot reports. Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.
+
+材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。
+每天 08:30 和 18:30（上海时间）自动发送。
