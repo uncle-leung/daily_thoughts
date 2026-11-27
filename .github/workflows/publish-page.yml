@@ -13,12 +13,22 @@ permissions:
   pages: write
   id-token: write
 
+# Letter jobs push with the default token, which does not start this
+# workflow, then they dispatch it. A docs push can still overlap that
+# dispatch. One Pages deployment at a time; cancelling the in-progress
+# one is itself a cause of "Deployment failed, try again later."
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  # deploy-pages lists artifacts once, as soon as it starts. In the same job
+  # as the upload, that list is often still empty for an artifact finalized
+  # a fraction of a second earlier. The next job sees it. Upload exactly
+  # once per run: a second artifact named github-pages makes the lookup fail
+  # with "multiple artifacts", including on a re-run of this job.
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,6 +41,78 @@ jobs:
         with:
           path: docs
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # "Deployment failed, try again later" is a final status inside
+      # deploy-pages, and the artifact lookup is not retried either. Retry
+      # only this action. Each attempt is capped at 3 minutes so a stuck
+      # poll cannot hold the concurrency group for the action's 10 minute
+      # default. Backoff reaches the next attempt about 3 minutes after the
+      # first, which is the window in which a later run of the same site has
+      # been accepted.
       - name: Deploy Pages
-        id: deployment
+        id: attempt_1
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+        with:
+          timeout: "180000"
+
+      - name: Wait before retrying Pages
+        if: steps.attempt_1.outcome == 'failure'
+        run: sleep 20
+
+      - name: Deploy Pages (retry 2)
+        id: attempt_2
+        if: steps.attempt_1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: "180000"
+
+      - name: Wait before retrying Pages
+        if: steps.attempt_1.outcome == 'failure' && steps.attempt_2.outcome == 'failure'
+        run: sleep 40
+
+      - name: Deploy Pages (retry 3)
+        id: attempt_3
+        if: steps.attempt_1.outcome == 'failure' && steps.attempt_2.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: "180000"
+
+      - name: Wait before retrying Pages
+        if: steps.attempt_1.outcome == 'failure' && steps.attempt_2.outcome == 'failure' && steps.attempt_3.outcome == 'failure'
+        run: sleep 120
+
+      - name: Deploy Pages (retry 4)
+        id: attempt_4
+        if: steps.attempt_1.outcome == 'failure' && steps.attempt_2.outcome == 'failure' && steps.attempt_3.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: "180000"
+
+      - name: Record the published page URL
+        id: deployment
+        if: steps.attempt_1.outcome == 'success' || steps.attempt_2.outcome == 'success' || steps.attempt_3.outcome == 'success' || steps.attempt_4.outcome == 'success'
+        env:
+          URL_1: ${{ steps.attempt_1.outputs.page_url }}
+          URL_2: ${{ steps.attempt_2.outputs.page_url }}
+          URL_3: ${{ steps.attempt_3.outputs.page_url }}
+          URL_4: ${{ steps.attempt_4.outputs.page_url }}
+        run: |
+          url="$URL_4"
+          if [ -z "$url" ]; then url="$URL_3"; fi
+          if [ -z "$url" ]; then url="$URL_2"; fi
+          if [ -z "$url" ]; then url="$URL_1"; fi
+          if [ -z "$url" ]; then
+            echo "Pages deploy succeeded without a page_url output" >&2
+            exit 0
+          fi
+          echo "page_url=$url" >> "$GITHUB_OUTPUT"
