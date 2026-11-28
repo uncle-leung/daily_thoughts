@@ -1,0 +1,81 @@
+NBA直播 · 11-29 09:30 费城76人@休斯顿火箭 · NBA TV
+
+今天直播与明天预告（开球为中国时间）。全国转播场次对照 iptv-org 体育源频道。
+整理时间：2026-11-29 01:53 上海时间
+本赛季（2026-27）美国全国转播以 ESPN / ABC / NBA TV / NBC / Peacock / Prime Video 为主；TNT 本季不转 NBA。Sportsnet 是加拿大转播网。
+体育源：https://iptv-org.github.io/iptv/categories/sports.m3u
+
+今天直播 · 2026-11-29
+
+1. 06:00  奥兰多魔术 @ 华盛顿奇才
+   转播：MNMT2
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+2. 07:00  布鲁克林篮网 @ 夏洛特黄蜂
+   转播：DAZN (YES)
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+3. 09:00  印第安纳步行者 @ 芝加哥公牛
+   转播：DAZN IND
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+4. 09:00  俄克拉荷马城雷霆 @ 密尔沃基雄鹿
+   转播：MyMi、Bucks App、Thunder App
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+5. 09:30  费城76人 @ 休斯顿火箭
+   转播：NBA TV
+   iptv 频道：NBA TV (720p) · sports.m3u
+
+明天预告 · 2026-11-30
+
+1. 04:30  迈阿密热火 @ 克利夫兰骑士
+   转播：DAZN CLE
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+2. 05:00  波士顿凯尔特人 @ 圣安东尼奥马刺
+   转播：NBA TV、DAZN SAS
+   iptv 频道：NBA TV (720p) · sports.m3u
+
+3. 05:00  洛杉矶湖人 @ 孟菲斯灰熊
+   转播：Spectrum Sports Net、Spectrum Sports Net +、DAZN MEM
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+4. 06:00  菲尼克斯太阳 @ 犹他爵士
+   转播：Suns Live、Arizona's Family 3TV、KJZZ-TV、Jazz+
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+5. 07:00  亚特兰大老鹰 @ 纽约尼克斯
+   转播：地方台 / League Pass
+   iptv 频道：地方台 / League Pass
+
+6. 07:00  丹佛掘金 @ 多伦多猛龙
+   转播：地方台 / League Pass
+   iptv 频道：地方台 / League Pass
+
+7. 07:00  新奥尔良鹈鹕 @ 波特兰开拓者
+   转播：BlazerVision、GCSEN、Pelicans.com
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+8. 07:00  奥兰多魔术 @ 底特律活塞
+   转播：地方台 / League Pass
+   iptv 频道：地方台 / League Pass
+
+9. 09:30  洛杉矶快船 @ 金州勇士
+   转播：ClipperVision
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+10. 10:00  明尼苏达森林狼 @ 萨克拉门托国王
+   转播：DAZN MIN
+   iptv：无对应全国源，多为地方台 / 流媒体
+
+iptv-org 可对照频道
+
+- NBA TV (720p)（NBATV.us）· sports.m3u 有源
+- ESPN (United States) HD (720p)（ESPN.us）· sports.m3u 有源
+- ESPN 2 (United States) HD (720p)（ESPN2.us）· sports.m3u 有源
+- TNT（TNT.us）· API 有源 · 本季美国不转 NBA
+- ABC（ABC.us）· API 有源 · 全国场次；iptv 多为地方台信号
+- Sportsnet（Sportsnet.ca）· 暂无源 · iptv-org 暂无可用流
+
+流地址可能失效或受版权/地区限制，仅作频道对照。每天 08:45 与 18:45（上海）自动发送。
