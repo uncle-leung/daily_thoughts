@@ -1,0 +1,67 @@
+每日想法 · 2026-11-28 10:07（上海）
+
+十条想法，对照今天的时事。每条先给中文，再给学习用英文。
+EN: Ten thoughts. Read the Chinese first, then the English in the green box. The English is a study translation.
+整理时间：2026-11-28 10:07 上海时间
+
+1. [世间 · World] 台灣「九合一」選舉開始投票 核電政策公投同步舉行
+EN: Voting begins for Taiwan's "Nine-in-One" elections, with a referendum on nuclear power policy being held simultaneously.
+BBC中文报道，台灣1965萬選民將票選縣市長、地方議員、鄉鎮村里長等將近1.11萬名公職人員，同時公投決定日後能源政策。这是远处的局势，不是你今晚要做的决定。值得留下的是一件具体事实：谁在改规则，以及它会不会顺着物价、供应链或你的行业传过来。
+EN: According to a BBC Chinese report, 19.65 million Taiwanese voters will elect nearly 11,100 public officials, including mayors, local councilors, and township and village chiefs. At the same time, they will also vote in a referendum to decide future energy policies. This is a situation far away, not a decision you have to make tonight. What is worth keeping is one concrete fact: who is changing the rules, and whether that change will reach you through prices, the supply chain, or your own industry.
+生词: energy 能源 · prices 物价 · supply chain 供应链
+
+2. [知识 · Knowledge] Take-Two 无法阻止用户利用 AI 将 GTA 6 移植到 PC 上
+EN: Take-Two cannot prevent users from porting GTA 6 to PC using AI
+Solidot报道，GTA 6 开发商 Rockstar 的母公司 Take-Two 与微软和索尼签署了独占协议，这款备受瞩目的大作目前只有主机版本，PC 版本发布时间未知。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: Solidot reports that Take-Two, the parent company of GTA 6 developer Rockstar, has signed exclusivity agreements with Microsoft and Sony. This highly anticipated blockbuster currently only has console versions, and the release date for the PC version is unknown. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: agreement 协议 · artificial intelligence 人工智能 · model 模型 · funding 融资
+
+3. [工作 · Work] IBM 停止签证担保，让 H-1B 持有者选择离职或离开美国
+EN: IBM stops visa sponsorship, giving H-1B holders the choice to resign or leave the United States
+Solidot报道，蓝色巨人决定停止为其咨询部门员工提供美国工作签证及绿卡担保，该公司咨询部门有逾 15 万员工，受影响员工可选择到其他国家工作，或在 2026 年 12 月 31 日前离职。人手、奖金和岗位都在被重新谈，公司想用更少的人加上工具完成原来的产出。你能准备的，是看清哪一段工作必须由人收尾，而不是跟着每一条裁员消息改一次心情。
+EN: Solidot reports that the blue giant has decided to stop sponsoring U.S. work visas and green cards for employees in its consulting division, which has over 150,000 employees. Affected employees can choose to work in other countries or leave the company by December 31, 2026. Headcount, bonuses, and jobs are all being renegotiated, as companies try to finish the same work with fewer people plus tools. What you can prepare is to see which stretch of the work a person must close, rather than changing your mood with every layoff story.
+生词: visa 签证 · job 岗位 · layoffs 裁员
+
+4. [人生 · Life] 中国老年人口数量前10省份出炉，山东老年人最多，江苏第二，9省份老年人口超1500万人#一财情报局 #媒体原创
+EN: The top 10 provinces with the elderly population in China have been released. Shandong has the largest number of elderly people, followed by Jiangsu. The elderly population in 9 provinces exceeds 15 million #一财informationbureau #mediaoriginal
+Sohu报道，中国老年人口数量前10省份出炉，山东老年人最多，江苏第二，9省份老年人口超1500万人#一财情报局 #媒体原创。老龄化不是一个远处的统计，它会变成照护、岗位和公共支出的安排。家里若有老人，把一次体检或一次陪诊写进这个月，比把这组数字再看一遍更有用。
+EN: Sohu reported that China's top 10 provinces with the largest number of elderly people have been released. Shandong has the largest number of elderly people, followed by Jiangsu. The number of elderly people in 9 provinces exceeds 15 million. #一财报bureau #Media Original. An aging population is not a statistic in the distance. It becomes arrangements for care, jobs, and public spending. If there is an older person at home, put one checkup or one visit with them on this month's calendar. That is more useful than reading the numbers again.
+生词: aging population 老龄化 · job 岗位
+
+5. [财富 · Wealth] 黄金多头终于喘口气！金价从一年多低点强势反弹3% 但加息阴影仍未消散
+EN: Gold bulls finally take a breather! Gold prices rebounded strongly by 3% from more than a year's low, but the shadow of interest rate hikes has not dissipated
+财联社报道，黄金多头终于喘口气，金价从一年多低点强势反弹3% 但加息阴影仍未消散。融资、贸易和价格的数字很大，不会自动变成你的机会或损失。先分清它改变的是公司的估值，还是你自己的现金流；只有后一种，才需要你这周行动。
+EN: The Financial Associated Press reported that gold bulls finally took a breather, with gold prices rebounding strongly by 3% from the low in more than a year, but the shadow of interest rate hikes has not dissipated. The numbers in funding, trade, and prices are large, and they do not automatically become your opportunity or your loss. First tell whether they change a company's valuation or your own cash flow. Only the second one needs an action from you this week.
+生词: gold 黄金 · funding 融资 · trade 贸易 · valuation 估值 · cash flow 现金流
+
+6. [健康 · Health] 艾滋病疫苗终于触手可及
+EN: An AIDS vaccine is finally within reach
+Solidot报道，本世纪初，南非 KwaZulu-Natal 省的一名年轻女性感染了 HIV。把它当成研究和公共卫生信息，而不是给你的处方。能带走的仍是已经靠得住的做法：睡眠、走路，以及该问医生的事不要问评论区。
+EN: Solidot reported that at the beginning of this century, a young woman in South Africa's KwaZulu-Natal province was infected with HIV. Treat it as research and public-health information, not as a prescription written for you. What you can take away is still the practice that already holds: sleep, walking, and not asking the comments what you should ask a doctor.
+生词: vaccine 疫苗 · public health 公共卫生 · prescription 处方 · sleep 睡眠
+
+7. [世间 · World] 台灣「九合一」選舉：六都市長候選人簡介
+EN: Taiwan's "Nine-in-One" Elections: Profiles of Mayoral Candidates in the Six Municipalities
+這場選舉將影響藍綠政治版圖，六都選情備受關注，包括台北、新北、桃園、台中、台南、高雄，BBC中文整理各地候選人的簡介。选举、冲突和制裁很少按标题的音量进入家里，它们先改变运费、零件和人们说话的口气。碰得到你的生活，就调整一个安排；碰不到，看完就可以停。
+EN: This election will impact the political landscape of the Blue and Green camps. The electoral situations in the six major cities—Taipei, New Taipei, Taoyuan, Taichung, Tainan, and Kaohsiung—are attracting significant attention. BBC Chinese has compiled profiles of candidates from each region. Elections, conflicts, and sanctions rarely enter a home at the volume of the headline. They first change freight costs, parts, and the way people talk. If one of them can reach your life, adjust one plan. If it cannot, you can stop after reading.
+生词: election 选举 · conflict 冲突 · sanctions 制裁
+
+8. [知识 · Knowledge] 图库平台充斥着生成式 AI 图像
+EN: Stock image platforms are flooded with generative AI images.
+Solidot报道，根据发表在《The Quarterly Journal of Economics》期刊上的一项研究，今天的大型图库平台充斥着生成式 AI 图像。模型之间的差距在缩小，人和人的差距会留在选题、品味和肯不肯认账。今天可以很小：让工具出一版草稿，你只改其中需要负责的判断。
+EN: According to a study published in The Quarterly Journal of Economics, today's large image gallery platforms are flooded with generative AI images, Solidot reports. The gap between models is shrinking, and the gap between people will remain in the topic they choose, their taste, and whether they own the result. Today can stay small: let the tool produce a draft, and change only the judgment you are responsible for.
+生词: model 模型
+
+9. [知识 · Knowledge] 押注英偉達發展AI，亞洲在黃仁勳復職後前景如何？
+EN: Betting on NVIDIA's AI development, what are the prospects for Asia after Jensen Huang's return?
+BBC中文报道，黃仁勳戲劇性地重返英偉達執行長職位，引發亞洲股市劇烈波動，也暴露出區內經濟體高度依賴AI產業及英偉達所帶來的風險。跟上这个技术浪潮，不是收藏更多入口，而是让新工具碰一件旧工作。碰过一次，你才知道它替你省下的是时间，还是你自己的思考。
+EN: BBC Chinese reported that Jensen Huang's dramatic return to the position of CEO of NVIDIA triggered significant fluctuations in Asian stock markets, also exposing the risks associated with the region's economies' heavy reliance on the AI industry and NVIDIA. Keeping up with this wave of technology means letting a new tool touch one old task, not collecting more entry points. Only after you try it once do you know whether it saved you time or took the place of your own thinking.
+
+10. [知识 · Knowledge] BBC事實查核：與中國有關帳號用AI生成影攻擊台灣選舉候選人
+EN: BBC Fact Check: China-linked accounts use AI-generated videos to attack Taiwanese election candidates
+BBC中文报道，一波與中國有關的帳號用AI生成影片，攻擊台灣執政黨關鍵人物，包括總統賴清德和台北市長候選人沈伯洋。这说明人工智能正在从发布会走进日常工具，能力变便宜，判断变得更贵。不必追每一轮模型和融资，挑你这周已经在重复的一件事试一次，最后是否采用仍由你负责。
+EN: BBC Chinese reported that a wave of China-linked accounts used AI-generated videos to attack key figures of Taiwan's ruling party, including President Lai Ching-te and Taipei mayoral candidate Shen Bo-yang. This shows artificial intelligence moving from product launches into everyday tools: the capability is getting cheaper, and judgment is getting more expensive. Do not chase every new model or funding round — pick one task you already repeat this week, try the tool once, and keep the final decision yourself.
+生词: artificial intelligence 人工智能 · model 模型 · funding 融资
+
+材料来自公开报道。想法是据此整理的，不是新闻原文，也不是投资或医疗建议。
+每天 08:30 和 18:30（上海时间）自动发送。
